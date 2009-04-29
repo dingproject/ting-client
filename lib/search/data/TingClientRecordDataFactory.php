@@ -1,7 +1,6 @@
 <?php
 
-$basePath = dirname(__FILE__);
-require_once $basePath.'/TingClientDublinCoreData.php';
+require_once dirname(__FILE__).'/TingClientDublinCoreData.php';
 
 class TingClientRecordDataFactory
 {

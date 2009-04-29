@@ -1,11 +1,10 @@
 <?php
 
-$basePath = dirname(__FILE__);
-require_once $basePath.'/../TingClientResponseAdapter.php';
-require_once $basePath.'/../../../search/TingClientSearchResult.php';
-require_once $basePath.'/../../../search/TingClientRecord.php';
-require_once $basePath.'/../../../search/TingClientFacetResult.php';
-require_once $basePath.'/../../../search/data/TingClientRecordDataFactory.php';
+require_once dirname(__FILE__).'/../TingClientResponseAdapter.php';
+require_once dirname(__FILE__).'/../../../search/TingClientSearchResult.php';
+require_once dirname(__FILE__).'/../../../search/TingClientRecord.php';
+require_once dirname(__FILE__).'/../../../search/TingClientFacetResult.php';
+require_once dirname(__FILE__).'/../../../search/data/TingClientRecordDataFactory.php';
 
 class TingClientJsonResponseAdapter implements TingClientResponseAdapter 
 {

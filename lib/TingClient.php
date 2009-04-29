@@ -1,8 +1,7 @@
 <?php
 
-$basePath = dirname(__FILE__);
-require_once $basePath.'/adapter/request/TingClientRequestAdapter.php';
-require_once $basePath.'/adapter/response/TingClientResponseAdapter.php';
+require_once dirname(__FILE__).'/adapter/request/TingClientRequestAdapter.php';
+require_once dirname(__FILE__).'/adapter/response/TingClientResponseAdapter.php';
 
 class TingClient
 {
@@ -24,7 +23,7 @@ class TingClient
 		$this->responseAdapter = $responseAdapter;
 	}
 	
-	public function search(TingSearchRequest $searchRequest)
+	public function search(TingClientSearchRequest $searchRequest)
 	{
 		$response = $this->requestAdapter->search($searchRequest);
 		return $this->responseAdapter->parseSearchResult($response);

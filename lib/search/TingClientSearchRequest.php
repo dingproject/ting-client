@@ -4,10 +4,12 @@ class TingClientSearchRequest
 {
 		private $query;
 		private $facets = array();
+		private $numFacets;
 		private $format;
 		private $start;
-		private $stepValue;
+		private $numResults;
 		private $sort;
+		private $output;
 	
 		function __construct($query)
 		{
@@ -34,6 +36,16 @@ class TingClientSearchRequest
 			$this->facets = $facets;	
 		}
 		
+		function getNumFacets()
+		{
+			return $this->numFacets;
+		}
+		
+		function setNumFacets($numFacets)
+		{
+			$this->numFacets = $numFacets;
+		}
+		
 		public function getFormat()
 		{
 			return $this->format;
@@ -54,14 +66,14 @@ class TingClientSearchRequest
 			$this->start = $start;
 		}
 		
-		public function getStepValue()
+		function getNumResults()
 		{
-			return $this->stepValue;
+			return $this->numResults;
 		}
 		
-		public function setStepValue($stepValue)
+		function setNumResults($numResults)
 		{
-			$this->stepValue = $stepValue;
+			$this->numResults = $numResults;
 		}
 		
 		public function getSort()
@@ -72,6 +84,16 @@ class TingClientSearchRequest
 		public function setSort($sort)
 		{
 			$this->sort = $sort;
+		}
+		
+		function getOutput()
+		{
+			return $this->output;
+		}
+		
+		function setOutput($output)
+		{
+			$this->output = $output;
 		}
 	
 }

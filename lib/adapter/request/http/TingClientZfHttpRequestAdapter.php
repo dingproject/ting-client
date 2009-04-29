@@ -1,11 +1,10 @@
 <?php
 
-$basePath = dirname(__FILE__);
-require_once $basePath.'/TingClientHttpRequestAdapter.php';
-require_once $basePath.'/TingClientHttpRequest.php';
-require_once $basePath.'/../../../exception/TingClientException.php';
+require_once dirname(__FILE__).'/TingClientHttpRequestAdapter.php';
+require_once dirname(__FILE__).'/TingClientHttpRequest.php';
+require_once dirname(__FILE__).'/../../../exception/TingClientException.php';
 
-class TingClientZfHttpRequestAdapterabstract extends TingClientHttpRequestAdapter 
+class TingClientZfHttpRequestAdapter extends TingClientHttpRequestAdapter 
 {
 	
 	/**
@@ -13,7 +12,13 @@ class TingClientZfHttpRequestAdapterabstract extends TingClientHttpRequestAdapte
 	 */
 	private $client;
 	
-	function __construct(Zend_Http_Client $client)
+	function __construct(Zend_Http_Client $client, TingClientHttpRequestFactory $httpRequestFactory)
+	{
+		$this->client = $client;
+		parent::__construct($httpRequestFactory);
+	}
+	
+	public function setClient(Zend_Http_Client $client)
 	{
 		$this->client = $client;
 	}

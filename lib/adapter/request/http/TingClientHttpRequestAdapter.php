@@ -1,18 +1,22 @@
 <?php
 
-$basePath = dirname(__FILE__);
-require_once $basePath.'/../TingClientHttpRequest.php';
-require_once $basePath.'/../TingClientHttpRequestAdapter.php';
-require_once $basePath.'/../TingClientHttpRequestFactory.php';
-require_once $basePath.'/../../../search/TingClientSearchRequest.php';
+require_once dirname(__FILE__).'/../TingClientRequestAdapter.php';
+require_once dirname(__FILE__).'/TingClientHttpRequest.php';
+require_once dirname(__FILE__).'/TingClientHttpRequestFactory.php';
+require_once dirname(__FILE__).'/../../../search/TingClientSearchRequest.php';
 
 abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 {
-
+		
 	/**
 	 * @var TingClientHttpRequestFactory
 	 */
 	private $httpRequestFactory;
+
+	function __construct(TingClientHttpRequestFactory $httpRequestFactory)
+	{
+		$this->httpRequestFactory = $httpRequestFactory;
+	}
 	
 	public function setHttpRequestFactory(TingClientHttpRequestFactory $httpRequestFactory)
 	{
@@ -32,6 +36,6 @@ abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 	 * @param TingClientHttpRequest $request
 	 * @return string The response body
 	 */
-	protected function request(TingClientHttpRequest $request);
+	protected abstract function request(TingClientHttpRequest $request);
 	
 }

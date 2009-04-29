@@ -1,9 +1,8 @@
 <?php
 
-$basePath = dirname(__FILE__);
-require_once $basePath.'/TingClientHttpRequestAdapter.php';
-require_once $basePath.'/TingClientHttpRequest.php';
-require_once $basePath.'/../../../exception/TingClientException.php';
+require_once dirname(__FILE__).'/TingClientHttpRequestAdapter.php';
+require_once dirname(__FILE__).'/TingClientHttpRequest.php';
+require_once dirname(__FILE__).'/../../../exception/TingClientException.php';
 
 class TingClientDrupal6HttpRequestAdapter extends TingClientHttpRequestAdapter 
 {

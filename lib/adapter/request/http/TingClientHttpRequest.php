@@ -1,20 +1,18 @@
 <?php
 
-$basePath = dirname(__FILE__);
-require_once $basePath.'/../TingClientHttpRequest.php';
-
+require_once dirname(__FILE__).'/../../../exception/TingClientException.php';
 
 class TingClientHttpRequest
 {
 	const GET = 'GET';
 	const POST = 'POST';
-	const METHODS = array(TingClientHttpRequest::GET,
-												TingClientHttpRequest::POST);
+	static public $METHODS = array(self::GET,
+																	self::POST);
 	
 	private $method;
 	private $baseUrl;
-	private $parameters = array(TingClientHttpRequest::GET => array(), 
-															TingClientHttpRequest::POST => array());
+	private $parameters = array(self::GET => array(), 
+															self::POST => array());
 	
 	public function setMethod($method)
 	{
@@ -31,6 +29,16 @@ class TingClientHttpRequest
 	{
 		$this->validateMethod($method);
 		$this->parameters[$method][$name] = $value;
+	}
+	
+	public function setGetParameter($name, $value)
+	{
+		$this->setParameter(self::GET, $name, $value);
+	}
+	
+	public function setPostParameter($name, $value)
+	{
+		$this->setParameter(self::POST, $name, $value);
 	}
 	
 	public function setParameters($method, $array)
@@ -51,7 +59,12 @@ class TingClientHttpRequest
 	
 	public function getUrl()
 	{
-		return $this->baseUrl;
+		$parameters = array();
+		foreach ($this->getParameters(TingClientHttpRequest::GET) as $name => $value)
+		{
+			$parameters[] = urlencode($name).'='.urlencode($value);
+		}
+		return $this->getBaseUrl().'?'.implode('&', $parameters);
 	}
 	
 	public function getParameters($method)
@@ -59,11 +72,21 @@ class TingClientHttpRequest
 		return $this->parameters[$method];
 	}
 	
+	public function getGetParameters()
+	{
+		return $this->getParameters(self::GET);
+	}
+	
+	public function getPostParameters()
+	{
+		return $this->getParameters(self::POST);
+	}
+	
 	private function validateMethod($method)
 	{
-		if (!in_array($method, self::METHODS))
+		if (!in_array($method, self::$METHODS))
 		{
-			throw new TingClientException('Unrecognized method '.$method);
+			throw new TingClientException('Unrecognized method "'.$method.'"');
 		}
 	}
 	
