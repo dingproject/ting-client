@@ -14,8 +14,12 @@ class TingClientHttpRequestFactoryTest extends UnitTestCase {
 		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
 		
 		$httpRequest = $factory->fromSearchRequest($searchRequest);
-		$this->assertEqual($httpRequest->getGetParameters(), array(	'action' => 'searchRequest',
-																																'query' => 'dc.title:danmark'));		
+		$this->assertEqual(	$httpRequest->getGetParameters(), 
+												array('action' => 'searchRequest',
+															'query' => 'dc.title:danmark'),
+												'Search GET parameters have not been set correctly');		
+
+		$this->assertEqual($httpRequest->getBaseUrl(), $this->baseUrl, 'Base URL not transfered connectly.');
 	}
 
 }

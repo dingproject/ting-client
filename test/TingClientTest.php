@@ -16,8 +16,8 @@ class TingClientTest extends UnitTestCase {
 	
 	function testRequest()
 	{
-		//End to end test
-		$requestAdapter = new TingClientZfHttpRequestAdapter(new TingClientHttpRequestFactory('http://ting.dbc.dk'));
+		//End to end internal test
+		$requestAdapter = new TingClientMockHttpRequestAdapter(new TingClientHttpRequestFactory('http://ting.dbc.dk'));
 		$requestAdapter->setResponse(file_get_contents(dirname(__FILE__).'/examples/json/single.js'));
 		$responseAdapter = new TingClientJsonResponseAdapter();
 

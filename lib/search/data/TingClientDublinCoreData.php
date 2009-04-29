@@ -5,6 +5,7 @@ require_once dirname(__FILE__).'/TingClientRecordData.php';
 class TingClientDublinCoreData implements TingClientRecordData
 {
 	
+	private $identifier;
 	private $title;
 	private $creator;
 	private $subject;
@@ -20,6 +21,16 @@ class TingClientDublinCoreData implements TingClientRecordData
 	private $coverage;
 	private $rights;
 
+	function getIdentifier()
+	{
+		return $this->identifier;
+	}
+	
+	function setIdentifier($identifier)
+	{
+		$this->identifier = $identifier;
+	}
+	
 	function getTitle()
 	{
 		return $this->title;

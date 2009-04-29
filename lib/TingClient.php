@@ -23,6 +23,10 @@ class TingClient
 		$this->responseAdapter = $responseAdapter;
 	}
 	
+	/**
+	 * @param TingClientSearchRequest $searchRequest
+	 * @return TingClientSearchResult
+	 */
 	public function search(TingClientSearchRequest $searchRequest)
 	{
 		$response = $this->requestAdapter->search($searchRequest);

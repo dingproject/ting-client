@@ -24,10 +24,12 @@ class TingClientZfHttpRequestAdapter extends TingClientHttpRequestAdapter
 	}
 	
 	protected function request(TingClientHttpRequest $request)
-	{
+	{		
+		
 		//Transfer request configuration to Zend Client 
 		$method = $request->getMethod();
-		$this->client->setMethod(self::$method);
+		$class = new ReflectionClass(get_class($this->client));
+		$this->client->setMethod($class->getConstant($method));
 		$this->client->setUri($request->getBaseUrl());
 		$this->client->setParameterGet($request->getParameters(TingClientHttpRequest::GET));
 		$this->client->setParameterPost($request->getParameters(TingClientHttpRequest::POST));

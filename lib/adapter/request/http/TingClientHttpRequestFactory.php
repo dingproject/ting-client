@@ -20,6 +20,7 @@ class TingClientHttpRequestFactory
 	{
 		$httpRequest = new TingClientHttpRequest();
 		$httpRequest->setMethod(TingClientHttpRequest::GET);
+		$httpRequest->setBaseUrl($this->baseUrl);
 		$httpRequest->setGetParameter('action', 'searchRequest');
 		
 		$methodParameterMap = array('query' => 'query',
