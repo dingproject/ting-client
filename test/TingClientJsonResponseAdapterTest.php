@@ -1,7 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/../vendor/simpletest/autorun.php';
-require_once dirname(__FILE__) . '/../lib/adapter/response/TingClientJsonResponseAdapter.php';
+require_once dirname(__FILE__) . '/../lib/adapter/response/json/TingClientJsonResponseAdapter.php';
 
 class TingClientJsonResponseAdapterTest extends UnitTestCase {
 
@@ -24,8 +24,19 @@ class TingClientJsonResponseAdapterTest extends UnitTestCase {
 		$this->assertEqual(sizeof($records), 1, 'Wrong number of expected records');
 		foreach ($records as $record)
 		{
-			$this->assertEqual($record->getTitles(), array('Danmark Kbh. : 1940'), 'Wrong title extracted');
-			$this->assertEqual($record->getTypes(), array('type'), 'Wrong type extracted');
+			//Data tests
+			$data = array('title' => array('Danmark Kbh. : 1940'),
+										'language' => array('Dansk'),
+										'type' => array('Tidsskrift'),
+										'publisher' => array('\\Kbh.\\'),
+										'subject' => array('05.6','Periodica af blandet indhold. Danmark'),
+										'date' => array('194? 194?'));
+			
+			foreach ($data as $name => $expectedValue)
+			{
+				$getter = 'get'.ucwords($name);
+				$this->assertEqual($record->getData()->$getter(), $expectedValue, 'Wrong data extracted for '.$name);				
+			}
 		}
 		
 		//Facet tests

@@ -1,6 +1,9 @@
 <?php
 
-class TingClientDublinCoreData
+$basePath = dirname(__FILE__);
+require_once $basePath.'/TingClientRecordData.php';
+
+class TingClientDublinCoreData implements TingClientRecordData
 {
 	
 	private $title;
@@ -18,6 +21,146 @@ class TingClientDublinCoreData
 	private $coverage;
 	private $rights;
 
+	function getTitle()
+	{
+		return $this->title;
+	}
+	
+	function setTitle($title)
+	{
+		$this->title = $title;
+	}
+	
+	function getCreator()
+	{
+		return $this->creator;
+	}
+	
+	function setCreator($creator)
+	{
+		$this->creator = $creator;
+	}
+	
+	function getSubject()
+	{
+		return $this->subject;
+	}
+	
+	function setSubject($subject)
+	{
+		$this->subject = $subject;
+	}
+	
+	function getDescription()
+	{
+		return $this->description;
+	}
+	
+	function setDescription($description)
+	{
+		$this->description = $description;
+	}
+	
+	function getPublisher()
+	{
+		return $this->publisher;
+	}
+	
+	function setPublisher($publisher)
+	{
+		$this->publisher = $publisher;
+	}
+	
+	function getContributor()
+	{
+		return $this->contributor;
+	}
+	
+	function setContributor($contributor)
+	{
+		$this->contributor = $contributor;
+	}
+	
+	function getDate()
+	{
+		return $this->date;
+	}
+	
+	function setDate($date)
+	{
+		$this->date = $date;
+	}
+	
+	function getType()
+	{
+		return $this->type;
+	}
+	
+	function setType($type)
+	{
+		$this->type = $type;
+	}
+	
+	function getFormat()
+	{
+		return $this->format;
+	}
+	
+	function setFormat($format)
+	{
+		$this->format = $format;
+	}
+	
+	function getSource()
+	{
+		return $this->source;
+	}
+	
+	function setSource($source)
+	{
+		$this->source = $source;
+	}
+	
+	function getLanguage()
+	{
+		return $this->language;
+	}
+	
+	function setLanguage($language)
+	{
+		$this->language = $language;
+	}
+	
+	function getRelation()
+	{
+		return $this->relation;
+	}
+	
+	function setRelation($relation)
+	{
+		$this->relation = $relation;
+	}
+	
+	function getCoverage()
+	{
+		return $this->coverage;
+	}
+	
+	function setCoverage($coverage)
+	{
+		$this->coverage = $coverage;
+	}
+	
+	function getRights()
+	{
+		return $this->rights;
+	}
+	
+	function setRights($rights)
+	{
+		$this->rights = $rights;
+	}
+	
 }
 
 ?>

@@ -3,7 +3,9 @@
 $basePath = dirname(__FILE__);
 require_once $basePath.'/../TingClientResponseAdapter.php';
 require_once $basePath.'/../../../search/TingClientSearchResult.php';
+require_once $basePath.'/../../../search/TingClientRecord.php';
 require_once $basePath.'/../../../search/TingClientFacetResult.php';
+require_once $basePath.'/../../../search/data/TingClientRecordDataFactory.php';
 
 class TingClientJsonResponseAdapter implements TingClientResponseAdapter 
 {
@@ -19,11 +21,16 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		
 		$result->setNumTotalRecords($response->searchResult->hitCount);
 		
-		foreach ($result->searchResult->records as $recordResult)
+		foreach ($response->searchResult->records as $recordsResult)
 		{
-			$record = new TingClientRecord();
-			$record->setId($recordResult->identifier);
-			
+			foreach ($recordsResult as $recordResult)
+			{
+				$record = new TingClientRecord();
+				$record->setId($recordResult->identifier);
+				$record->setData(TingClientRecordDataFactory::fromSearchRecordData($recordResult));
+				
+				$result->addRecord($record);
+			}
 		}
 		
 		foreach ($response->searchResult->facetResult as $facetResult)
