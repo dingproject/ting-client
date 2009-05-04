@@ -25,7 +25,7 @@ This example shows how the project is set up using HTTP and the [Zend Framework]
 
 To search the Ting API:
 
-* Setup the ««TingClient««
+* Setup the ``TingClient``
 * Configure the search query:
 		
 		$search = new TingClientSearchRequest('dc.title:danmark');
@@ -44,24 +44,24 @@ The Ting Client uses two primary classes:
 
 The Ting Client is bundled with request adapters using HTTP based on the following frameworks:
 
-* [Drupal 6](http://drupal.org/): ««TingClientDrupal6HttpRequestAdapter««
-* [Zend Framework](http://framework.zend.com/): ««TingClientZfHttpRequestAdapter««
+* [Drupal 6](http://drupal.org/): ``TingClientDrupal6HttpRequestAdapter``
+* [Zend Framework](http://framework.zend.com/): ``TingClientZfHttpRequestAdapter``
 
-Other protocols can be supported by adding new classes implementing the ««TingClientRequestAdapter«« interface.
+Other protocols can be supported by adding new classes implementing the ``TingClientRequestAdapter`` interface.
 
-Other frameworks can be supported under HTTP by adding new classes extended the ««TingClientHttpRequestAdapter«« abstract class.
+Other frameworks can be supported under HTTP by adding new classes extended the ``TingClientHttpRequestAdapter`` abstract class.
 
 ### Response
 
 The Ting Client is bundled with response adapters supporting the following formats:
 
-* [JSON](http://framework.zend.com/): ««TingClientJsonResponseAdapter««
+* [JSON](http://framework.zend.com/): ``TingClientJsonResponseAdapter``
 
-Other formats can be supported by adding new classes implementing the ««TingClientResponseAdapter«« interface.
+Other formats can be supported by adding new classes implementing the ``TingClientResponseAdapter`` interface.
 
 ## Tests
 
-The client is unit tested using [SimpleTest](http://simpletest.org/) which is included in the ««vender«« directory:
+The client is unit tested using [SimpleTest](http://simpletest.org/) which is included in the ``vender`` directory:
 
 * To run internal tests:
     
