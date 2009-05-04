@@ -55,7 +55,7 @@ Other frameworks can be supported under HTTP by adding new classes extended the 
 
 The Ting Client is bundled with response adapters supporting the following formats:
 
-* [JSON](http://framework.zend.com/): ``TingClientJsonResponseAdapter``
+* JSON: ``TingClientJsonResponseAdapter``
 
 Other formats can be supported by adding new classes implementing the ``TingClientResponseAdapter`` interface.
 
