@@ -10,16 +10,16 @@ The client has been developed for use with [Drupal 6](http://drupal.org/) and [Z
 
 ## Usage
 
-All use of the Ting API requires creating and configuring a TingClient object which determines how the client will access the API.
+All use of the Ting API requires creating and configuring a TingClient object based on a request adapter and a response adapter. This determines how the client will access the API.
 
-This example shows how the project is set up using HTTP and the [Zend Framework](http://framework.zend.com/). 
+This example shows how the client is set up using HTTP and [Zend Framework](http://framework.zend.com/). 
 
 		$client = new TingClient(
 								new TingClientZfHttpRequestAdapter(
 									new Zend_Http_Client(),
 									new TingClientHttpRequestFactory($this->baseUrl)), 
 								new TingClientJsonResponseAdapter()
-							);	
+							);
 
 ### Search
 
@@ -61,7 +61,7 @@ Other formats can be supported by adding new classes implementing the ``TingClie
 
 ## Tests
 
-The client is unit tested using [SimpleTest](http://simpletest.org/) which is included in the ``vender`` directory:
+The client is unit tested using [SimpleTest](http://simpletest.org/) which is included in the ``vendor`` directory:
 
 * To run internal tests:
     
