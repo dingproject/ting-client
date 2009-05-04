@@ -53,9 +53,11 @@ class TingClientLiveTest extends UnitTestCase {
 	function testFacets()
 	{
 		$facetName = 'dc.title';
+		$numFacets = 1;
 		
 		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
 		$searchRequest->setFacets('dc.title');
+		$searchRequest->setNumFacets($numFacets);
 		$searchRequest->setOutput('json');		
 		$searchResult = $this->client->search($searchRequest);
 
@@ -63,11 +65,9 @@ class TingClientLiveTest extends UnitTestCase {
 		
 		$searchFacetFound = false;
 		$facetResults = $searchResult->getFacets();
-		foreach ($facetResults as $facet)
-		{
-			$searchFacetFound |= $facet->getName() == $facetName;
-		}
-		$this->assertTrue($searchFacetFound, 'Expected facet used in search was not part of search result');						
+		$facet = array_shift($facetResults);
+		$this->assertEqual($facet->getName(), $facetName, 'Expected facet used in search was not part of search result');
+		$this->assertEqual(sizeof($facet->getTerms()), $numFacets, 'Expected number of facet terms does not match expected number');						
 	}
 
 }
