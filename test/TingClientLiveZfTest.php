@@ -37,6 +37,17 @@ class TingClientLiveTest extends UnitTestCase {
 		
 		$this->assertNoErrors('Search should not throw errors');
 	}
+	
+	function testRequestInternationalChars()
+	{
+		//Test using international characters ®¯
+		$searchRequest = new TingClientSearchRequest('dc.title:¾blegr¿d');
+		$searchRequest->setOutput('json');		
+		$searchResult = $this->client->search($searchRequest);
+		
+		$this->assertNoErrors('Search should not throw errors');
+	}
+	
 
 	function testNumResults()
 	{
@@ -50,13 +61,13 @@ class TingClientLiveTest extends UnitTestCase {
 		$this->assertEqual(sizeof($searchResult->getRecords()), 1, 'Returned number of results does not match requested number');						
 	}
 	
-	function testFacets()
+	function testFacet()
 	{
 		$facetName = 'dc.title';
 		$numFacets = 1;
 		
 		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
-		$searchRequest->setFacets('dc.title');
+		$searchRequest->setFacets($facetName);
 		$searchRequest->setNumFacets($numFacets);
 		$searchRequest->setOutput('json');		
 		$searchResult = $this->client->search($searchRequest);
@@ -67,7 +78,30 @@ class TingClientLiveTest extends UnitTestCase {
 		$facetResults = $searchResult->getFacets();
 		$facet = array_shift($facetResults);
 		$this->assertEqual($facet->getName(), $facetName, 'Expected facet used in search was not part of search result');
-		$this->assertEqual(sizeof($facet->getTerms()), $numFacets, 'Expected number of facet terms does not match expected number');						
+		$this->assertEqual(sizeof($facet->getTerms()), $numFacets, 'Returned number of facet terms does not match expected number');						
 	}
+	
+	function testMultipleFacets()
+	{
+		$facetNames = array('dc.title', 'dc.creator', 'dc.subject');
+		$numFacets = 3;
+		
+		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
+		$searchRequest->setFacets($facetNames);
+		$searchRequest->setNumFacets($numFacets);
+		$searchRequest->setOutput('json');		
+		$searchResult = $this->client->search($searchRequest);
 
+		$this->assertNoErrors('Search should not throw errors');
+		
+		$facetResults = $searchResult->getFacets();
+		$this->assertEqual(sizeof($facetResults), sizeof($facetNames), 'Returned number of facets does not match expected number');
+		foreach ($facetResults as $facetResult)
+		{
+			$this->assertTrue(in_array($facet->getName(), $facetNames), 'Returned facet '.$facet->getName().' was not part of expected facets');
+			$this->assertEqual(sizeof($facet->getTerms()), $numFacets, 'Returned number of facet terms for '.$facet->getName().' does not match expected number');
+		}
+						
+	}
+	
 }
