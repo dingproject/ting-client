@@ -24,15 +24,18 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		
 		$result->setNumTotalRecords($response->searchResult->hitCount);
 		
-		foreach ($response->searchResult->records as $recordsResult)
+		if (isset($response->searchResult->records) && is_object($response->searchResult->records))
 		{
-			foreach ($recordsResult as $recordResult)
+			foreach ($response->searchResult->records as $recordsResult)
 			{
-				$record = new TingClientRecord();
-				$record->setId($recordResult->identifier);
-				$record->setData(TingClientRecordDataFactory::fromSearchRecordData($recordResult));
-				
-				$result->addRecord($record);
+				foreach ($recordsResult as $recordResult)
+				{
+					$record = new TingClientRecord();
+					$record->setId($recordResult->identifier);
+					$record->setData(TingClientRecordDataFactory::fromSearchRecordData($recordResult));
+					
+					$result->addRecord($record);
+				}
 			}
 		}
 		
