@@ -55,5 +55,18 @@ class TingClientJsonResponseAdapterTest extends UnitTestCase {
 			}
 		}		
 	}
+	
+	function testEmptyResponse()
+	{
+		$json = file_get_contents(dirname(__FILE__).'/examples/json/empty.js');
+		
+		$responseAdapter = new TingClientJsonResponseAdapter();
+		$result = $responseAdapter->parseSearchResult($json);
+
+		$this->assertEqual($result->getNumTotalRecords(), 0, 'Wrong total number of records');
+		$this->assertEqual(sizeof($result->getRecords()), 0, 'Wrong number of records');
+		$this->assertEqual(sizeof($result->getFacets()), 'Wrong number of facets');
+	}
+	
 
 }
