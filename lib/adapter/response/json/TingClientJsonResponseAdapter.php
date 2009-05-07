@@ -11,7 +11,7 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 
 	/**
 	 * @param string $responseString
-	 * @return TingSearchResult
+	 * @return TingClientSearchResult
 	 */
 	public function parseSearchResult($responseString)
 	{
@@ -19,7 +19,7 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		$response = json_decode($responseString);
 		if (!$response)
 		{
-			throw new TingClientException('Unable to decode response as JSON: '.$response);
+			throw new TingClientException('Unable to decode response as JSON: '.$responseString);
 		}
 		
 		$result->setNumTotalRecords($response->searchResult->hitCount);
