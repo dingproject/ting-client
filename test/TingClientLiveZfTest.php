@@ -101,10 +101,9 @@ class TingClientLiveTest extends UnitTestCase {
 		$this->assertEqual(sizeof($facetResults), sizeof($facetNames), 'Returned number of facets does not match expected number');
 		foreach ($facetResults as $facetResult)
 		{
-			$this->assertTrue(in_array($facet->getName(), $facetNames), 'Returned facet '.$facet->getName().' was not part of expected facets');
-			$this->assertEqual(sizeof($facet->getTerms()), $numFacets, 'Returned number of facet terms for '.$facet->getName().' does not match expected number');
+			$this->assertTrue(in_array($facetResult->getName(), $facetNames), 'Returned facet '.$facetResult->getName().' was not part of expected facets');
+			$this->assertEqual(sizeof($facetResult->getTerms()), $numFacets, 'Returned number of facet terms for '.$facetResult->getName().' does not match expected number');
 		}
 						
 	}
-	
 }
