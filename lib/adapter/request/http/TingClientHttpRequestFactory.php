@@ -2,15 +2,27 @@
 
 require_once dirname(__FILE__).'/TingClientHttpRequest.php';
 require_once dirname(__FILE__).'/../../../search/TingClientSearchRequest.php';
+require_once dirname(__FILE__).'/../../../log/TingClientVoidLogger.php';
 
 class TingClientHttpRequestFactory
 {
 	private $baseUrl;
 	
-	function __construct($baseUrl)
+	/**
+	 * @var TingClientLogger
+	 */
+	private $logger;
+	
+	function __construct($baseUrl, TingClientLogger $logger = NULL)
 	{
 		$this->baseUrl = $baseUrl;
+		$this->logger = (isset($logger)) ? $logger : new TingClientVoidLogger();
 	}
+	
+	function setLogger(TingClientLogger $logger)
+	{
+		$this->logger = $logger;
+	}	
 	
 	/**
 	 * @param TingClientSearchRequest $searchRequest

@@ -6,6 +6,7 @@ require_once dirname(__FILE__) . '/../lib/adapter/request/http/TingClientHttpReq
 require_once dirname(__FILE__) . '/../lib/adapter/response/json/TingClientJsonResponseAdapter.php';
 require_once dirname(__FILE__) . '/../lib/TingClient.php';
 require_once dirname(__FILE__) . '/../lib/search/TingClientSearchRequest.php';
+require_once dirname(__FILE__) . '/../lib/log/TingClientSimpleTestLogger.php';
 
 require_once 'Zend/Http/Client.php';
 
@@ -24,7 +25,9 @@ class TingClientLiveTest extends UnitTestCase {
 																													new TingClientHttpRequestFactory($this->baseUrl));
 		$responseAdapter = new TingClientJsonResponseAdapter();
 
-		$this->client = new TingClient($requestAdapter, $responseAdapter);
+		$this->client = new TingClient(	$requestAdapter, 
+																		$responseAdapter, 
+																		new TingClientSimpleTestLogger($this));
 		
 	}
 	

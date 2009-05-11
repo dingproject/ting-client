@@ -11,6 +11,7 @@ class TingClientHttpRequestFactoryTest extends UnitTestCase {
 	function testSearchRequestGeneration()
 	{
 		$factory = new TingClientHttpRequestFactory($this->baseUrl);
+		$factory->setLogger(new TingClientSimpleTestLogger($this));
 		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
 		
 		$httpRequest = $factory->fromSearchRequest($searchRequest);

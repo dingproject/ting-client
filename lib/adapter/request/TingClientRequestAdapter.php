@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__).'/../../search/TingClientSearchRequest.php';
+require_once dirname(__FILE__).'/../../log/TingClientLogger.php';
 
 interface TingClientRequestAdapter
 {
@@ -9,6 +10,8 @@ interface TingClientRequestAdapter
 	 * @param TingClientSearchRequest $request
 	 * @return string The response body
 	 */
-	function search(TingClientSearchRequest $searchRequest);
+	public function search(TingClientSearchRequest $searchRequest);
+	
+	public function setLogger(TingClientLogger $logger);
 	
 }

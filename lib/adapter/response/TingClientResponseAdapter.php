@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__).'/../../log/TingClientLogger.php';
+
 interface TingClientResponseAdapter
 {
 
@@ -9,5 +11,7 @@ interface TingClientResponseAdapter
 	 * @param string $responseString
 	 */
 	public function parseSearchResult($responseString);
+	
+	public function setLogger(TingClientLogger $logger);
 	
 }

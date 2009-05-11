@@ -5,10 +5,26 @@ require_once dirname(__FILE__).'/../../../search/TingClientSearchResult.php';
 require_once dirname(__FILE__).'/../../../search/TingClientRecord.php';
 require_once dirname(__FILE__).'/../../../search/TingClientFacetResult.php';
 require_once dirname(__FILE__).'/../../../search/data/TingClientRecordDataFactory.php';
+require_once dirname(__FILE__).'/../../../log/TingClientLogger.php';
 
 class TingClientJsonResponseAdapter implements TingClientResponseAdapter 
 {
+	
+	/**
+	 * @var TingClientLogger
+	 */
+	private $logger;
 
+	public function __construct(TingClientLogger $logger = NULL)
+	{
+		$this->logger = (isset($logger)) ? $logger : new TingClientVoidLogger();
+	}
+	
+	public function setLogger(TingClientLogger $logger)
+	{
+		$this->logger = $logger;
+	}
+	
 	/**
 	 * @param string $responseString
 	 * @return TingClientSearchResult
@@ -30,6 +46,8 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 			{
 				foreach ($recordsResult as $recordResult)
 				{
+					$this->logger->log('Extracting search result '.$recordResult->identifier, TingClientLogger::DEBUG);
+					
 					$record = new TingClientRecord();
 					$record->setId($recordResult->identifier);
 					$record->setData(TingClientRecordDataFactory::fromSearchRecordData($recordResult));
@@ -38,9 +56,11 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 				}
 			}
 		}
-		
+
+		$this->logger->log('Extracting '.sizeof($response->searchResult->facetResult).' facets', TingClientLogger::INFO);
 		foreach ($response->searchResult->facetResult as $facetResult)
 		{
+			$this->logger->log('Extracting facet '.$facetResult->facetName, TingClientLogger::DEBUG);
 			$facet = new TingClientFacetResult();
 			$facet->setName($facetResult->facetName);
 			foreach ($facetResult->facetTerm as $term)

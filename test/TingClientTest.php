@@ -6,6 +6,7 @@ require_once dirname(__FILE__) . '/../lib/adapter/request/http/TingClientHttpReq
 require_once dirname(__FILE__) . '/../lib/adapter/response/json/TingClientJsonResponseAdapter.php';
 require_once dirname(__FILE__) . '/../lib/TingClient.php';
 require_once dirname(__FILE__) . '/../lib/search/TingClientSearchRequest.php';
+require_once dirname(__FILE__) . '/../lib/log/TingClientSimpleTestLogger.php';
 
 class TingClientTest extends UnitTestCase {
 
@@ -21,7 +22,7 @@ class TingClientTest extends UnitTestCase {
 		$requestAdapter->setResponse(file_get_contents(dirname(__FILE__).'/examples/json/single.js'));
 		$responseAdapter = new TingClientJsonResponseAdapter();
 
-		$client = new TingClient($requestAdapter, $responseAdapter);
+		$client = new TingClient($requestAdapter, $responseAdapter, new TingClientSimpleTestLogger($this));
 		$client->search(new TingClientSearchRequest('dc.title:danmark'));
 		$this->assertNoErrors('Search should not throw errors!');
 	}

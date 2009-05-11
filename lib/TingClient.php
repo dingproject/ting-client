@@ -2,6 +2,7 @@
 
 require_once dirname(__FILE__).'/adapter/request/TingClientRequestAdapter.php';
 require_once dirname(__FILE__).'/adapter/response/TingClientResponseAdapter.php';
+require_once dirname(__FILE__).'/log/TingClientVoidLogger.php';
 
 class TingClient
 {
@@ -16,11 +17,19 @@ class TingClient
 	 */
 	private $responseAdapter;
 	
+	/**
+	 * @var TingClientLogger
+	 */
+	private $logger;
+	
 	function __construct(TingClientRequestAdapter $requestAdapter,
-						 TingClientResponseAdapter $responseAdapter)
+						 TingClientResponseAdapter $responseAdapter, TingClientLogger $logger = NULL)
 	{
+		$this->logger = (isset($logger)) ? $logger : new TingClientVoidLogger();
 		$this->requestAdapter = $requestAdapter;
+		$this->requestAdapter->setLogger($this->logger);
 		$this->responseAdapter = $responseAdapter;
+		$this->responseAdapter->setLogger($this->logger);
 	}
 	
 	/**

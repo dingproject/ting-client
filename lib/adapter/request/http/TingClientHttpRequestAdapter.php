@@ -4,6 +4,7 @@ require_once dirname(__FILE__).'/../TingClientRequestAdapter.php';
 require_once dirname(__FILE__).'/TingClientHttpRequest.php';
 require_once dirname(__FILE__).'/TingClientHttpRequestFactory.php';
 require_once dirname(__FILE__).'/../../../search/TingClientSearchRequest.php';
+require_once dirname(__FILE__).'/../../../log/TingClientVoidLogger.php';
 
 abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 {
@@ -12,9 +13,15 @@ abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 	 * @var TingClientHttpRequestFactory
 	 */
 	private $httpRequestFactory;
+	
+	/**
+	 * @var TingClientLogger
+	 */
+	protected $logger;
 
 	function __construct(TingClientHttpRequestFactory $httpRequestFactory)
 	{
+		$this->logger = new TingClientVoidLogger();
 		$this->httpRequestFactory = $httpRequestFactory;
 	}
 	
@@ -23,13 +30,21 @@ abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 		$this->httpRequestFactory = $httpRequestFactory;
 	}
 	
+	public function setLogger(TingClientLogger $logger)
+	{
+		$this->logger = $logger;
+		$this->httpRequestFactory->setLogger($logger);
+	}
+	
 	/**
 	 * @param TingClientSearchRequest $request
 	 * @return string The response body
 	 */
 	public function search(TingClientSearchRequest $searchRequest)
 	{
-		return $this->request($this->httpRequestFactory->fromSearchRequest($searchRequest));
+		$httpRequest = $this->httpRequestFactory->fromSearchRequest($searchRequest);
+		$this->logger->log('Sending search request to '.$httpRequest->getUrl(), TingClientLogger::INFO);
+		return $this->request($httpRequest);
 	}
 
 	/**

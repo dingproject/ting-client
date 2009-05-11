@@ -2,6 +2,8 @@
 
 require_once dirname(__FILE__) . '/../vendor/simpletest/autorun.php';
 require_once dirname(__FILE__) . '/../lib/adapter/response/json/TingClientJsonResponseAdapter.php';
+require_once dirname(__FILE__) . '/../lib/log/TingClientSimpleTestLogger.php';
+
 
 class TingClientJsonResponseAdapterTest extends UnitTestCase {
 
@@ -15,6 +17,7 @@ class TingClientJsonResponseAdapterTest extends UnitTestCase {
 		$json = file_get_contents(dirname(__FILE__).'/examples/json/single.js');
 		
 		$responseAdapter = new TingClientJsonResponseAdapter();
+		$responseAdapter->setLogger(new TingClientSimpleTestLogger($this));
 		$result = $responseAdapter->parseSearchResult($json);
 
 		$this->assertEqual($result->getNumTotalRecords(), '13926', 'Wrong total number of records');
@@ -61,6 +64,7 @@ class TingClientJsonResponseAdapterTest extends UnitTestCase {
 		$json = file_get_contents(dirname(__FILE__).'/examples/json/empty.js');
 		
 		$responseAdapter = new TingClientJsonResponseAdapter();
+		$responseAdapter->setLogger(new TingClientSimpleTestLogger($this));
 		$result = $responseAdapter->parseSearchResult($json);
 
 		$this->assertEqual($result->getNumTotalRecords(), 0, 'Wrong total number of records');
