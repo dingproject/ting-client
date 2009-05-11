@@ -37,7 +37,12 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		{
 			throw new TingClientException('Unable to decode response as JSON: '.$responseString);
 		}
-		
+		if (!is_object($response))
+		{
+			throw new TingClientException('Unexpected JSON response: '.var_export($response, true));
+		}
+
+		$this->logger->log('Total number of results '.$response->searchResult->hitCount, TingClientLogger::INFO);
 		$result->setNumTotalRecords($response->searchResult->hitCount);
 		
 		if (isset($response->searchResult->records) && is_object($response->searchResult->records))
@@ -70,7 +75,6 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 			
 			$result->addFacet($facet);
 		}
-		
 		
 		return $result;
 	}
