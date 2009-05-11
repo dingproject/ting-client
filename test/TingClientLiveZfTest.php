@@ -43,15 +43,22 @@ class TingClientLiveTest extends UnitTestCase {
 	
 	function testRequestInternationalChars()
 	{
-		//Test using international characters ®¯
-		$searchRequest = new TingClientSearchRequest('dc.title:¾blegr¿d');
+		//Test using international characters Ã†Ã˜Ã…
+		$searchRequest = new TingClientSearchRequest('dc.title:blÃ¥bÃ¦rgrÃ¸d');
 		$searchRequest->setOutput('json');		
 		$searchResult = $this->client->search($searchRequest);
 		
 		$this->assertNoErrors('Search should not throw errors');
+		
+		//Ã† as first character
+		$searchRequest = new TingClientSearchRequest('dc.title:Ã¦blegrÃ¸d');
+		$searchRequest->setOutput('json');		
+		$searchResult = $this->client->search($searchRequest);
+		
+		$this->assertNoErrors('Search should not throw errors');
+		
 	}
 	
-
 	function testNumResults()
 	{
 		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
