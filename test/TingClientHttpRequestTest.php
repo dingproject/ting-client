@@ -29,13 +29,5 @@ class TingClientHttpRequestTest extends UnitTestCase {
 		$request->setParameter(TingClientHttpRequest::POST, 'pish', 'posh');
 		$this->assertEqual($request->getUrl(), $this->baseUrl.'?foo=bar&baz=boink&bik=bok');
 	}
-	
-	function testArrayParameterUrlGeneration()
-	{
-		$request = new TingClientHttpRequest();
-		$request->setBaseUrl($this->baseUrl);
-		$request->setParameter(TingClientHttpRequest::GET, 'foo', array('bar', 'baz'));
-		$this->assertEqual($request->getUrl(), $this->baseUrl.'?foo=bar&foo=baz');
-	}
 
 }

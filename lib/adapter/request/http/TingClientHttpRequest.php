@@ -59,22 +59,7 @@ class TingClientHttpRequest
 	
 	public function getUrl()
 	{
-		$parameters = array();
-		foreach ($this->getParameters(TingClientHttpRequest::GET) as $name => $value)
-		{
-			if (!is_array($value))
-			{
-				$parameters[] = urlencode($name).'='.urlencode($value);
-			}
-			else
-			{
-				foreach ($value as $v)
-				{
-					$parameters[] = urlencode($name).'='.urlencode($v);
-				}
-			}
-		}
-		return $this->getBaseUrl().'?'.implode('&', $parameters);
+		return $this->getBaseUrl().'?'.http_build_query($this->getGetParameters(), NULL, '&');
 	}
 	
 	public function getParameters($method)
