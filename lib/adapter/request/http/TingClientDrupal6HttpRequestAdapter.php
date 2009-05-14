@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__).'/TingClientHttpRequestAdapter.php';
+require_once dirname(__FILE__).'/TingClientHttpRequestFactory.php';
 require_once dirname(__FILE__).'/TingClientHttpRequest.php';
 require_once dirname(__FILE__).'/../../../exception/TingClientException.php';
 
@@ -8,9 +9,10 @@ class TingClientDrupal6HttpRequestAdapter extends TingClientHttpRequestAdapter
 {
 	private $numRetries;
 	
-	function __construct($options = array())
+	function __construct(TingClientHttpRequestFactory $httpRequestFactory, $options = array())
 	{
 		$this->numRetries = (isset($options['num_retries'])) ? $options['num_retries'] : 3;
+		parent::__construct($httpRequestFactory);
 	}
 	
 	protected function request(TingClientHttpRequest $request)
