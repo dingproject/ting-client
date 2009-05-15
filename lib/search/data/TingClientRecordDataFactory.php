@@ -31,8 +31,7 @@ class TingClientRecordDataFactory
 		
 		foreach ($recordData->dc as $attribute => $value)
 		{
-			$setter = 'set'.ucwords($attribute);
-			$data->$setter($value);
+			$data->$attribute = $value;
 		}
 		return $data;	
 	}

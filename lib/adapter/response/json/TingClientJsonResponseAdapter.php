@@ -43,7 +43,7 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		}
 
 		$this->logger->log('Total number of results '.$response->searchResult->hitCount, TingClientLogger::INFO);
-		$result->setNumTotalRecords($response->searchResult->hitCount);
+		$result->numTotalRecords = $response->searchResult->hitCount;
 		
 		if (isset($response->searchResult->records) && is_object($response->searchResult->records))
 		{
@@ -54,10 +54,10 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 					$this->logger->log('Extracting search result '.$recordResult->identifier, TingClientLogger::DEBUG);
 					
 					$record = new TingClientRecord();
-					$record->setId($recordResult->identifier);
-					$record->setData(TingClientRecordDataFactory::fromSearchRecordData($recordResult));
+					$record->id = $recordResult->identifier;
+					$record->data = TingClientRecordDataFactory::fromSearchRecordData($recordResult);
 					
-					$result->addRecord($record);
+					$result->records[] = $record;
 				}
 			}
 		}
@@ -67,13 +67,13 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		{
 			$this->logger->log('Extracting facet '.$facetResult->facetName, TingClientLogger::DEBUG);
 			$facet = new TingClientFacetResult();
-			$facet->setName($facetResult->facetName);
+			$facet->name = $facetResult->facetName;
 			foreach ($facetResult->facetTerm as $term)
 			{
-				$facet->addTerm($term->term, $term->frequence);
+				$facet->terms[$term->term] = $term->frequence;
 			}
 			
-			$result->addFacet($facet);
+			$result->facets[$facet->name] = $facet;
 		}
 		
 		return $result;
