@@ -11,7 +11,7 @@ class TingClientSearchRequest
 		private $sort;
 		private $output;
 	
-		function __construct($query)
+		function __construct($query = null)
 		{
 			$this->query = $query;
 		}
