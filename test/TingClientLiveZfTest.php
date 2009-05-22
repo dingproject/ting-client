@@ -68,7 +68,7 @@ class TingClientLiveTest extends UnitTestCase {
 
 		$this->assertNoErrors('Search should not throw errors');
 		
-		$this->assertEqual(sizeof($searchResult->getRecords()), 1, 'Returned number of results does not match requested number');						
+		$this->assertEqual(sizeof($searchResult->records), 1, 'Returned number of results does not match requested number');						
 	}
 	
 	function testFacet()
@@ -85,10 +85,10 @@ class TingClientLiveTest extends UnitTestCase {
 		$this->assertNoErrors('Search should not throw errors');
 		
 		$searchFacetFound = false;
-		$facetResults = $searchResult->getFacets();
+		$facetResults = $searchResult->facets;
 		$facet = array_shift($facetResults);
-		$this->assertEqual($facet->getName(), $facetName, 'Expected facet used in search was not part of search result');
-		$this->assertEqual(sizeof($facet->getTerms()), $numFacets, 'Returned number of facet terms does not match expected number');						
+		$this->assertEqual($facet->name, $facetName, 'Expected facet used in search was not part of search result');
+		$this->assertEqual(sizeof($facet->terms), $numFacets, 'Returned number of facet terms does not match expected number');						
 	}
 	
 	function testMultipleFacets()
@@ -104,13 +104,42 @@ class TingClientLiveTest extends UnitTestCase {
 
 		$this->assertNoErrors('Search should not throw errors');
 		
-		$facetResults = $searchResult->getFacets();
+		$facetResults = $searchResult->facets;
 		$this->assertEqual(sizeof($facetResults), sizeof($facetNames), 'Returned number of facets does not match expected number');
 		foreach ($facetResults as $facetResult)
 		{
-			$this->assertTrue(in_array($facetResult->getName(), $facetNames), 'Returned facet '.$facetResult->getName().' was not part of expected facets');
-			$this->assertEqual(sizeof($facetResult->getTerms()), $numFacets, 'Returned number of facet terms for '.$facetResult->getName().' does not match expected number');
+			$this->assertTrue(in_array($facetResult->name, $facetNames), 'Returned facet '.$facetResult->name.' was not part of expected facets');
+			$this->assertEqual(sizeof($facetResult->terms), $numFacets, 'Returned number of facet terms for '.$facetResult->name.' does not match expected number');
+		}					
+	}
+	
+	function testFacetNarrowing()
+	{
+
+		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
+		$searchRequest->setFacets(array('dc.creator'));
+		$searchRequest->setNumFacets(10);
+		$searchRequest->setOutput('json');		
+		$searchResult = $this->client->search($searchRequest);
+		
+		$this->assertNoErrors('Search should not throw errors');
+		
+		$facetCount = 0;
+		$facet = array_shift($searchResult->facets);
+		foreach ($facet->terms as $facetTerm => $facetCount)
+		{
+			if ($facetCount < $searchResult->numTotalRecords)
+			{
+				$query = $searchRequest->getQuery();
+				$query .= ' and '.$facet->name.':'.$facetTerm;
+				break;
+			}
 		}
-						
+		$searchRequest->setQuery($query);
+		
+		$narrowedSearchResult = $this->client->search($searchRequest);
+		
+		$this->assertTrue($narrowedSearchResult->numTotalRecords < $searchResult->numTotalRecords, 'Total number of results in narrowed result ('.$narrowedSearchResult->numTotalRecords.') should be less than original result ('.$searchResult->numTotalRecords.')');
+		$this->assertEqual($facetCount, $narrowedSearchResult->numTotalRecords, 'Number of results in narrowed search result ('.$narrowedSearchResult->numTotalRecords.') should be equal to count from narrowing facet term ('.$facetCount.')');
 	}
 }
