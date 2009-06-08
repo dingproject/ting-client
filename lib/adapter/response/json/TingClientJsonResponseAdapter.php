@@ -1,9 +1,6 @@
 <?php
 
 require_once dirname(__FILE__).'/../TingClientResponseAdapter.php';
-require_once dirname(__FILE__).'/../../../search/TingClientSearchResult.php';
-require_once dirname(__FILE__).'/../../../search/TingClientRecord.php';
-require_once dirname(__FILE__).'/../../../search/TingClientFacetResult.php';
 require_once dirname(__FILE__).'/../../../search/data/TingClientRecordDataFactory.php';
 require_once dirname(__FILE__).'/../../../log/TingClientLogger.php';
 
