@@ -1,7 +1,6 @@
 <?php
 
 require_once dirname(__FILE__).'/../TingClientResponseAdapter.php';
-require_once dirname(__FILE__).'/../../../search/data/TingClientRecordDataFactory.php';
 require_once dirname(__FILE__).'/../../../log/TingClientLogger.php';
 
 class TingClientJsonResponseAdapter implements TingClientResponseAdapter 
