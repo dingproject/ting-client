@@ -46,7 +46,17 @@ abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 		$this->logger->log('Sending search request to '.$httpRequest->getUrl(), TingClientLogger::INFO);
 		return $this->request($httpRequest);
 	}
-
+	
+	/**
+	 * @param string $request
+	 * @return string The response body
+	 */
+	public function scan($scanRequest)
+	{
+		$httpRequest = $this->httpRequestFactory->fromSearchRequest($searchRequest);
+		$this->logger->log('Sending scan request to '.$httpRequest->getUrl(), TingClientLogger::INFO);
+		return $this->request($httpRequest);
+	}
 	/**
 	 * @param TingClientHttpRequest $request
 	 * @return string The response body

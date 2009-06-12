@@ -56,4 +56,36 @@ class TingClientHttpRequestFactory
 		return $httpRequest;
 	}
 	
+	/**
+	 * @param TingClientSearchRequest $searchRequest
+	 * @return TingClientHttpRequest
+	 */
+	function fromScanRequest(TingClientSearchRequest $searchRequest)
+	{
+		$httpRequest = new TingClientHttpRequest();
+		$httpRequest->setMethod(TingClientHttpRequest::GET);
+		$httpRequest->setBaseUrl($this->baseUrl);
+		$httpRequest->setGetParameter('action', 'searchRequest');
+		
+		$methodParameterMap = array('field' => 'field',
+																'prefix' => 'prefix',
+																'numResults' => 'limit',
+																'lower' => 'lower',
+																'upper' => 'upper',
+																'minFrequency' => 'minFrequency',
+																'maxFrequency' => 'maxFrequency'
+																);
+		
+		foreach ($methodParameterMap as $method => $parameter)
+		{
+			$getter = 'get'.ucfirst($method);
+			if ($value = $searchRequest->$getter())
+			{
+				$httpRequest->setParameter(TingClientHttpRequest::GET, $parameter, $value);
+			}
+		}
+		
+		return $httpRequest;
+	}	
+	
 }

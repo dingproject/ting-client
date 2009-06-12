@@ -42,6 +42,16 @@ class TingClient
 		return $this->responseAdapter->parseSearchResult($response);
 	}
 	
+	/**
+	 * @param string $string
+	 * @return TingClientScanResult
+	 */
+	public function scan($scanString)
+	{
+		$response = $this->requestAdapter->scan($scanString);
+		return $this->responseAdapter->parseScanResult($response);
+	}
+	
 }
 
 ?>

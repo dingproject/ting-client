@@ -12,6 +12,12 @@ interface TingClientResponseAdapter
 	 * @return TingClientSearchResult
 	 */
 	public function parseSearchResult($responseString);
+
+	/**
+	 * @param string $responseString
+	 * @return TingClientScanResult
+	 */
+	public function parseScanResult($responseString);
 	
 	public function setLogger(TingClientLogger $logger);
 	

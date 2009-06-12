@@ -28,15 +28,7 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 	public function parseSearchResult($responseString)
 	{
 		$result = new TingClientSearchResult();
-		$response = json_decode($responseString);
-		if (!$response)
-		{
-			throw new TingClientException('Unable to decode response as JSON: '.$responseString);
-		}
-		if (!is_object($response))
-		{
-			throw new TingClientException('Unexpected JSON response: '.var_export($response, true));
-		}
+		$response = $this->parseJson($responseString);
 
 		$this->logger->log('Total number of results '.$response->searchResult->hitCount, TingClientLogger::INFO);
 		$result->numTotalRecords = $response->searchResult->hitCount;
@@ -73,6 +65,41 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * @param string $responseString
+	 * @return TingClientScanResult
+	 */
+	public function parseScanResult($responseString)
+	{
+		$result = new TingClientScanResult();
+		$response = $this->parseJson($responseString);
+
+		if (isset($response->terms) && is_array($response->terms))
+		{
+			foreach ($response->terms as $scanResult)
+			{
+					$term = new TingClientScanTerm();
+					$record->name = $scanResult->name;
+					$record->term = $scanResult->term;
+					$result->terms[] = $term;
+			}
+		}
+		return $result;
+	}
+	
+	private function parseJson($response)
+	{
+		$response = json_decode($responseString);
+		if (!$response)
+		{
+			throw new TingClientException('Unable to decode response as JSON: '.$responseString);
+		}
+		if (!is_object($response))
+		{
+			throw new TingClientException('Unexpected JSON response: '.var_export($response, true));
+		}
 	}
 
 }
