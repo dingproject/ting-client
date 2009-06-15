@@ -5,8 +5,13 @@ class TingClientRecordIdentifier
 	
 	const ISSN = 'ISSN';
 	const ISBN = 'ISBN';
-	static public $TYPES = array(	self::ISSN,
-																self::ISBN);
+	const URL = 'URL';
+	const UNKNOWN = 'UNKNOWN';
+
+	static private $ID_TYPE_MAP = array(self::ISSN => '/^ISSN:\s(.*)/i', 
+																			self::ISBN => '/^ISBN:\s(.*)/i',
+																			self::URL => '/^(http\:\/\/[a-zA-Z0-9_\-]+(?:\.[a-zA-Z0-9_\-]+)*\.[a-zA-Z]{2,4}(?:\/[a-zA-Z0-9_]+)*(?:\/[a-zA-Z0-9_]+\.[a-zA-Z]{2,4}(?:\?[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)?)?(?:\&[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)*)$/i');
+																
 	private $type;
 	private $id;
 	
@@ -31,22 +36,16 @@ class TingClientRecordIdentifier
 	 */
 	public static function factory($string)
 	{
-		$type = FALSE;
-		foreach (self::$TYPES as $t)
+		$type = self::UNKNOWN;
+		foreach (self::$ID_TYPE_MAP as $t => $regExp)
 		{
-			if (strpos($string, $t) !== FALSE)
+			if (preg_match($regExp, $string, $matches))
 			{
 				$type = $t;
+				$id = $matches[1];
 				break;
 			}
 		}
-		
-		if (!$type)
-		{
-			throw new TingClientException('Unable to determine type from string: '.$string);	
-		}
-		
-		$id = substr($string, strpos($string, ': ') + 2);
 		
 		return new TingClientRecordIdentifier($type, $id);
 	}
