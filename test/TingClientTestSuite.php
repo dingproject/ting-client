@@ -8,6 +8,7 @@ class TingClientLocalTestSuide extends TestSuite {
         $this->addFile('TingClientJsonResponseAdapterTest.php');
         $this->addFile('TingClientHttpRequestTest.php');
         $this->addFile('TingClientHttpRequestFactoryTest.php');
+        $this->addFile('TingClientRecordIdentifierTest.php');
 	}
 	
 	public function addFile($file)

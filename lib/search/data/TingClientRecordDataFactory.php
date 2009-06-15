@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__).'/TingClientDublinCoreData.php';
+require_once dirname(__FILE__).'/identifier/TingClientRecordIdentifier.php';
 
 class TingClientRecordDataFactory
 {
@@ -31,7 +32,16 @@ class TingClientRecordDataFactory
 		
 		foreach ($recordData->dc as $attribute => $value)
 		{
-			$data->$attribute = $value;
+			switch ($attribute) {
+				case 'identifier':
+				 	$data->$attribute = TingClientRecordIdentifier::factory($value);
+					break;
+				default:
+					$data->$attribute = $value;
+					break;
+			}
+			
+			
 		}
 		return $data;	
 	}
