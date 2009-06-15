@@ -89,7 +89,7 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		return $result;
 	}
 	
-	private function parseJson($response)
+	private function parseJson($responseString)
 	{
 		$response = json_decode($responseString);
 		if (!$response)
@@ -100,6 +100,7 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		{
 			throw new TingClientException('Unexpected JSON response: '.var_export($response, true));
 		}
+		return $response;
 	}
 
 }
