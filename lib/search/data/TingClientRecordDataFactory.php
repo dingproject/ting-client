@@ -30,15 +30,20 @@ class TingClientRecordDataFactory
 			throw new TingClientException('Search record does not contain recognized data format');
 		}
 		
+		
 		foreach ($recordData->dc as $attribute => $value)
 		{
-			switch ($attribute) {
-				case 'identifier':
-				 	$data->$attribute = TingClientRecordIdentifier::factory($value);
-					break;
-				default:
-					$data->$attribute = $value;
-					break;
+			if ($attribute == 'identifier' && $value)
+			{	
+				$data->$attribute = array();
+				foreach ($value as $v)
+				{
+					$data->$attribute[] = TingClientRecordIdentifier::factory($value);
+				}
+			}
+			else
+			{
+				$data->$attribute = $value;
 			}
 			
 			
