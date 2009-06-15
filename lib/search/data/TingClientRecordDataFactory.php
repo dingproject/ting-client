@@ -38,7 +38,7 @@ class TingClientRecordDataFactory
 				$data->$attribute = array();
 				foreach ($value as $i => $v)
 				{
-					$data->$attribute[$i] = TingClientRecordIdentifier::factory($value);
+					$data->$attribute[$i] = TingClientRecordIdentifier::factory($v);
 				}
 			}
 			else
