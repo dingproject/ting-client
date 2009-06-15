@@ -20,12 +20,11 @@ class TingClientJsonResponseAdapterTest extends UnitTestCase {
 		$responseAdapter->setLogger(new TingClientSimpleTestLogger($this));
 		$result = $responseAdapter->parseSearchResult($json);
 
-		$this->assertEqual($result->getNumTotalRecords(), '13926', 'Wrong total number of records');
+		$this->assertEqual($result->numTotalRecords, '13926', 'Wrong total number of records');
 		
 		//Record tests
-		$records = $result->getRecords();
-		$this->assertEqual(sizeof($records), 1, 'Wrong number of expected records');
-		foreach ($records as $record)
+		$this->assertEqual(sizeof($result->records), 1, 'Wrong number of expected records');
+		foreach ($result->records as $record)
 		{
 			//Data tests
 			$data = array('title' => array('Danmark Kbh. : 1940'),
@@ -37,20 +36,18 @@ class TingClientJsonResponseAdapterTest extends UnitTestCase {
 			
 			foreach ($data as $name => $expectedValue)
 			{
-				$getter = 'get'.ucwords($name);
-				$this->assertEqual($record->getData()->$getter(), $expectedValue, 'Wrong data extracted for '.$name);				
+				$this->assertEqual($record->data->$name, $expectedValue, 'Wrong data extracted for '.$name);				
 			}
 		}
 		
 		//Facet tests
-		$facets = $result->getFacets();
-		$this->assertEqual(sizeof($facets), 2, 'Wrong number of facets');
+		$this->assertEqual(sizeof($result->facets), 2, 'Wrong number of facets');
 
 		$facetNames = array('dc.creator' => array('af' => 1788), 'dc.title' => array('danmark' => 13926));
 		foreach ($facetNames as $facetName => $termNames)
 		{
-			$this->assertTrue(isset($facets[$facetName]), 'Expected facet is not included');
-			$terms = $facets[$facetName]->getTerms();
+			$this->assertTrue(isset($result->facets[$facetName]), 'Expected facet is not included');
+			$terms = $result->facets[$facetName]->terms;
 			foreach ($termNames as $termName => $frequency)
 			{
 				$this->assertTrue(isset($terms[$termName]), 'Excepted term is not included');
@@ -67,9 +64,9 @@ class TingClientJsonResponseAdapterTest extends UnitTestCase {
 		$responseAdapter->setLogger(new TingClientSimpleTestLogger($this));
 		$result = $responseAdapter->parseSearchResult($json);
 
-		$this->assertEqual($result->getNumTotalRecords(), 0, 'Wrong total number of records');
-		$this->assertEqual(sizeof($result->getRecords()), 0, 'Wrong number of records');
-		$this->assertEqual(sizeof($result->getFacets()), 'Wrong number of facets');
+		$this->assertEqual($result->numTotalRecords, 0, 'Wrong total number of records');
+		$this->assertEqual(sizeof($result->records), 0, 'Wrong number of records');
+		$this->assertEqual(sizeof($result->facets), 'Wrong number of facets');
 	}
 	
 
