@@ -12,22 +12,12 @@ class TingClientRecordIdentifier
 																			self::ISBN => '/^ISBN:\s(.*)/i',
 																			self::URL => '/^(http\:\/\/[a-zA-Z0-9_\-]+(?:\.[a-zA-Z0-9_\-]+)*\.[a-zA-Z]{2,4}(?:\/[a-zA-Z0-9_]+)*(?:\/[a-zA-Z0-9_]+\.[a-zA-Z]{2,4}(?:\?[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)?)?(?:\&[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)*)$/i');
 																
-	private $type;
-	private $id;
+	public $type;
+	public $id;
 	
 	public function __construct($type, $id) {
 		$this->type = $type;
 		$this->id = $id;
-	}
-	
-	public function getType()
-	{
-		return $this->type;
-	}
-	
-	public function getId()
-	{
-		return $this->id;
 	}
 	
 	/**
