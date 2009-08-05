@@ -1,6 +1,8 @@
 <?php
 
-class TingClientSearchRequest
+require_once dirname(__FILE__).'/TingClientRequest.php';
+
+class TingClientSearchRequest extends TingClientRequest
 {
 		private $query;
 		private $facets = array();
@@ -9,10 +11,10 @@ class TingClientSearchRequest
 		private $start;
 		private $numResults;
 		private $sort;
-		private $output;
 	
 		function __construct($query = null)
 		{
+			parent::__construct();
 			$this->query = $query;
 		}
 		
@@ -84,16 +86,6 @@ class TingClientSearchRequest
 		public function setSort($sort)
 		{
 			$this->sort = $sort;
-		}
-		
-		function getOutput()
-		{
-			return $this->output;
-		}
-		
-		function setOutput($output)
-		{
-			$this->output = $output;
 		}
 	
 }

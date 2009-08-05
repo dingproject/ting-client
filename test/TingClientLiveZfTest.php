@@ -31,6 +31,9 @@ class TingClientLiveTest extends UnitTestCase {
 		
 	}
 	
+	/**
+	 * Test sending a request.
+	 */
 	function testRequest()
 	{
 		//End to end test
@@ -41,6 +44,9 @@ class TingClientLiveTest extends UnitTestCase {
 		$this->assertNoErrors('Search should not throw errors');
 	}
 	
+	/**
+	 * Test support for international characters in queries.
+	 */
 	function testRequestInternationalChars()
 	{
 		//Test using international characters ÆØÅ
@@ -58,7 +64,10 @@ class TingClientLiveTest extends UnitTestCase {
 		$this->assertNoErrors('Search should not throw errors');
 		
 	}
-	
+
+	/**
+	 * Test support for specifying search result size.
+	 */
 	function testNumResults()
 	{
 		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
@@ -71,6 +80,9 @@ class TingClientLiveTest extends UnitTestCase {
 		$this->assertEqual(sizeof($searchResult->collections), 1, 'Returned number of results does not match requested number');						
 	}
 	
+	/**
+	 * Test to ensure support for handling facets and number of facet terms in search requests.
+	 */
 	function testFacet()
 	{
 		$facetName = 'dc.title';
@@ -91,6 +103,9 @@ class TingClientLiveTest extends UnitTestCase {
 		$this->assertEqual(sizeof($facet->terms), $numFacets, 'Returned number of facet terms does not match expected number');						
 	}
 	
+	/**
+	 * Test to ensure support for handling several facets and facet terms in search requests.
+	 */
 	function testMultipleFacets()
 	{
 		$facetNames = array('dc.title', 'dc.creator', 'dc.subject');
@@ -113,6 +128,10 @@ class TingClientLiveTest extends UnitTestCase {
 		}					
 	}
 	
+	/**
+	 * Test to check that when adding a facet to a query the result is smaller than
+	 * the original result set.
+	 */
 	function testFacetNarrowing()
 	{
 		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
@@ -142,5 +161,45 @@ class TingClientLiveTest extends UnitTestCase {
 				
 		$this->assertTrue($narrowedSearchResult->numTotalObjects < $searchResult->numTotalObjects, 'Total number of results in narrowed result ('.$narrowedSearchResult->numTotalObjects.') should be less than original result ('.$searchResult->numTotalObjects.')');
 		$this->assertEqual($facetCount, $narrowedSearchResult->numTotalObjects, 'Number of results in narrowed search result ('.$narrowedSearchResult->numTotalObjects.') should be equal to count from narrowing facet term ('.$facetCount.')');
+	}
+	
+	/**
+	 * Test to retrieve an object with an object id from a search result, 
+	 * perform a separate query for this id and ensure that the result is equal
+	 * to the original object.
+	 */
+	function testObjectRetrieval()
+	{
+		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
+		$searchRequest->setOutput('json');		
+		$searchResult = $this->client->search($searchRequest);
+
+		$this->assertTrue(sizeof($searchResult->collections) > 0, 'Search should return at least one result');
+		
+		$searchObject = $searchResult->collections[0]->objects[0];
+		$this->assertNotNull($searchObject, 'Search should return at least one collection containing one object');
+		
+		$objectRequest = new TingClientObjectRequest($searchObject->id, 'json');
+		$object = $this->client->getObject($objectRequest);
+
+		$this->assertEqual($searchObject, $object, 'Retrieved object should be equal to search result');
+	}
+	
+	function testCollectionRetrieval()
+	{
+		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
+		$searchRequest->setOutput('json');		
+		$searchRequest->setNumResults(10);
+		$searchResult = $this->client->search($searchRequest);
+
+		$this->assertTrue(sizeof($searchResult->collections) > 0, 'Search should return at least one result');
+		
+		$searchCollection = $searchResult->collections[0];
+		$this->assertNotNull($searchCollection, 'Search should return at least one collection');
+		
+		$collectionRequest = new TingClientCollectionRequest('dc.title:danmark', 'json');
+		$collection = $this->client->getCollection($collectionRequest);
+
+		$this->assertEqual($searchCollection, $collection, 'Retrieved collection should be equal to search result');
 	}
 }

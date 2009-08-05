@@ -2,7 +2,7 @@
 
 class TingClientObjectCollection implements Iterator, ArrayAccess
 {
-	private $objects;
+	public $objects;
 	private $position = 0;
 	
   public function __construct($objects = array()) {

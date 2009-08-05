@@ -86,6 +86,23 @@ class TingClientHttpRequestFactory
 		}
 		
 		return $httpRequest;
-	}	
+	}
+
+	function fromCollectionRequest(TingClientCollectionRequest $collectionRequest)
+	{
+		//TODO determine how to specify searching for a specific collection
+		$searchRequest = new TingClientSearchRequest($collectionRequest->getId());
+		$searchRequest->setOutput($collectionRequest->getOutput());
+		$searchRequest->setNumResults(10);
+		return $this->fromSearchRequest($searchRequest);
+	}
+	
+	function fromObjectRequest(TingClientObjectRequest $objectRequest)
+	{		
+		$searchRequest = new TingClientSearchRequest('fedoraPid:'.str_replace(':', '?', $objectRequest->getId()));
+		$searchRequest->setOutput($objectRequest->getOutput());
+		$searchRequest->setNumResults(1);
+		return $this->fromSearchRequest($searchRequest);
+	}
 	
 }

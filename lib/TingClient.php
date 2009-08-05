@@ -56,9 +56,9 @@ class TingClient
 	 * @param string $collectionId
 	 * @return TingClientObjectCollection 
 	 */
-	public function getCollection($collectionId)
+	public function getCollection(TingClientCollectionRequest $collectionRequest)
 	{
-		$response = $this->requestAdapter->getCollection($collectionId);
+		$response = $this->requestAdapter->getCollection($collectionRequest);
 		return $this->responseAdapter->parseCollectionResult($response);
 	}
 	
@@ -66,9 +66,9 @@ class TingClient
 	 * @param string $objectId
 	 * @return TongClientObject
 	 */
-	public function getObject($objectId)
+	public function getObject(TingClientObjectRequest $objectRequest)
 	{
-		$response = $this->requestAdapter->getObject($objectId);
+		$response = $this->requestAdapter->getObject($objectRequest);
 		return $this->responseAdapter->parseObjectResult($response);
 	}
 	

@@ -42,9 +42,7 @@ abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 	 */
 	public function search(TingClientSearchRequest $searchRequest)
 	{
-		$httpRequest = $this->httpRequestFactory->fromSearchRequest($searchRequest);
-		$this->logger->log('Sending search request to '.$httpRequest->getUrl(), TingClientLogger::DEBUG);
-		return $this->request($httpRequest);
+		return $this->doRequest($this->httpRequestFactory->fromSearchRequest($searchRequest));
 	}
 	
 	/**
@@ -53,25 +51,37 @@ abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 	 */
 	public function scan(TingClientScanRequest $scanRequest)
 	{
-		$httpRequest = $this->httpRequestFactory->fromScanRequest($scanRequest);
-		$this->logger->log('Sending scan request to '.$httpRequest->getUrl(), TingClientLogger::DEBUG);
-		return $this->request($httpRequest);
+		return $this->doRequest($this->httpRequestFactory->fromScanRequest($scanRequest));
 	}
 	
 	/**
-	 * @param string $collectionId
+	 * @param TingClientCollectionRequest $collectionRequest
 	 * @return string The response body
 	 */
-	public function getCollection($collectionId)
+	public function getCollection(TingClientCollectionRequest $collectionRequest)
 	{
+		return $this->doRequest($this->httpRequestFactory->fromCollectionRequest($collectionRequest));
 	}
 	
 	/**
-	 * @param string $objectId
+	 * @param TingClientObjectRequest $objectRequest
 	 * @return string The response body
 	 */
-	public function getObject($objectId)
+	public function getObject(TingClientObjectRequest $objectRequest)
 	{
+		return $this->doRequest($this->httpRequestFactory->fromObjectRequest($objectRequest));
+	}
+	
+	/**
+	 * Private function used to prepare for and handle HTTP request/responses 
+	 *
+	 * @param TingClientHttpRequest $request
+	 * @return The response body
+	 */
+	private function doRequest(TingClientHttpRequest $request)
+	{
+		$this->logger->log('Sending HTTP request to '.$request->getUrl(), TingClientLogger::DEBUG);
+		return $this->request($request);
 	}
 	
 	/**
@@ -79,16 +89,5 @@ abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 	 * @return string The response body
 	 */
 	protected abstract function request(TingClientHttpRequest $request);
-	
-	/**
-	 * Load a file from the file system to use as a response
-	 *
-	 * @param string $filename
-	 * @return string The file contents
-	 */
-	protected function loadFile($filename)
-	{
-		return file_get_contents(dirname(__FILE__).'/../../../../data/'.$filename);
-	}
 	
 }

@@ -1,6 +1,9 @@
 <?php
 
 require_once dirname(__FILE__).'/../../search/TingClientSearchRequest.php';
+require_once dirname(__FILE__).'/../../search/TingClientCollectionRequest.php';
+require_once dirname(__FILE__).'/../../search/TingClientObjectRequest.php';
+require_once dirname(__FILE__).'/../../scan/TingClientScanRequest.php';
 require_once dirname(__FILE__).'/../../log/TingClientLogger.php';
 
 interface TingClientRequestAdapter
@@ -19,16 +22,16 @@ interface TingClientRequestAdapter
 	public function scan(TingClientScanRequest $scanRequest);
 	
 	/**
-	 * @param string $collectionId
+	 * @param TingClientCollectionRequest $collectionRequest
 	 * @return string The response body
 	 */
-	public function getCollection($collectionId);
+	public function getCollection(TingClientCollectionRequest $collectionRequest);
 	
 	/**
-	 * @param string $objectId
+	 * @param TingClientObjectRequest $objectRequest
 	 * @return string The response body
 	 */
-	public function getObject($objectId);
+	public function getObject(TingClientObjectRequest $objectRequest);
 	
 	public function setLogger(TingClientLogger $logger);
 	

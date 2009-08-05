@@ -27,12 +27,14 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 	 */
 	public function parseSearchResult($responseString)
 	{
+		var_dump($responseString);
+		
 		$searchResult = new TingClientSearchResult();
 		$response = $this->parseJson($responseString);
 
 		$this->logger->log('Total number of results '.$response->result->hitCount, TingClientLogger::INFO);
 		$searchResult->numTotalObjects = $response->result->hitCount;
-		
+
 		if (isset($response->result->searchResult) && is_object($response->result->searchResult))
 		{
 			foreach ($response->result->searchResult as $entry => $result)
@@ -96,7 +98,13 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 	public function parseObjectResult($responseString)
 	{
 		$response = $this->parseJson($responseString);
-		return null;
+
+		$object = null;
+		if (isset($response->result->searchResult->collection->object[0]))
+		{
+			$object = $this->generateObject($response->result->searchResult->collection->object[0]);
+		}
+		return $object;		
 	}
 	
 	private function parseJson($responseString)
