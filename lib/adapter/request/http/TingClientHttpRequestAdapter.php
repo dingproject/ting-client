@@ -43,24 +43,52 @@ abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 	public function search(TingClientSearchRequest $searchRequest)
 	{
 		$httpRequest = $this->httpRequestFactory->fromSearchRequest($searchRequest);
-		$this->logger->log('Sending search request to '.$httpRequest->getUrl(), TingClientLogger::INFO);
+		$this->logger->log('Sending search request to '.$httpRequest->getUrl(), TingClientLogger::DEBUG);
 		return $this->request($httpRequest);
 	}
 	
 	/**
-	 * @param string $request
+	 * @param TingClientScanRequest $scanRequest
 	 * @return string The response body
 	 */
-	public function scan($scanRequest)
+	public function scan(TingClientScanRequest $scanRequest)
 	{
-		$httpRequest = $this->httpRequestFactory->fromSearchRequest($searchRequest);
-		$this->logger->log('Sending scan request to '.$httpRequest->getUrl(), TingClientLogger::INFO);
+		$httpRequest = $this->httpRequestFactory->fromScanRequest($scanRequest);
+		$this->logger->log('Sending scan request to '.$httpRequest->getUrl(), TingClientLogger::DEBUG);
 		return $this->request($httpRequest);
 	}
+	
+	/**
+	 * @param string $collectionId
+	 * @return string The response body
+	 */
+	public function getCollection($collectionId)
+	{
+	}
+	
+	/**
+	 * @param string $objectId
+	 * @return string The response body
+	 */
+	public function getObject($objectId)
+	{
+	}
+	
 	/**
 	 * @param TingClientHttpRequest $request
 	 * @return string The response body
 	 */
 	protected abstract function request(TingClientHttpRequest $request);
+	
+	/**
+	 * Load a file from the file system to use as a response
+	 *
+	 * @param string $filename
+	 * @return string The file contents
+	 */
+	protected function loadFile($filename)
+	{
+		return file_get_contents(dirname(__FILE__).'/../../../../data/'.$filename);
+	}
 	
 }

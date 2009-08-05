@@ -1,11 +1,12 @@
 <?php
 
-require_once dirname(__FILE__).'/TingClientRecord.php';
+require_once dirname(__FILE__).'/../object/TingClientObject.php';
+require_once dirname(__FILE__).'/../object/TingClientObjectCollection.php';
 require_once dirname(__FILE__).'/TingClientFacetResult.php';
 
 class TingClientSearchResult
 {
-	public $numTotalRecords;
-	public $records = array();
+	public $numTotalObjects = 0;
+	public $collections = array();
 	public $facets = array();	
 }

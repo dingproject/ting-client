@@ -37,7 +37,7 @@ class TingClientHttpRequestFactory
 		
 		$methodParameterMap = array('query' => 'query',
 																'facets' => 'facets.facetName',
-																'numFacets' => 'facets.number',
+																'numFacets' => 'facets.numberOfTerms',
 																'format' => 'format',
 																'start' => 'start',
 																'numResults' => 'stepValue',

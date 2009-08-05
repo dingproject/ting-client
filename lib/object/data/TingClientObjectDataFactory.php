@@ -1,12 +1,12 @@
 <?php
 
 require_once dirname(__FILE__).'/TingClientDublinCoreData.php';
-require_once dirname(__FILE__).'/identifier/TingClientRecordIdentifier.php';
+require_once dirname(__FILE__).'/../identifier/TingClientObjectIdentifier.php';
 
-class TingClientRecordDataFactory
+class TingClientObjectDataFactory
 {
 	
-	public function fromSearchRecordData($recordData)
+	public function fromSearchObjectData($objectData)
 	{
 		$formats = array('dc' => 'TingClientDublinCoreData');
 		
@@ -15,13 +15,13 @@ class TingClientRecordDataFactory
 		foreach ($formats as $name => $dataClass)
 		{
 			$data = new $dataClass();
-			if (is_array($recordData) &&
-					isset($recordData[$name]))
+			if (is_array($objectData) &&
+					isset($objectData[$name]))
 			{
-				$dataArray = $recordArray[$name];
-			} elseif (is_object($recordData) &&
-								isset($recordData->$name)) {
-				$dataArray = $recordData->$name;
+				$dataArray = $objectData[$name];
+			} elseif (is_object($objectData) &&
+								isset($objectData->$name)) {
+				$dataArray = $objectData->$name;
 			}
 		}
 		
@@ -30,14 +30,14 @@ class TingClientRecordDataFactory
 			throw new TingClientException('Search record does not contain recognized data format');
 		}
 		
-		foreach ($recordData->dc as $attribute => $value)
+		foreach ($objectData->dc as $attribute => $value)
 		{
 			if ($attribute == 'identifier' && $value)
 			{	
 				$data->$attribute = array();
 				foreach ($value as $i => $v)
 				{
-					array_push($data->$attribute, TingClientRecordIdentifier::factory($v));
+					array_push($data->$attribute, TingClientObjectIdentifier::factory($v));
 				}
 			}
 			else

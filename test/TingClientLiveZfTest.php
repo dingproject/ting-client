@@ -12,7 +12,7 @@ require_once 'Zend/Http/Client.php';
 
 class TingClientLiveTest extends UnitTestCase {
 	
-	private $baseUrl = 'http://didicas.dbc.dk/opensearch/';
+	private $baseUrl = 'http://didicas.dbc.dk/opensearch_0.2/';
 
 	/**
 	 * @var TingClient
@@ -68,7 +68,7 @@ class TingClientLiveTest extends UnitTestCase {
 
 		$this->assertNoErrors('Search should not throw errors');
 		
-		$this->assertEqual(sizeof($searchResult->records), 1, 'Returned number of results does not match requested number');						
+		$this->assertEqual(sizeof($searchResult->collections), 1, 'Returned number of results does not match requested number');						
 	}
 	
 	function testFacet()
@@ -115,7 +115,6 @@ class TingClientLiveTest extends UnitTestCase {
 	
 	function testFacetNarrowing()
 	{
-
 		$searchRequest = new TingClientSearchRequest('dc.title:danmark');
 		$searchRequest->setFacets(array('dc.creator'));
 		$searchRequest->setNumFacets(10);
@@ -126,20 +125,22 @@ class TingClientLiveTest extends UnitTestCase {
 		
 		$facetCount = 0;
 		$facet = array_shift($searchResult->facets);
+		
+		$query = '';
 		foreach ($facet->terms as $facetTerm => $facetCount)
 		{
-			if ($facetCount < $searchResult->numTotalRecords)
+			if ($facetCount < $searchResult->numTotalObjects)
 			{
 				$query = $searchRequest->getQuery();
-				$query .= ' and '.$facet->name.':'.$facetTerm;
+				$query .= ' AND '.$facet->name.':'.$facetTerm;
 				break;
 			}
 		}
 		$searchRequest->setQuery($query);
 		
 		$narrowedSearchResult = $this->client->search($searchRequest);
-		
-		$this->assertTrue($narrowedSearchResult->numTotalRecords < $searchResult->numTotalRecords, 'Total number of results in narrowed result ('.$narrowedSearchResult->numTotalRecords.') should be less than original result ('.$searchResult->numTotalRecords.')');
-		$this->assertEqual($facetCount, $narrowedSearchResult->numTotalRecords, 'Number of results in narrowed search result ('.$narrowedSearchResult->numTotalRecords.') should be equal to count from narrowing facet term ('.$facetCount.')');
+				
+		$this->assertTrue($narrowedSearchResult->numTotalObjects < $searchResult->numTotalObjects, 'Total number of results in narrowed result ('.$narrowedSearchResult->numTotalObjects.') should be less than original result ('.$searchResult->numTotalObjects.')');
+		$this->assertEqual($facetCount, $narrowedSearchResult->numTotalObjects, 'Number of results in narrowed search result ('.$narrowedSearchResult->numTotalObjects.') should be equal to count from narrowing facet term ('.$facetCount.')');
 	}
 }

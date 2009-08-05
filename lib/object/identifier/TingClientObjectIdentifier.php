@@ -1,6 +1,6 @@
 <?php
 
-class TingClientRecordIdentifier
+class TingClientObjectIdentifier
 {
 	
 	const ISSN = 'ISSN';
@@ -37,7 +37,12 @@ class TingClientRecordIdentifier
 			}
 		}
 		
-		return new TingClientRecordIdentifier($type, $id);
+		return new TingClientObjectIdentifier($type, $id);
+	}
+	
+	public function __toString()
+	{
+		return $this->type.':'.$id;	
 	}
 	
 }

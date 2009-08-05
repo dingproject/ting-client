@@ -1,8 +1,8 @@
 <?php
 
-require_once dirname(__FILE__).'/TingClientRecordData.php';
+require_once dirname(__FILE__).'/TingClientObjectData.php';
 
-class TingClientDublinCoreData implements TingClientRecordData
+class TingClientDublinCoreData implements TingClientObjectData
 {
 	
 	public $identifier;

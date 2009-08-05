@@ -69,5 +69,27 @@ class TingClientJsonResponseAdapterTest extends UnitTestCase {
 		$this->assertEqual(sizeof($result->facets), 'Wrong number of facets');
 	}
 	
+	function testCollectionSearch()
+	{
+		$json = file_get_contents(dirname(__FILE__).'/examples/json/search-collection-1.js');
+		
+		$responseAdapter = new TingClientJsonResponseAdapter();
+		$responseAdapter->setLogger(new TingClientSimpleTestLogger($this));
+		//$result = $responseAdapter->parseSearchResult($json);
+	}
+	
+	function testCollection()
+	{
+		$json = file_get_contents(dirname(__FILE__).'/examples/json/collection.js');
+		
+		$responseAdapter = new TingClientJsonResponseAdapter();
+		$responseAdapter->setLogger(new TingClientSimpleTestLogger($this));
+		$collection = $responseAdapter->parseCollectionResult($json);
+		
+		$this->assertNotNull($collection);
+		$this->assertTrue(sizeof($collection) > 0, 'Empty collection of objects');
+		
+	}
+	
 
 }

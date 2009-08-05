@@ -27,31 +27,22 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 	 */
 	public function parseSearchResult($responseString)
 	{
-		$result = new TingClientSearchResult();
+		$searchResult = new TingClientSearchResult();
 		$response = $this->parseJson($responseString);
 
-		$this->logger->log('Total number of results '.$response->searchResult->hitCount, TingClientLogger::INFO);
-		$result->numTotalRecords = $response->searchResult->hitCount;
+		$this->logger->log('Total number of results '.$response->result->hitCount, TingClientLogger::INFO);
+		$searchResult->numTotalObjects = $response->result->hitCount;
 		
-		if (isset($response->searchResult->records) && is_object($response->searchResult->records))
+		if (isset($response->result->searchResult) && is_object($response->result->searchResult))
 		{
-			foreach ($response->searchResult->records as $recordsResult)
+			foreach ($response->result->searchResult as $entry => $result)
 			{
-				foreach ($recordsResult as $recordResult)
-				{
-					$this->logger->log('Extracting search result '.$recordResult->identifier, TingClientLogger::DEBUG);
-					
-					$record = new TingClientRecord();
-					$record->id = $recordResult->identifier;
-					$record->data = TingClientRecordDataFactory::fromSearchRecordData($recordResult);
-					
-					$result->records[] = $record;
-				}
+				$searchResult->collections[] = $this->generateCollection($result);
 			}
 		}
 
-		$this->logger->log('Extracting '.sizeof($response->searchResult->facetResult).' facets', TingClientLogger::INFO);
-		foreach ($response->searchResult->facetResult as $facetResult)
+		$this->logger->log('Extracting '.sizeof($response->result->facetResult).' facets', TingClientLogger::INFO);
+		foreach ($response->result->facetResult as $facetResult)
 		{
 			$this->logger->log('Extracting facet '.$facetResult->facetName, TingClientLogger::DEBUG);
 			$facet = new TingClientFacetResult();
@@ -61,10 +52,10 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 				$facet->terms[$term->term] = $term->frequence;
 			}
 			
-			$result->facets[$facet->name] = $facet;
+			$searchResult->facets[$facet->name] = $facet;
 		}
 		
-		return $result;
+		return $searchResult;
 	}
 	
 	/**
@@ -89,6 +80,25 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		return $result;
 	}
 	
+	public function parseCollectionResult($responseString)
+	{
+		$response = $this->parseJson($responseString);
+		
+		$collection = null;
+		if (isset($response->result->searchResult->collection) && is_object($response->result->searchResult->collection))
+		{
+			$collection = $this->generateCollection($response->result->searchResult->collection);
+		}
+		
+		return $collection;		
+	}
+	
+	public function parseObjectResult($responseString)
+	{
+		$response = $this->parseJson($responseString);
+		return null;
+	}
+	
 	private function parseJson($responseString)
 	{
 		$response = json_decode($responseString);
@@ -101,6 +111,27 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 			throw new TingClientException('Unexpected JSON response: '.var_export($response, true));
 		}
 		return $response;
+	}
+	
+	private function generateObject($objectData)
+	{
+		$object = new TingClientObject();
+		$object->id = $objectData->identifier;
+		$object->data = TingClientObjectDataFactory::fromSearchObjectData($objectData);
+		return $object;
+	}
+	
+	private function generateCollection($collectionData)
+	{
+		$objects = array();
+		if (isset($collectionData->object) && is_array($collectionData->object))
+		{
+			foreach ($collectionData->object as $objectData)
+			{
+				$objects[] = $this->generateObject($objectData);
+			}		
+		}
+		return new TingClientObjectCollection($objects);
 	}
 
 }

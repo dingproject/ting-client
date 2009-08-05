@@ -43,13 +43,33 @@ class TingClient
 	}
 	
 	/**
-	 * @param string $string
+	 * @param TingClientScanRequest $scanRequest
 	 * @return TingClientScanResult
 	 */
-	public function scan($scanString)
+	public function scan(TingClientScanRequest $scanRequest)
 	{
-		$response = $this->requestAdapter->scan($scanString);
+		$response = $this->requestAdapter->scan($scanRequest);
 		return $this->responseAdapter->parseScanResult($response);
+	}
+	
+	/**
+	 * @param string $collectionId
+	 * @return TingClientObjectCollection 
+	 */
+	public function getCollection($collectionId)
+	{
+		$response = $this->requestAdapter->getCollection($collectionId);
+		return $this->responseAdapter->parseCollectionResult($response);
+	}
+	
+	/**
+	 * @param string $objectId
+	 * @return TongClientObject
+	 */
+	public function getObject($objectId)
+	{
+		$response = $this->requestAdapter->getObject($objectId);
+		return $this->responseAdapter->parseObjectResult($response);
 	}
 	
 }

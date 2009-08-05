@@ -13,10 +13,22 @@ interface TingClientRequestAdapter
 	public function search(TingClientSearchRequest $searchRequest);
 
 	/**
-	 * @param string $scanString
+	 * @param TingClientScanRequest $scanRequest
 	 * @return string The response body
 	 */
-	public function scan($scanString);
+	public function scan(TingClientScanRequest $scanRequest);
+	
+	/**
+	 * @param string $collectionId
+	 * @return string The response body
+	 */
+	public function getCollection($collectionId);
+	
+	/**
+	 * @param string $objectId
+	 * @return string The response body
+	 */
+	public function getObject($objectId);
 	
 	public function setLogger(TingClientLogger $logger);
 	
