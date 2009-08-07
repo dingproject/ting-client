@@ -27,8 +27,6 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 	 */
 	public function parseSearchResult($responseString)
 	{
-		var_dump($responseString);
-		
 		$searchResult = new TingClientSearchResult();
 		$response = $this->parseJson($responseString);
 
