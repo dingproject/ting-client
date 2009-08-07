@@ -4,23 +4,23 @@ require_once dirname(__FILE__).'/TingClientRequest.php';
 
 class TingClientCollectionRequest extends TingClientRequest
 {
-		private $id;
+		private $objectId;
 		private $output;
 	
-		function __construct($id = null, $output = null)
+		function __construct($objectId = null, $output = null)
 		{
 			parent::__construct($output);
-			$this->id = $id;
+			$this->objectId = $objectId;
 		}
 
-		function getId()
+		function getObjectId()
 		{
-			return $this->id;
+			return $this->objectId;
 		}
 		
-		function setId($id)
+		function setObjectId($objectId)
 		{
-			$this->id = $id;
+			$this->objectId = $objectId;
 		}
-		
+				
 }

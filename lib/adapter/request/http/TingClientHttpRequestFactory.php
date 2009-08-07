@@ -41,6 +41,7 @@ class TingClientHttpRequestFactory
 																'format' => 'format',
 																'start' => 'start',
 																'numResults' => 'stepValue',
+																'allObjects' => 'allObjects',
 																'output' => 'outputType'
 																);
 		
@@ -90,10 +91,11 @@ class TingClientHttpRequestFactory
 
 	function fromCollectionRequest(TingClientCollectionRequest $collectionRequest)
 	{
-		//TODO determine how to specify searching for a specific collection
-		$searchRequest = new TingClientSearchRequest($collectionRequest->getId());
+		//TODO prefix query with fedoraPid once collection search is probably implemented
+		$searchRequest = new TingClientSearchRequest($collectionRequest->getObjectId());
+		$searchRequest->setAllObjects(true); 
+		$searchRequest->setNumResults(10); //TODO this should not be necessary when collections are fully functional
 		$searchRequest->setOutput($collectionRequest->getOutput());
-		$searchRequest->setNumResults(10);
 		return $this->fromSearchRequest($searchRequest);
 	}
 	

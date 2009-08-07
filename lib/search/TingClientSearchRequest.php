@@ -11,6 +11,7 @@ class TingClientSearchRequest extends TingClientRequest
 		private $start;
 		private $numResults;
 		private $sort;
+		private $allObjects;
 	
 		function __construct($query = null)
 		{
@@ -86,6 +87,16 @@ class TingClientSearchRequest extends TingClientRequest
 		public function setSort($sort)
 		{
 			$this->sort = $sort;
+		}
+		
+		function getAllObjects()
+		{
+			return $this->allObjects;
+		}
+		
+		function setAllObjects($allObjects)
+		{
+			$this->allObjects = $allObjects;
 		}
 	
 }
