@@ -10,6 +10,7 @@ class TingClientScanRequest
 	private $upper;
 	private $minFrequency;
 	private $maxFrequency;
+	private $output;
 	
 	function getField()
 	{
@@ -81,7 +82,14 @@ class TingClientScanRequest
 		$this->maxFrequency = $maxFrequency;
 	}
 	
+	function getOutput()
+	{
+		return $this->output;
+	}
 	
-	
+	function setOutput($output)
+	{
+		$this->output = $output;
+	}
 	
 }

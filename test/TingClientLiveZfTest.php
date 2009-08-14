@@ -209,6 +209,7 @@ class TingClientLiveTest extends UnitTestCase {
 		$scanRequest = new TingClientScanRequest();
 		$scanRequest->setField('title');
 		$scanRequest->setLower('København');
+		$scanRequest->setOutput('json');
 		$scanResult = $this->client->scan($scanRequest);
 		
 		$this->assertNoErrors('Scan should not throw errors');
@@ -223,6 +224,7 @@ class TingClientLiveTest extends UnitTestCase {
 		$scanRequest->setField('title');
 		$scanRequest->setLower($query);
 		$scanRequest->setNumResults($numResults);
+		$scanRequest->setOutput('json');
 		$scanResult = $this->client->scan($scanRequest);
 		
 		$this->assertEqual(sizeof($scanResult->terms), 10, 'Returned number of results does not match expected number of results');

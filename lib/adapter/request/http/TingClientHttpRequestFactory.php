@@ -75,7 +75,8 @@ class TingClientHttpRequestFactory
 																'lower' => 'lower',
 																'upper' => 'upper',
 																'minFrequency' => 'minFrequency',
-																'maxFrequency' => 'maxFrequency'
+																'maxFrequency' => 'maxFrequency',
+																'output' => 'outputType'
 																);
 		
 		foreach ($methodParameterMap as $method => $parameter)
