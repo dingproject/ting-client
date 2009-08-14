@@ -66,17 +66,18 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 	{
 		$result = new TingClientScanResult();
 		$response = $this->parseJson($responseString);
-
-		if (isset($response->terms) && is_array($response->terms))
+		
+		if (isset($response->term) && is_array($response->term))
 		{
-			foreach ($response->terms as $scanResult)
+			foreach ($response->term as $scanTerm)
 			{
 					$term = new TingClientScanTerm();
-					$record->name = $scanResult->name;
-					$record->term = $scanResult->term;
+					$record->name = $scanTerm->name;
+					$record->count = $scanTerm->hitCount;
 					$result->terms[] = $term;
 			}
 		}
+
 		return $result;
 	}
 	

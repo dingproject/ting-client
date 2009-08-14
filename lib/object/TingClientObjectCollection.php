@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__).'/TingClientObject.php';
+
 class TingClientObjectCollection
 {
 	public $objects;

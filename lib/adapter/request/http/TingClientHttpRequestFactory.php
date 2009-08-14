@@ -6,16 +6,18 @@ require_once dirname(__FILE__).'/../../../log/TingClientVoidLogger.php';
 
 class TingClientHttpRequestFactory
 {
-	private $baseUrl;
+	private $searchUrl;
+	private $scanUrl;
 	
 	/**
 	 * @var TingClientLogger
 	 */
 	private $logger;
 	
-	function __construct($baseUrl, TingClientLogger $logger = NULL)
+	function __construct($searchUrl, $scanUrl, TingClientLogger $logger = NULL)
 	{
-		$this->baseUrl = $baseUrl;
+		$this->searchUrl = $searchUrl;
+		$this->scanUrl = $scanUrl;
 		$this->logger = (isset($logger)) ? $logger : new TingClientVoidLogger();
 	}
 	
@@ -32,7 +34,7 @@ class TingClientHttpRequestFactory
 	{
 		$httpRequest = new TingClientHttpRequest();
 		$httpRequest->setMethod(TingClientHttpRequest::GET);
-		$httpRequest->setBaseUrl($this->baseUrl);
+		$httpRequest->setBaseUrl($this->searchUrl);
 		$httpRequest->setGetParameter('action', 'searchRequest');
 		
 		$methodParameterMap = array('query' => 'query',
@@ -58,15 +60,14 @@ class TingClientHttpRequestFactory
 	}
 	
 	/**
-	 * @param TingClientSearchRequest $searchRequest
+	 * @param TingClientScanRequest $scanRequest
 	 * @return TingClientHttpRequest
 	 */
-	function fromScanRequest(TingClientSearchRequest $searchRequest)
+	function fromScanRequest(TingClientScanRequest $scanRequest)
 	{
 		$httpRequest = new TingClientHttpRequest();
 		$httpRequest->setMethod(TingClientHttpRequest::GET);
-		$httpRequest->setBaseUrl($this->baseUrl);
-		$httpRequest->setGetParameter('action', 'searchRequest');
+		$httpRequest->setBaseUrl($this->scanUrl);
 		
 		$methodParameterMap = array('field' => 'field',
 																'prefix' => 'prefix',
@@ -80,7 +81,7 @@ class TingClientHttpRequestFactory
 		foreach ($methodParameterMap as $method => $parameter)
 		{
 			$getter = 'get'.ucfirst($method);
-			if ($value = $searchRequest->$getter())
+			if ($value = $scanRequest->$getter())
 			{
 				$httpRequest->setParameter(TingClientHttpRequest::GET, $parameter, $value);
 			}

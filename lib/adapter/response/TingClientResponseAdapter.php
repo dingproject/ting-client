@@ -2,6 +2,7 @@
 
 require_once dirname(__FILE__).'/../../log/TingClientLogger.php';
 require_once dirname(__FILE__).'/../../search/TingClientSearchResult.php';
+require_once dirname(__FILE__).'/../../scan/TingClientScanResult.php';
 require_once dirname(__FILE__).'/../../object/data/TingClientObjectDataFactory.php';
 require_once dirname(__FILE__).'/../../object/TingClientObject.php';
 require_once dirname(__FILE__).'/../../object/TingClientObjectCollection.php';

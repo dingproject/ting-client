@@ -12,8 +12,9 @@ require_once 'Zend/Http/Client.php';
 
 class TingClientLiveTest extends UnitTestCase {
 	
-	private $baseUrl = 'http://didicas.dbc.dk/opensearch_0.2/';
-
+	private $searchUrl = 'http://didicas.dbc.dk/opensearch_0.2/';
+	private $scanUrl = 'http://didicas.dbc.dk/openscan/server.php';
+	
 	/**
 	 * @var TingClient
 	 */
@@ -22,7 +23,7 @@ class TingClientLiveTest extends UnitTestCase {
 	function __construct()
 	{
 		$requestAdapter = new TingClientZfHttpRequestAdapter(	new Zend_Http_Client(),
-																													new TingClientHttpRequestFactory($this->baseUrl));
+																													new TingClientHttpRequestFactory($this->searchUrl, $this->scanUrl));
 		$responseAdapter = new TingClientJsonResponseAdapter();
 
 		$this->client = new TingClient(	$requestAdapter, 
@@ -201,5 +202,34 @@ class TingClientLiveTest extends UnitTestCase {
 		$collection = $this->client->getCollection($collectionRequest);
 
 		$this->assertEqual($searchCollection, $collection, 'Retrieved collection should be equal to search result');
+	}
+	
+	function testScan()
+	{
+		$scanRequest = new TingClientScanRequest();
+		$scanRequest->setField('title');
+		$scanRequest->setLower('København');
+		$scanResult = $this->client->scan($scanRequest);
+		
+		$this->assertNoErrors('Scan should not throw errors');
+	}
+	
+	function testScanResult()
+	{
+		$query = 'København';
+		$numResults = 10;
+		
+		$scanRequest = new TingClientScanRequest();
+		$scanRequest->setField('title');
+		$scanRequest->setLower($query);
+		$scanRequest->setNumResults($numResults);
+		$scanResult = $this->client->scan($scanRequest);
+		
+		$this->assertEqual(sizeof($scanResult->terms), 10, 'Returned number of results does not match expected number of results');
+
+		foreach ($scanResult->terms as $term)
+		{
+			$this->assertEqual(strpos($term->name, $query), 0, 'Returned term does not match requested prefix');
+		}
 	}
 }
