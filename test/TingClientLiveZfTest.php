@@ -231,7 +231,25 @@ class TingClientLiveTest extends UnitTestCase {
 
 		foreach ($scanResult->terms as $term)
 		{
-			$this->assertEqual(strpos($term->name, $query), 0, 'Returned term does not match requested prefix');
+			$this->assertTrue(strpos($term->name, $query) === 0, 'Returned term '.$term->name.' does not match requested prefix '.$query);
+		}
+	}
+	
+	function testScanDcCaps()
+	{
+		$query = 'Rest';
+		
+		$scanRequest = new TingClientScanRequest();
+		$scanRequest->setField('dc.title');
+		$scanRequest->setLower($query);
+		$scanRequest->setOutput('json');
+		$scanResult = $this->client->scan($scanRequest);
+		
+		$this->assertNoErrors('Scan should not throw errors');
+		
+		foreach ($scanResult->terms as $term)
+		{
+			$this->assertTrue(strpos($term->name, $query) === 0, 'Returned term '.$term->name.' does not match requested prefix '.$query);
 		}
 	}
 }
