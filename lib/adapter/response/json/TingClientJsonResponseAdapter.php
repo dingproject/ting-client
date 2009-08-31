@@ -33,7 +33,7 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		$this->logger->log('Total number of results '.$response->result->hitCount, TingClientLogger::INFO);
 		$searchResult->numTotalObjects = $response->result->hitCount;
 
-		if (isset($response->result->searchResult) && is_object($response->result->searchResult))
+		if (isset($response->result->searchResult) && is_array($response->result->searchResult))
 		{
 			foreach ($response->result->searchResult as $entry => $result)
 			{
