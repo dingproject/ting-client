@@ -99,9 +99,9 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 		$response = $this->parseJson($responseString);
 
 		$object = null;
-		if (isset($response->result->searchResult->collection->object[0]))
+		if (isset($response->result->searchResult[0]->object[0]))
 		{
-			$object = $this->generateObject($response->result->searchResult->collection->object[0]);
+			$object = $this->generateObject($response->result->searchResult[0]->object[0]);
 		}
 		return $object;		
 	}
