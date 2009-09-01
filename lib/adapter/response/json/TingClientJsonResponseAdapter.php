@@ -84,11 +84,11 @@ class TingClientJsonResponseAdapter implements TingClientResponseAdapter
 	public function parseCollectionResult($responseString)
 	{
 		$response = $this->parseJson($responseString);
-		
+
 		$collection = null;
-		if (isset($response->result->searchResult->collection) && is_object($response->result->searchResult->collection))
+		if (isset($response->result->searchResult) && is_array($response->result->searchResult))
 		{
-			$collection = $this->generateCollection($response->result->searchResult->collection);
+			$collection = $this->generateCollection($response->result->searchResult[0]);
 		}
 		
 		return $collection;		
