@@ -37,7 +37,7 @@ class TingClientObjectDataFactory
 				$data->$attribute = array();
 				foreach ($value as $i => $v)
 				{
-					array_push($data->$attribute, TingClientObjectIdentifier::factory($v));
+					array_push($data->$attribute, TingClientObjectIdentifier::factory($v, $data));
 				}
 			}
 			else

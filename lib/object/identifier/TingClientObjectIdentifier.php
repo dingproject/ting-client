@@ -22,27 +22,19 @@ class TingClientObjectIdentifier
 	
 	/**
 	 * @param Identifier string $string
+	 * @param TingClientDublinCoreData
 	 * @return TingClientRecordIdentifier
 	 */
-	public static function factory($string)
-	{
-		$type = self::UNKNOWN;
-		foreach (self::$ID_TYPE_MAP as $t => $regExp)
-		{
-			if (preg_match($regExp, $string, $matches))
-			{
-				$type = $t;
-				$id = $matches[1];
-				break;
-			}
+	public static function factory($identifier, TingClientDublinCoreData $object) {
+		if (in_array($object->type[0], array('Bog', 'Årbog', 'Bog stor skrift', 'Billedbog', 'Tegneserie'))) {
+			return new TingClientObjectIdentifier(self::ISBN, $identifier);
 		}
-		
-		return new TingClientObjectIdentifier($type, $id);
+		return new TingClientObjectIdentifier(self::UNKNOWN, $identifier);
 	}
 	
 	public function __toString()
 	{
-		return $this->type.':'.$id;	
+		return $this->type.':'.$this->id;	
 	}
 	
 }
