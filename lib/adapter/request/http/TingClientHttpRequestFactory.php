@@ -93,10 +93,8 @@ class TingClientHttpRequestFactory
 
 	function fromCollectionRequest(TingClientCollectionRequest $collectionRequest)
 	{
-		//TODO prefix query with fedoraPid once collection search is probably implemented
-		$searchRequest = new TingClientSearchRequest($collectionRequest->getObjectId());
+		$searchRequest = new TingClientSearchRequest('fedoraPid:'.str_replace(':', '?', $collectionRequest->getObjectId()));
 		$searchRequest->setAllObjects(true); 
-		$searchRequest->setNumResults(10); //TODO this should not be necessary when collections are fully functional
 		$searchRequest->setOutput($collectionRequest->getOutput());
 		return $this->fromSearchRequest($searchRequest);
 	}
