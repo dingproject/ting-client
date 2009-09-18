@@ -5,7 +5,7 @@ require_once dirname(__FILE__).'/RestJsonTingClientSearchRequest.php';
 require_once dirname(__FILE__).'/RestJsonTingClientScanRequest.php';
 require_once dirname(__FILE__).'/RestJsonTingClientObjectRequest.php';
 require_once dirname(__FILE__).'/RestJsonTingClientCollectionRequest.php';
-
+require_once dirname(__FILE__).'/RestJsonTingClientObjectRecommendationRequest.php';
 
 class RestJsonTingClientRequestFactory implements TingClientRequestFactory
 {
@@ -53,9 +53,12 @@ class RestJsonTingClientRequestFactory implements TingClientRequestFactory
 		
 	}
 	
-	public function getAdhlRequest()
+	/**
+	 * @return RestJsonTingClientObjectRecommendationRequest
+	 */
+	function getObjectRecommendationRequest()
 	{
-	
+		return new RestJsonTingClientObjectRecommendationRequest($this->urls['recommendation']);
 	}
 
 }
