@@ -30,8 +30,8 @@ class RestJsonTingClientCollectionRequest extends RestJsonTingClientRequest
 			return $searchResult->collections[0];
 		}
 
-		public function getHttpRequest() {}
+		protected function getHttpRequest() {}
 		
-		public function parseResponse($responseString) {}	
+		protected function parseJson($responseString) {}	
 		
 }

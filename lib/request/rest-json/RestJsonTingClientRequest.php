@@ -10,7 +10,7 @@ abstract class RestJsonTingClientRequest extends HttpTingClientRequest
 		parent::__construct($baseUrl);
 	}
 	
-	protected function parseJson($responseString)
+	public function parseResponse($responseString)
 	{
 		$response = json_decode($responseString);
 		if (!$response)
@@ -21,7 +21,9 @@ abstract class RestJsonTingClientRequest extends HttpTingClientRequest
 		{
 			throw new TingClientException('Unexpected JSON response: '.var_export($response, true));
 		}
-		return $response;
+		return $this->parseJson($response);
 	}
+	
+	protected abstract function parseJson($response);
 	
 }

@@ -24,7 +24,7 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 			parent::__construct($baseUrl);
 		}		
 
-		public function getHttpRequest()
+		protected function getHttpRequest()
 		{
 			$httpRequest = new TingClientHttpRequest();
 			$httpRequest->setMethod(TingClientHttpRequest::GET);
@@ -52,10 +52,9 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 			return $httpRequest;			
 		}
 			
-		public function parseResponse($responseString)
+		protected function parseJson($response)
 		{
 			$searchResult = new TingClientSearchResult();
-			$response = $this->parseJson($responseString);
 	
 			$searchResult->numTotalObjects = $response->result->hitCount;
 	

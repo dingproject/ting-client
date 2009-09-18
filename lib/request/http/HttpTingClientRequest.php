@@ -16,8 +16,8 @@ abstract class HttpTingClientRequest implements TingClientRequest
 		return $this->parseResponse($adapter->execute($this->getHttpRequest()));
 	}
 	
-	abstract public function getHttpRequest();
+	abstract protected function getHttpRequest();
 	
-	abstract public function parseResponse($responseString);
+	abstract protected function parseResponse($responseString);
 	
 }

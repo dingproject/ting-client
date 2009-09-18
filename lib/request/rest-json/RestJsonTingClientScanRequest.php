@@ -22,7 +22,7 @@ class RestJsonTingClientScanRequest extends RestJsonTingClientRequest
 		parent::__construct($baseUrl);
 	}
 	
-	public function getHttpRequest()
+	protected function getHttpRequest()
 	{
 		$httpRequest = new TingClientHttpRequest();
 		$httpRequest->setMethod(TingClientHttpRequest::GET);
@@ -50,10 +50,9 @@ class RestJsonTingClientScanRequest extends RestJsonTingClientRequest
 		return $httpRequest;		
 	}
 		
-	public function parseResponse($responseString)
+	protected function parseJson($response)
 	{
 		$result = new TingClientScanResult();
-		$response = $this->parseJson($responseString);
 		
 		if (isset($response->term) && is_array($response->term))
 		{
