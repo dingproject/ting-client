@@ -71,11 +71,17 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 			{
 				$facet = new TingClientFacetResult();
 				$facet->name = $facetResult->facetName;
-				foreach ($facetResult->facetTerm as $term)
+				if (isset($facetResult->facetTerm))
 				{
-					$facet->terms[$term->term] = $term->frequence;
+					foreach ($facetResult->facetTerm as $term)
+					{
+						if (isset($term->frequence) && ($term->frequence > 0))
+						{
+							$facet->terms[$term->term] = $term->frequence;
+						}
+					}
 				}
-				
+					
 				$searchResult->facets[$facet->name] = $facet;
 			}
 			
