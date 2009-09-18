@@ -9,6 +9,7 @@ class RestJsonTingClientObjectRequest extends RestJsonTingClientRequest
 {
 
 		protected $id;
+		protected $localId;
 	
 		function getObjectId()
 		{
@@ -20,10 +21,33 @@ class RestJsonTingClientObjectRequest extends RestJsonTingClientRequest
 			$this->id = $id;
 		}
 		
+		function getLocalId()
+		{
+			return $this->localId;
+		}
+		
+		function setLocalId($localId)
+		{
+			$this->localId = $localId;
+		}
+		
 		public function execute(TingClientRequestAdapter $adapter)
 		{
 			$request = new RestJsonTingClientSearchRequest($this->baseUrl);
-			$request->setQuery('fedoraPid:'.str_replace(':', '?', $this->id));
+			
+			//determine which id to use and the corresponding index
+			$ids = array(	'fedoraPid' => 'objectId',
+										'rec.id' => 'localId');
+			foreach ($ids as $index => $attribute)
+			{
+				$id = call_user_func(array($this, 'get'.ucfirst($attribute)));
+				if ($id)
+				{	
+					$request->setQuery($index.':'.str_replace(':', '?', $id));
+					break;
+				}
+			}
+			
 			$request->setNumResults(1);
 			
 			$searchResult = $request->execute($adapter);

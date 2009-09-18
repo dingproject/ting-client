@@ -8,27 +8,12 @@ class TingClientObjectDataFactory
 	
 	public function fromSearchObjectData($objectData)
 	{
-		$formats = array('dc' => 'TingClientDublinCoreData');
-		
-		$data = false;
-		$dataArray = array();
-		foreach ($formats as $name => $dataClass)
-		{
-			$data = new $dataClass();
-			if (is_array($objectData) &&
-					isset($objectData[$name]))
-			{
-				$dataArray = $objectData[$name];
-			} elseif (is_object($objectData) &&
-								isset($objectData->$name)) {
-				$dataArray = $objectData->$name;
-			}
-		}
-		
-		if (!$data)
+		if (!isset($objectData->dc))
 		{
 			throw new TingClientException('Search record does not contain recognized data format');
 		}
+		
+		$data = new TingClientDublinCoreData();
 		
 		foreach ($objectData->dc as $attribute => $value)
 		{
@@ -39,6 +24,13 @@ class TingClientObjectDataFactory
 				{
 					array_push($data->$attribute, TingClientObjectIdentifier::factory($v, $data));
 				}
+			}
+			elseif ($attribute == 'local_id_hack' && $value)
+			{
+				$value = (is_array($value)) ? array_shift($value) : $value;
+				$value = explode('|', $value, 2);
+				$data->localId = $value[0];
+				$data->ownerId = (isset($value[1])) ? $value[1] : null;	
 			}
 			else
 			{

@@ -28,4 +28,35 @@ class TingClientLiveCollectionTest extends TingClientLiveZfTest
 		$this->assertEqual($searchObject, $object, 'Retrieved object should be equal to search result');
 	}
 	
+	function testObjectRetrievalByLocalId()
+	{
+		$searchRequest = $this->requestFactory->getSearchRequest();
+		$searchRequest->setQuery('dc.title:danmark');
+		$searchResult = $this->client->execute($searchRequest);
+
+		$this->assertTrue(sizeof($searchResult->collections) > 0, 'Search should return at least one result');
+		
+		$localId = null;
+		$searchObject = null;
+		foreach ($searchResult->collections as $collection)
+		{
+			foreach ($collection->objects as $object)
+			{
+				if ($object->data->localId)
+				{
+					$localId = $object->data->localId;
+					$searchObject = $object;
+					break 2;
+				}
+			}
+		}
+		$this->assertNotNull($localId, 'Search should return at least one object containing a local id');
+		
+		$objectRequest = $this->requestFactory->getObjectRequest();
+		$objectRequest->setLocalId($localId);
+		$object = $this->client->execute($objectRequest);
+
+		$this->assertEqual($searchObject, $object, 'Retrieved object should be equal to search result');
+	}
+	
 }

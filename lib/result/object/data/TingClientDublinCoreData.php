@@ -5,6 +5,8 @@ require_once dirname(__FILE__).'/TingClientObjectData.php';
 class TingClientDublinCoreData implements TingClientObjectData
 {
 	
+	public $localId;
+	public $ownerId;
 	public $identifier;
 	public $title;
 	public $creator;
