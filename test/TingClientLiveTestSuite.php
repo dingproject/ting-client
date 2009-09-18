@@ -11,7 +11,8 @@ class TingClientLiveZfTestSuide extends TestSuite
         $this->addFile('TingClientLiveScanTest.php');
         $this->addFile('TingClientLiveObjectTest.php');
         $this->addFile('TingClientLiveCollectionTest.php');
-  }
+        $this->addFile('TingClientLiveObjectRecommendationTest.php');
+	}
 	
 	public function addFile($file)
 	{
