@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__).'/TingClientHttpRequestAdapter.php';
 require_once dirname(__FILE__).'/TingClientHttpRequest.php';
-require_once dirname(__FILE__).'/../../../exception/TingClientException.php';
+require_once dirname(__FILE__).'/../../exception/TingClientException.php';
 
 class TingClientZfHttpRequestAdapter extends TingClientHttpRequestAdapter 
 {
@@ -12,10 +12,9 @@ class TingClientZfHttpRequestAdapter extends TingClientHttpRequestAdapter
 	 */
 	private $client;
 	
-	function __construct(Zend_Http_Client $client, TingClientHttpRequestFactory $httpRequestFactory)
+	function __construct(Zend_Http_Client $client)
 	{
 		$this->client = $client;
-		parent::__construct($httpRequestFactory);
 	}
 	
 	public function setClient(Zend_Http_Client $client)
@@ -23,9 +22,8 @@ class TingClientZfHttpRequestAdapter extends TingClientHttpRequestAdapter
 		$this->client = $client;
 	}
 	
-	protected function request(TingClientHttpRequest $request)
+	public function executeRequest(TingClientHttpRequest $request)
 	{		
-		
 		//Transfer request configuration to Zend Client 
 		$method = $request->getMethod();
 		$class = new ReflectionClass(get_class($this->client));

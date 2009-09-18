@@ -1,9 +1,8 @@
 <?php
 
 require_once dirname(__FILE__).'/TingClientHttpRequestAdapter.php';
-require_once dirname(__FILE__).'/TingClientHttpRequestFactory.php';
 require_once dirname(__FILE__).'/TingClientHttpRequest.php';
-require_once dirname(__FILE__).'/../../../exception/TingClientException.php';
+require_once dirname(__FILE__).'/../../exception/TingClientException.php';
 
 class TingClientDrupal6HttpRequestAdapter extends TingClientHttpRequestAdapter 
 {
@@ -15,7 +14,7 @@ class TingClientDrupal6HttpRequestAdapter extends TingClientHttpRequestAdapter
 		parent::__construct($httpRequestFactory);
 	}
 	
-	protected function request(TingClientHttpRequest $request)
+	public function executeRequest(TingClientHttpRequest $request)
 	{
 		$result = drupal_http_request($request->getUrl(), array(), $request->getMethod(), NULL, $this->numRetries);
 		if (isset($result->error))

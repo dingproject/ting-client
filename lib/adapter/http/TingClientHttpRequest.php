@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/../../../exception/TingClientException.php';
+require_once dirname(__FILE__).'/../../exception/TingClientException.php';
 
 class TingClientHttpRequest
 {
