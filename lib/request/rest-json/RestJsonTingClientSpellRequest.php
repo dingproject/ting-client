@@ -37,9 +37,12 @@ class RestJsonTingClientSpellRequest	extends RestJsonTingClientRequest
 			}
 
 			$suggestions = array();
-			foreach ($response->term as $term)
+			if (isset($response->term) && $response->term)
 			{
-				$suggestions[] = new TingClientSpellSuggestion($term->suggestion, floatval(str_replace(',', '.', $term->weight)));
+				foreach ($response->term as $term)
+				{
+					$suggestions[] = new TingClientSpellSuggestion($term->suggestion, floatval(str_replace(',', '.', $term->weight)));
+				}
 			}
 			return $suggestions;
 		}
