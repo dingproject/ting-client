@@ -8,10 +8,9 @@ class TingClientDrupal6HttpRequestAdapter extends TingClientHttpRequestAdapter
 {
 	private $numRetries;
 	
-	function __construct(TingClientHttpRequestFactory $httpRequestFactory, $options = array())
+	function __construct($options = array())
 	{
 		$this->numRetries = (isset($options['num_retries'])) ? $options['num_retries'] : 3;
-		parent::__construct($httpRequestFactory);
 	}
 	
 	public function executeRequest(TingClientHttpRequest $request)
