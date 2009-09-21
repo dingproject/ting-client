@@ -13,6 +13,7 @@ class TingClientLiveZfTest extends UnitTestCase {
 	private $searchUrl = 'http://didicas.dbc.dk/opensearch_0.3/';
 	private $scanUrl = 'http://didicas.dbc.dk/openscan/server.php';
 	private $recommendationUrl = 'http://didicas.dbc.dk/openadhl/server.php';
+	private $spellUrl = 'http://didicas.dbc.dk/openspell/server.php';
 	
 	/**
 	 * @var TingClient
@@ -31,7 +32,8 @@ class TingClientLiveZfTest extends UnitTestCase {
 																			'scan' => $this->scanUrl,
 																			'collection' => $this->searchUrl,
 																			'object' => $this->searchUrl,
-																			'recommendation' => $this->recommendationUrl));
+																			'recommendation' => $this->recommendationUrl,
+																			'spell' => $this->spellUrl));
 				
 		$requestAdapter = new TingClientZfHttpRequestAdapter(new Zend_Http_Client());
 

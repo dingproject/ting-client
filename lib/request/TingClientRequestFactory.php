@@ -5,6 +5,7 @@ require_once dirname(__FILE__).'/base/TingClientScanRequest.php';
 require_once dirname(__FILE__).'/base/TingClientObjectRequest.php';
 require_once dirname(__FILE__).'/base/TingClientCollectionRequest.php';
 require_once dirname(__FILE__).'/base/TingClientObjectRecommendationRequest.php';
+require_once dirname(__FILE__).'/base/TingClientSpellRequest.php';
 
 interface TingClientRequestFactory {
 	
@@ -29,7 +30,7 @@ interface TingClientRequestFactory {
 	function getObjectRequest();
 	
 	/**
-	 * @return TingClientRequest
+	 * @return TingClientSpellRequest
 	 */
 	function getSpellRequest();
 	
