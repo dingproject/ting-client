@@ -25,7 +25,7 @@ class TingClientLiveTest extends TingClientLiveZfTest {
 		$scanRequest->setNumResults($numResults);
 		$scanResult = $this->client->execute($scanRequest);
 		
-		$this->assertEqual(sizeof($scanResult->terms), $numResults, 'Returned number of results does not match expected number of results');
+		$this->assertEqual(sizeof($scanResult->terms), $numResults, 'Returned number of results ('.sizeof($scanResult->terms).') does not match expected number of results ('.$numResults.')');
 
 		foreach ($scanResult->terms as $term)
 		{
@@ -50,4 +50,23 @@ class TingClientLiveTest extends TingClientLiveZfTest {
 			$this->assertTrue(strpos($term->name, $query) === 0, 'Returned term '.$term->name.' does not match requested prefix '.$query);
 		}
 	}
+	
+	function testScanCaps()
+	{
+		$query = 'Rest';
+		
+		$scanRequest = $this->requestFactory->getScanRequest();
+		$scanRequest->setField('title');
+		$scanRequest->setLower($query);
+		$scanRequest->setNumResults(3);
+		$scanResult = $this->client->execute($scanRequest);
+		
+		$this->assertNoErrors('Scan should not throw errors');
+		
+		foreach ($scanResult->terms as $term)
+		{
+			$this->assertTrue(strpos($term->name, $query) === 0, 'Returned term '.$term->name.' does not match requested prefix '.$query);
+		}
+	}	
+	
 }
