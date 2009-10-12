@@ -9,6 +9,10 @@ interface TingClientObjectRecommendationRequest
 		
 		function setIsbn($isbn);
 		
+		function getNumResults();
+		
+		function setNumResults($numResults);
+		
 		function getSex();
 		
 		function setSex($sex);

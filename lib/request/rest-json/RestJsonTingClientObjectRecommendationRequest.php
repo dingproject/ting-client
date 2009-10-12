@@ -8,6 +8,7 @@ class RestJsonTingClientObjectRecommendationRequest extends RestJsonTingClientRe
 																										implements TingClientObjectRecommendationRequest
 {
 		protected $isbn;
+		protected $numResults;
 		protected $sex;
 		protected $minAge;
 		protected $maxAge;
@@ -22,6 +23,16 @@ class RestJsonTingClientObjectRecommendationRequest extends RestJsonTingClientRe
 		public function setIsbn($isbn)
 		{
 			$this->isbn = $isbn;
+		}
+		
+		function getNumResults()
+		{
+			return $this->numResults;
+		}
+		
+		function setNumResults($numResults)
+		{
+			$this->numResults = $numResults;
 		}
 		
 		public function getSex()
@@ -66,6 +77,11 @@ class RestJsonTingClientObjectRecommendationRequest extends RestJsonTingClientRe
 			{
 				$request->setGetParameter('isbn', $this->isbn);
 			}
+			
+		  if ($this->numResults)
+      {
+        $request->setGetParameter('numRecords', $this->numResults);
+      }
 			
 			if ($this->sex)
 			{
