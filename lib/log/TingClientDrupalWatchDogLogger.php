@@ -12,7 +12,7 @@ class TingClientDrupalWatchDogLogger extends TingClientLogger
 	
 	public function doLog($message, $severity)
 	{
-		watchdog(	'TingClient', $message, null, 
+		watchdog(	'ting client', $message, null, 
 							constant('WATCHDOG_'.$severity), 
 							'http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
 	}	
