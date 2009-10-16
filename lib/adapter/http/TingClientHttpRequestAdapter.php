@@ -29,8 +29,8 @@ abstract class TingClientHttpRequestAdapter implements TingClientRequestAdapter
 			$response = $this->executeRequest($request);
 
 			$stopTime = explode(' ', microtime());
-			$time = ($stopTime[1]+$stopTime[0]) - ($startTime[1]+$startTime[0]);
-			$this->logger->log('Completed HTTP request '.$request->getUrl().' ('.$time.'s)');
+			$time = floatval(($stopTime[1]+$stopTime[0]) - ($startTime[1]+$startTime[0]));
+			$this->logger->log('Completed HTTP request '.$request->getUrl().' ('.round($time, 3).'s)');
 			
 			return $response;
 		} 
