@@ -117,7 +117,7 @@ class RestJsonTingClientObjectRecommendationRequest extends RestJsonTingClientRe
 		{
 			if (isset($response->error))
 			{
-				throw new TingClientException('Error handling recommendation request: '.implode(', ', $response->error));
+				throw new TingClientException('Error handling recommendation request: '.$response->error);
 			}
 			
 			$recommendations = array();

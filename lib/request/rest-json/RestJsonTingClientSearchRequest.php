@@ -55,7 +55,12 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 		protected function parseJson($response)
 		{
 			$searchResult = new TingClientSearchResult();
-	
+
+      if (isset($response->error))
+      {
+        throw new TingClientException('Error handling search request: '.$response->error);
+      }
+			
 			$searchResult->numTotalObjects = $response->result->hitCount;
 	
 			if (isset($response->result->searchResult) && is_array($response->result->searchResult))
@@ -65,25 +70,28 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 					$searchResult->collections[] = $this->generateCollection($result);
 				}
 			}
-	
-			foreach ($response->result->facetResult as $facetResult)
+	    
+			if (isset($response->result->facetResult) && is_array($response->result->facetResult))
 			{
-				$facet = new TingClientFacetResult();
-				$facet->name = $facetResult->facetName;
-				if (isset($facetResult->facetTerm))
+				foreach ($response->result->facetResult as $facetResult)
 				{
-					foreach ($facetResult->facetTerm as $term)
+					$facet = new TingClientFacetResult();
+					$facet->name = $facetResult->facetName;
+					if (isset($facetResult->facetTerm))
 					{
-						if (isset($term->frequence) && ($term->frequence > 0))
+						foreach ($facetResult->facetTerm as $term)
 						{
-							$facet->terms[$term->term] = $term->frequence;
+							if (isset($term->frequence) && ($term->frequence > 0))
+							{
+								$facet->terms[$term->term] = $term->frequence;
+							}
 						}
 					}
+						
+					$searchResult->facets[$facet->name] = $facet;
 				}
-					
-				$searchResult->facets[$facet->name] = $facet;
-			}
-			
+		  }
+		  
 			return $searchResult;			
 		}
 		
