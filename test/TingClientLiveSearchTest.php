@@ -153,5 +153,19 @@ class TingClientLiveSearchTest extends TingClientLiveZfTest {
 			}
 		}
 	}
+  
+  function testAgency()
+  {
+  	$agency = 775100;
+  	
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('Harry Potter');
+    $searchRequest->setAgency(775100);
+    $searchResult = $this->client->execute($searchRequest);
+
+    $this->assertNoErrors('Search should not throw errors');
+
+    $this->assertTrue(sizeof($searchResult->collections) > 0, 'Search with agency should return collections');
+  }	
 	
 }

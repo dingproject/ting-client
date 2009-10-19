@@ -2,7 +2,7 @@
 
 interface TingClientSearchRequest
 {
-
+	
 		function getQuery();
 		
 		function setQuery($query);
@@ -34,5 +34,9 @@ interface TingClientSearchRequest
 		function getAllObjects();
 		
 		function setAllObjects($allObjects);
+		
+		function getAgency();
+		
+		function setAgency($agency);
 	
 }

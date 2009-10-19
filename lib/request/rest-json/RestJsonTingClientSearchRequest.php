@@ -18,6 +18,7 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 		protected $numResults;
 		protected $sort;
 		protected $allObjects;
+		protected $agency;
 	
 		public function __construct($baseUrl)
 		{
@@ -38,7 +39,8 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 																	'format' => 'format',
 																	'start' => 'start',
 																	'numResults' => 'stepValue',
-																	'allObjects' => 'allObjects');
+																	'allObjects' => 'allObjects',
+			                            'agency' => 'agency');
 			
 			foreach ($methodParameterMap as $method => $parameter)
 			{
@@ -194,6 +196,16 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 		function setAllObjects($allObjects)
 		{
 			$this->allObjects = $allObjects;
+		}
+		
+		function getAgency()
+		{
+			return $this->agency;
+		}
+		
+		function setAgency($agency)
+		{
+			$this->agency = $agency;
 		}
 	
 }
