@@ -59,6 +59,13 @@ class TingClientHttpRequest
 	
 	public function getUrl()
 	{
+		//http_build_query expects values in ISO-8859-1 so decode ut8_decode
+		//TODO: Assumes UTF8 input. Add check to test parameter encoding
+    $parameters = $this->getGetParameters();
+    foreach ($parameters as &$p)
+    {
+      $p = (!is_array($p)) ? utf8_decode($p) : $p;
+    }
 		return $this->getBaseUrl().'?'.http_build_query($this->getGetParameters(), NULL, '&');
 	}
 	
