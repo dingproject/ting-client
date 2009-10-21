@@ -1,6 +1,8 @@
 <?php
 
-interface TingClientObjectRequest
+require_once dirname(__FILE__) . '/TingClientAgentRequest.php';
+
+interface TingClientObjectRequest extends TingClientAgentRequest
 {
 
 		function getObjectId();
@@ -10,5 +12,5 @@ interface TingClientObjectRequest
 		function getLocalId();
 		
 		function setLocalId($id);
-	
+		
 }

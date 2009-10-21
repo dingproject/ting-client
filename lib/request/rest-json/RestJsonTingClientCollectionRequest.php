@@ -8,7 +8,8 @@ class RestJsonTingClientCollectionRequest extends RestJsonTingClientRequest
 {
 
 		protected $id;
-	
+	  protected $agency;
+	  
 		function getObjectId()
 		{
 			return $id;
@@ -19,10 +20,21 @@ class RestJsonTingClientCollectionRequest extends RestJsonTingClientRequest
 			$this->id = $id;
 		}
 
+		function getAgency()
+		{
+			return $this->agency;
+		}
+		
+		function setAgency($agency)
+		{
+			$this->agency = $agency;
+		}
+		
 		public function execute(TingClientRequestAdapter $adapter)
 		{
 			$request = new RestJsonTingClientSearchRequest($this->baseUrl);
 			$request->setQuery('fedoraPid:'.str_replace(':', '?', $this->id));
+			$request->setAgency($this->agency);
 			$request->setAllObjects(true); 
 			$request->setNumResults(1);
 			

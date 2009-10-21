@@ -10,6 +10,7 @@ class RestJsonTingClientObjectRequest extends RestJsonTingClientRequest
 
 		protected $id;
 		protected $localId;
+		protected $agency;
 	
 		function getObjectId()
 		{
@@ -29,6 +30,16 @@ class RestJsonTingClientObjectRequest extends RestJsonTingClientRequest
 		function setLocalId($localId)
 		{
 			$this->localId = $localId;
+		}
+		
+		function getAgency()
+		{
+			return $this->agency;
+		}
+		
+		function setAgency($agency)
+		{
+			$this->agency = $agency;
 		}
 		
 		public function execute(TingClientRequestAdapter $adapter)

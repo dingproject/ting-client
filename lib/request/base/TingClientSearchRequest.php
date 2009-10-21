@@ -1,6 +1,8 @@
 <?php
 
-interface TingClientSearchRequest
+require_once dirname(__FILE__) . '/TingClientAgentRequest.php';
+
+interface TingClientSearchRequest extends TingClientAgentRequest
 {
 	
 		function getQuery();
@@ -34,9 +36,5 @@ interface TingClientSearchRequest
 		function getAllObjects();
 		
 		function setAllObjects($allObjects);
-		
-		function getAgency();
-		
-		function setAgency($agency);
 	
 }
