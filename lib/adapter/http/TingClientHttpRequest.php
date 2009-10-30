@@ -66,7 +66,7 @@ class TingClientHttpRequest
     {
       $p = (!is_array($p)) ? utf8_decode($p) : $p;
     }
-		return $this->getBaseUrl().'?'.http_build_query($this->getGetParameters(), NULL, '&');
+		return $this->getBaseUrl().'?'.http_build_query($parameters, NULL, '&');
 	}
 	
 	public function getParameters($method)
