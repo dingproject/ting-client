@@ -14,8 +14,8 @@ class TingClientLiveCollectionTest extends TingClientLiveZfTest
 	{
 		$searchRequest = $this->requestFactory->getSearchRequest();
 		$searchRequest->setQuery('dc.title:danmark');
+		$searchRequest->setNumResults(1);
 		$searchResult = $this->client->execute($searchRequest);
-
 		$this->assertTrue(sizeof($searchResult->collections) > 0, 'Search should return at least one result');
 		
 		$searchObject = $searchResult->collections[0]->objects[0];
@@ -23,6 +23,7 @@ class TingClientLiveCollectionTest extends TingClientLiveZfTest
 		
 		$objectRequest = $this->requestFactory->getObjectRequest();
 		$objectRequest->setObjectId($searchObject->id);
+    $searchRequest->setNumResults(1);
 		$object = $this->client->execute($objectRequest);
 
 		$this->assertEqual($searchObject, $object, 'Retrieved object should be equal to search result');
@@ -32,6 +33,7 @@ class TingClientLiveCollectionTest extends TingClientLiveZfTest
 	{
 		$searchRequest = $this->requestFactory->getSearchRequest();
 		$searchRequest->setQuery('dc.title:danmark');
+    $searchRequest->setNumResults(1);
 		$searchResult = $this->client->execute($searchRequest);
 
 		$this->assertTrue(sizeof($searchResult->collections) > 0, 'Search should return at least one result');

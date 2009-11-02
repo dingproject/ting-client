@@ -3,7 +3,8 @@
 require_once dirname(__FILE__) . '/RestJsonTingClientRequest.php';
 require_once dirname(__FILE__) . '/../base/TingClientSearchRequest.php';
 require_once dirname(__FILE__) . '/../../result/search/TingClientSearchResult.php';
-require_once dirname(__FILE__) . '/../../result/object/data/TingClientObjectDataFactory.php';
+require_once dirname(__FILE__) . '/../../result/object/data/TingClientDublinCoreData.php';
+require_once dirname(__FILE__) . '/../../result/object/identifier/TingClientObjectIdentifier.php';
 
 
 class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest 
@@ -58,35 +59,33 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 		{
 			$searchResult = new TingClientSearchResult();
 
-      if (isset($response->error))
+			$searchResponse = $response->searchResponse;
+      if (isset($searchResponse->error))
       {
-        throw new TingClientException('Error handling search request: '.$response->error);
+        throw new TingClientException('Error handling search request: '.$searchResponse->error);
       }
 			
-			$searchResult->numTotalObjects = $response->result->hitCount;
+			$searchResult->numTotalObjects = self::getValue($searchResponse->result->hitCount);
 	
-			if (isset($response->result->searchResult) && is_array($response->result->searchResult))
+			if (isset($searchResponse->result->searchResult) && is_array($searchResponse->result->searchResult))
 			{
-				foreach ($response->result->searchResult as $entry => $result)
+				foreach ($searchResponse->result->searchResult as $entry => $result)
 				{
-					$searchResult->collections[] = $this->generateCollection($result);
+					$searchResult->collections[] = $this->generateCollection($result->collection);
 				}
 			}
 	    
-			if (isset($response->result->facetResult) && is_array($response->result->facetResult))
+			if (isset($searchResponse->result->facetResult->facet) && is_array($searchResponse->result->facetResult->facet))
 			{
-				foreach ($response->result->facetResult as $facetResult)
+				foreach ($searchResponse->result->facetResult->facet as $facetResult)
 				{
 					$facet = new TingClientFacetResult();
-					$facet->name = $facetResult->facetName;
+					$facet->name = self::getValue($facetResult->facetName);
 					if (isset($facetResult->facetTerm))
 					{
 						foreach ($facetResult->facetTerm as $term)
 						{
-							if (isset($term->frequence) && ($term->frequence > 0))
-							{
-								$facet->terms[$term->term] = $term->frequence;
-							}
+							$facet->terms[self::getValue($term->term)] = self::getValue($term->frequence);
 						}
 					}
 						
@@ -100,8 +99,46 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 		private function generateObject($objectData)
 		{
 			$object = new TingClientObject();
-			$object->id = $objectData->identifier;
-			$object->data = TingClientObjectDataFactory::fromSearchObjectData($objectData);
+			$object->id = self::getValue($objectData->identifier);
+			
+			$data = new TingClientDublinCoreData();
+
+			//Set all known attributes
+			$varNames = array_keys(get_object_vars($data));
+			foreach ($objectData->record as $name => $value)
+			{
+				if (in_array($name, $varNames))
+				{
+					$data->$name = self::getValue($value);
+				}
+			}
+			
+			//Handle identifiers separately to extract types etc.
+			$data->identifier = array();
+			if (isset($objectData->record->identifier))
+			{
+				foreach($objectData->record->identifier as $identifier)
+				{
+					$id = self::getValue($identifier);
+					$type = self::getAttributeValue($identifier, 'type');
+					$data->identifier[] = TingClientObjectIdentifier::factory($id, $type);
+				}
+			}
+			foreach ($data->identifier as $identifier)
+			{
+				if ($identifier->type == TingClientObjectIdentifier::FAUST_NUMBER)
+				{
+					$identifier = explode('|', $identifier->id, 2);
+					$idNames = array('localId', 'ownerId');
+					foreach ($identifier as $index => $value)
+					{
+						$data->$idNames[$index] = $value;
+					}
+				}
+			}
+			
+			$object->data = $data;
+						
 			return $object;
 		}
 		

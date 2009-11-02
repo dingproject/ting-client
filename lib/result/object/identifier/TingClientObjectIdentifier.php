@@ -3,14 +3,11 @@
 class TingClientObjectIdentifier
 {
 	
-	const ISSN = 'ISSN';
+  const FAUST_NUMBER = 'FAUST';
 	const ISBN = 'ISBN';
+	const ISSN = 'ISSN';
 	const URL = 'URL';
 	const UNKNOWN = 'UNKNOWN';
-
-	static private $ID_TYPE_MAP = array(self::ISSN => '/^ISSN:\s(.*)/i', 
-																			self::ISBN => '/^ISBN:\s(.*)/i',
-																			self::URL => '/^(http\:\/\/[a-zA-Z0-9_\-]+(?:\.[a-zA-Z0-9_\-]+)*\.[a-zA-Z]{2,4}(?:\/[a-zA-Z0-9_]+)*(?:\/[a-zA-Z0-9_]+\.[a-zA-Z]{2,4}(?:\?[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)?)?(?:\&[a-zA-Z0-9_]+\=[a-zA-Z0-9_]+)*)$/i');
 																
 	public $type;
 	public $id;
@@ -25,11 +22,19 @@ class TingClientObjectIdentifier
 	 * @param TingClientDublinCoreData
 	 * @return TingClientRecordIdentifier
 	 */
-	public static function factory($identifier, TingClientDublinCoreData $object) {
-		if (in_array($object->type[0], array('Bog', 'Årbog', 'Bog stor skrift', 'Billedbog', 'Tegneserie'))) {
-			return new TingClientObjectIdentifier(self::ISBN, $identifier);
+	public static function factory($identifier, $type = NULL)
+	{
+    $t = self::UNKNOWN;
+    if ($type == 'dkdcplus:ISBN')
+    {
+      $t = self::ISBN;
+    }
+    elseif (strpos($identifier, '|') !== FALSE)
+    {
+    	$t = self::FAUST_NUMBER;
 		}
-		return new TingClientObjectIdentifier(self::UNKNOWN, $identifier);
+    
+		return new TingClientObjectIdentifier($t, $identifier);
 	}
 	
 	public function __toString()

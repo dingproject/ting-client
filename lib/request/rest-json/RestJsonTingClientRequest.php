@@ -24,6 +24,52 @@ abstract class RestJsonTingClientRequest extends HttpTingClientRequest
 		return $this->parseJson($response);
 	}
 	
-	protected abstract function parseJson($response);
+	protected static function getValue($object)
+	{
+		if (is_array($object))
+		{
+      return array_map(array('RestJsonTingClientRequest', 'getValue'), $object);
+		}
+		else
+		{
+  		return self::getBadgerFishValue($object, '$');
+		}
+	}
+
+	protected static function getAttributeValue($object, $attributeName)
+	{
+		$attribute = self::getAttribute($object, $attributeName);
+		if (is_array($attribute))
+		{
+			return array_map(array('RestJsonTingClientRequest', 'getValue'), $attribute);
+		}
+		else
+		{
+			return self::getValue($attribute); 
+		}
+	}
+
+  protected static function getAttribute($object, $attributeName)
+  {
+    //ensure that attribute names are prefixed with @
+    $attributeName = ($attributeName[0] != '@') ? '@'.$attributeName : $attributeName;
+    return self::getBadgerFishValue($object, $attributeName);
+  }
+	
+	protected static function getNamespace($object)
+	{
+		return self::getBadgerFishValue($object, '@');
+	}
+	
+	/**
+	 * Helper to reach JSON BadgerFish values with tricky attribute names.
+	 */
+	protected static function getBadgerFishValue($badgerFishObject, $valueName)
+	{
+		$properties = get_object_vars($badgerFishObject);
+    return (isset($properties[$valueName])) ? $properties[$valueName] : NULL;
+	}
+	
+	protected abstract function parseJson($response);	
 	
 }

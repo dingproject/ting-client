@@ -62,6 +62,7 @@ class RestJsonTingClientObjectRequest extends RestJsonTingClientRequest
 			$request->setNumResults(1);
 			
 			$searchResult = $request->execute($adapter);
+			//var_dump($searchResult);
 			return $searchResult->collections[0]->objects[0];
 		}
 
