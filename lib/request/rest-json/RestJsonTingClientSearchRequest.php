@@ -31,7 +31,7 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 			$httpRequest = new TingClientHttpRequest();
 			$httpRequest->setMethod(TingClientHttpRequest::GET);
 			$httpRequest->setBaseUrl($this->baseUrl);
-			$httpRequest->setGetParameter('action', 'searchRequest');
+			$httpRequest->setGetParameter('action', 'search');
 			$httpRequest->setGetParameter('outputType', 'json');
 			
 			$methodParameterMap = array('query' => 'query',
