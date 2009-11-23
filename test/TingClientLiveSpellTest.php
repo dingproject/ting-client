@@ -9,11 +9,12 @@ class TingClientLiveSpellTest extends TingClientLiveZfTest
 	{
 		$request = $this->requestFactory->getSpellRequest();
 		$request->setWord('tilyke');
+		$request->setNumResults(3);
 		$suggestions = $this->client->execute($request);
-		
+
 		$this->assertNoErrors('Spell request should not throw errors');
 
-		$this->assertTrue(sizeof($suggestions) > 0, 'Suggestions should return at least one result');
+		$this->assertEqual(sizeof($suggestions), 3, 'Suggestions should return the requested number of results');
 	}
 	
 }

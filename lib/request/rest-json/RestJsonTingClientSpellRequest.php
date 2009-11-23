@@ -15,6 +15,7 @@ class RestJsonTingClientSpellRequest	extends RestJsonTingClientRequest
 			$request = new TingClientHttpRequest();
 			$request->setBaseUrl($this->baseUrl);
 			$request->setMethod(TingClientHttpRequest::GET);
+			$request->setGetParameter('action', 'openSpell');
 			$request->setGetParameter('outputType', 'json');
 			
 			if ($this->word)
@@ -31,17 +32,16 @@ class RestJsonTingClientSpellRequest	extends RestJsonTingClientRequest
 		
 		protected function parseJson($response)
 		{
-			if (isset($response->error))
-			{
-				throw new TingClientException($response->error);
-			}
-
 			$suggestions = array();
-			if (isset($response->term) && $response->term)
+			if (isset($response->spellResponse))
 			{
-				foreach ($response->term as $term)
+				$response = $response->spellResponse;
+				if (isset($response->term) && $response->term)
 				{
-					$suggestions[] = new TingClientSpellSuggestion($term->suggestion, floatval(str_replace(',', '.', $term->weight)));
+					foreach ($response->term as $term)
+					{
+						$suggestions[] = new TingClientSpellSuggestion($this->getValue($term->suggestion), floatval(str_replace(',', '.', $this->getValue($term->weight))));
+					}
 				}
 			}
 			return $suggestions;
