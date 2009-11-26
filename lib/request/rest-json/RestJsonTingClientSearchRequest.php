@@ -103,13 +103,32 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 			
 			$data = new TingClientDublinCoreData();
 
-			//Set all known attributes
+			//Set all known attributes mapping 1:1.
 			$varNames = array_keys(get_object_vars($data));
 			foreach ($objectData->record as $name => $value)
 			{
 				if (in_array($name, $varNames))
 				{
 					$data->$name = self::getValue($value);
+				}
+			}
+			
+			//Handle creator seperately to filter on types
+			if (isset($objectData->record->creator))
+			{
+				$autCreators = array();
+				foreach($objectData->record->creator as $creator)
+				{
+					//For now only use oss:aut names. Other types duplicate this in various forms
+					if (self::getAttributeValue($creator, 'type') == 'oss:aut')
+					{
+						$autCreators[] = self::getValue($creator);
+					}
+				}
+				//Only reset creators if aut names were extracted
+				if (sizeof($autCreators) > 0)
+				{
+					$data->creator = $autCreators;
 				}
 			}
 			
