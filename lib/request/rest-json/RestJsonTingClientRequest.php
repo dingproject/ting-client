@@ -68,15 +68,13 @@ abstract class RestJsonTingClientRequest extends HttpTingClientRequest
   {
     $properties = get_object_vars($badgerFishObject);
     if (isset($properties[$valueName])) {
-      //some values contain html entities - decode these
-      $value = html_entity_decode($properties[$valueName], ENT_COMPAT, 'UTF-8');
-      
-      //some utf8 characters are not included in standard fonts - replace these with something common
-      //TODO: Consider moving this logic as this changes the basis for future queries
-      //based on replaced values
-      $replacements = array('/\x{A732}/u' => 'Å');
-      $value = preg_replace(array_keys($replacements), array_values($replacements), $value);
-      
+      $value = $properties[$valueName];     
+      if (is_string($value))
+      {
+        //some values contain html entities - decode these
+        $value = html_entity_decode($value, ENT_COMPAT, 'UTF-8');
+      }
+    	      
       return $value;
     }
     else
