@@ -49,6 +49,7 @@ class TingClientLiveSearchTest extends TingClientLiveZfTest {
   
     $this->assertNoErrors('Search should not throw errors');
     
+    $this->assertEqual(sizeof($searchResult->numTotalCollections), 1, 'Returned collection count does not match requested number');            
     $this->assertEqual(sizeof($searchResult->collections), 1, 'Returned number of results does not match requested number');            
   }
   

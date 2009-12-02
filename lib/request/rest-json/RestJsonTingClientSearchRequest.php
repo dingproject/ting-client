@@ -66,7 +66,8 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
       }
 			
 			$searchResult->numTotalObjects = self::getValue($searchResponse->result->hitCount);
-	
+      $searchResult->numTotalCollections = self::getValue($searchResponse->result->collectionCount);
+			
 			if (isset($searchResponse->result->searchResult) && is_array($searchResponse->result->searchResult))
 			{
 				foreach ($searchResponse->result->searchResult as $entry => $result)
