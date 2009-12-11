@@ -28,7 +28,8 @@ class RestJsonTingClientScanRequest extends RestJsonTingClientRequest
 		$httpRequest->setMethod(TingClientHttpRequest::GET);
 		$httpRequest->setBaseUrl($this->baseUrl);
 		$httpRequest->setGetParameter('outputType', 'json');
-		
+		$httpRequest->setGetParameter('action', 'openScan');
+
 		$methodParameterMap = array('field' => 'field',
 																'prefix' => 'prefix',
 																'numResults' => 'limit',
@@ -53,14 +54,14 @@ class RestJsonTingClientScanRequest extends RestJsonTingClientRequest
 	protected function parseJson($response)
 	{
 		$result = new TingClientScanResult();
-		
-		if (isset($response->term) && is_array($response->term))
+
+		if (isset($response->scanResponse->term) && is_array($response->scanResponse->term))
 		{
-			foreach ($response->term as $scanTerm)
+			foreach ($response->scanResponse->term as $scanTerm)
 			{
 					$term = new TingClientScanTerm();
-					$term->name = $scanTerm->name;
-					$term->count = $scanTerm->hitCount;
+					$term->name = $scanTerm->name->{'$'};
+					$term->count = $scanTerm->hitCount->{'$'};
 					$result->terms[] = $term;
 			}
 		}
