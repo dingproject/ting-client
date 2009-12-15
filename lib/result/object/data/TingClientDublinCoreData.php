@@ -12,6 +12,7 @@ class TingClientDublinCoreData implements TingClientObjectData
 	public $creator;
 	public $subject;
 	public $description;
+	public $abstract;
 	public $publisher;
 	public $contributor;
 	public $date;
