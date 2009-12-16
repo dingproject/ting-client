@@ -40,6 +40,7 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 																	'format' => 'format',
 																	'start' => 'start',
 																	'numResults' => 'stepValue',
+																	'sort' => 'sort',
 																	'allObjects' => 'allObjects',
 			                            'agency' => 'agency');
 			
