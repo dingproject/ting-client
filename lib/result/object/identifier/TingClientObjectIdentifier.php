@@ -29,6 +29,14 @@ class TingClientObjectIdentifier
     {
       $t = self::ISBN;
     }
+    elseif ($type == 'dkdcplus:ISSN')
+    {
+      $t = self::ISSN;
+    }
+    elseif ($type == 'dcterms:URI')
+    {
+      $t = self::URL;
+    }
     elseif (strpos($identifier, '|') !== FALSE)
     {
     	$t = self::FAUST_NUMBER;
