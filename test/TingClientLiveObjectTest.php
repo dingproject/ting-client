@@ -44,9 +44,9 @@ class TingClientLiveCollectionTest extends TingClientLiveZfTest
 		{
 			foreach ($collection->objects as $object)
 			{
-				if ($object->data->localId)
+				if ($object->localId)
 				{
-					$localId = $object->data->localId;
+					$localId = $object->localId;
 					$searchObject = $object;
 					break 2;
 				}
