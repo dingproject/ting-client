@@ -11,7 +11,7 @@ class TingClientHttpRequest
 	
 	private $method;
 	private $baseUrl;
-	private $parameters = array(self::GET => array(), 
+	private $parameters = array(self::GET => array('encoding' => 'iso-8859-1'),
 															self::POST => array());
 	
 	public function setMethod($method)
@@ -59,8 +59,11 @@ class TingClientHttpRequest
 	
 	public function getUrl()
 	{
-		//http_build_query expects values in ISO-8859-1 so decode ut8_decode
-		//TODO: Assumes UTF8 input. Add check to test parameter encoding
+    // Newer versions of the DBC services allow GET arguments encoded in UTF-8
+    // when &encoding=utf-8 is added to the URL. As of February 2010, not all
+    // support this argument. Instead they expect arguments to be encoded in
+    // ISO-8859-1, so for now we use ISO-8859-1 for all services.
+    // TODO: Assumes UTF8 input. Add check to test parameter encoding
     $parameters = $this->getGetParameters();
     foreach ($parameters as &$p)
     {
