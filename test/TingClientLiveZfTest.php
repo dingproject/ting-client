@@ -12,7 +12,7 @@ class TingClientLiveZfTest extends UnitTestCase {
 	
 	private $searchUrl = 'http://didicas.dbc.dk/opensearch_0.8/';
 	private $scanUrl = 'http://didicas.dbc.dk/openscan_1.3/server.php';
-	private $recommendationUrl = 'http://didicas.dbc.dk/openadhl/server.php';
+	private $recommendationUrl = 'http://didicas.dbc.dk/openadhl/1.1/';
 	private $spellUrl = 'http://didicas.dbc.dk/openspell/server.php';
 	
 	/**

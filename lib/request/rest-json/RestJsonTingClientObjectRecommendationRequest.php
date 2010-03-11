@@ -72,7 +72,9 @@ class RestJsonTingClientObjectRecommendationRequest extends RestJsonTingClientRe
 			$request = new TingClientHttpRequest();
 			$request->setBaseUrl($this->baseUrl);
 			$request->setMethod(TingClientHttpRequest::GET);
-			$request->setGetParameter('outputType', 'json');
+			$request->setGetParameter('action', 'ADHLRequest');
+      $request->setGetParameter('outputType', 'json');
+      
 			if ($this->isbn)
 			{
 				$request->setGetParameter('isbn', $this->isbn);
@@ -121,18 +123,19 @@ class RestJsonTingClientObjectRecommendationRequest extends RestJsonTingClientRe
 			}
 			
 			$recommendations = array();
-			if (isset($response->dc))
+			if (isset($response->adhlResponse->record))
 			{
-				foreach($response->dc as $dc)
+				foreach($response->adhlResponse->record as $record)
 				{
 					$recommendation = new TingClientObjectRecommendation();
-					if (isset($dc->id))
+					if ($id = $this->getAttributeValue($record, 'recordId'))
 					{
-						$id = explode('|', $dc->id, 2);
+						$id = explode('|', $id, 2);
 						$recommendation->localId = $id[0];
 						$recommendation->ownerId = (isset($id[1])) ? $id[1] : null;
 					}
 					$recommendations[] = $recommendation;
+					
 				}
 			}
 			
