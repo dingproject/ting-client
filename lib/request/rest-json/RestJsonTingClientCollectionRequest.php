@@ -33,7 +33,7 @@ class RestJsonTingClientCollectionRequest extends RestJsonTingClientRequest
 		public function execute(TingClientRequestAdapter $adapter)
 		{
 			$request = new RestJsonTingClientSearchRequest($this->baseUrl);
-			$request->setQuery('fedoraNormPid:'.str_replace(':', '_', $this->id));
+			$request->setQuery('rec.id='.$this->id);
 			$request->setAgency($this->agency);
 			$request->setAllObjects(true); 
 			$request->setNumResults(1);

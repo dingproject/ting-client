@@ -47,14 +47,14 @@ class RestJsonTingClientObjectRequest extends RestJsonTingClientRequest
 			$request = new RestJsonTingClientSearchRequest($this->baseUrl);
 			
 			//determine which id to use and the corresponding index
-			$ids = array(	'fedoraNormPid' => 'objectId',
-										'rec.id' => 'localId');
+			$ids = array(	'rec.id' => 'objectId',
+							'rec.id' => 'localId');
 			foreach ($ids as $index => $attribute)
 			{
 				$id = call_user_func(array($this, 'get'.ucfirst($attribute)));
 				if ($id)
 				{	
-					$request->setQuery($index.':'.str_replace(':', '_', $id));
+					$request->setQuery($index.':'.$id);
 					break;
 				}
 			}
