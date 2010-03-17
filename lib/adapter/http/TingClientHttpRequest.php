@@ -11,7 +11,7 @@ class TingClientHttpRequest
 	
 	private $method;
 	private $baseUrl;
-	private $parameters = array(self::GET => array('encoding' => 'iso-8859-1'),
+	private $parameters = array(self::GET => array('encoding' => 'utf-8'),
 															self::POST => array());
 	
 	public function setMethod($method)
@@ -59,17 +59,16 @@ class TingClientHttpRequest
 	
 	public function getUrl()
 	{
-    // Newer versions of the DBC services allow GET arguments encoded in UTF-8
-    // when &encoding=utf-8 is added to the URL. As of February 2010, not all
-    // support this argument. Instead they expect arguments to be encoded in
-    // ISO-8859-1, so for now we use ISO-8859-1 for all services.
-    // TODO: Assumes UTF8 input. Add check to test parameter encoding
     $parameters = $this->getGetParameters();
-    foreach ($parameters as &$p)
-    {
-      $p = (!is_array($p)) ? utf8_decode($p) : $p;
+    $parameters = self::encodeUtf8($parameters);
+    
+    $elements = array();
+    foreach ($parameters as $key => $value) {
+    	$elements[] = self::buildQueryElement($key, $value);
     }
-		return $this->getBaseUrl().'?'.http_build_query($parameters, NULL, '&');
+    $elements = implode('&', $elements);
+    
+    return $this->baseUrl.'?'.$elements;
 	}
 	
 	public function getParameters($method)
@@ -93,6 +92,34 @@ class TingClientHttpRequest
 		{
 			throw new TingClientException('Unrecognized method "'.$method.'"');
 		}
+	}
+	
+	private static function encodeUtf8($value) {
+		if (is_array($value)) {
+			foreach ($value as &$v) {
+				$v = self::encodeUtf8($v);
+			}
+		} else {
+		  if (!(preg_match('/^./us', $value) == 1)) {
+        $value = utf8_encode($value);
+      }
+		}
+		
+		return $value;
+	}
+	
+	private static function buildQueryElement($key, $value) {
+		if (is_array($value)) {
+			$element = array();
+			foreach ($value as $i => $v) {
+        $element[] = self::buildQueryElement($key.'['.$i.']', $v);
+			}
+			$element = implode('&', $element);
+		}	else {
+      $element = $key.'='.urlencode($value);			
+		}
+		
+		return $element;
 	}
 	
 }
