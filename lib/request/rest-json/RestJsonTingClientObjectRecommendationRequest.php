@@ -128,13 +128,14 @@ class RestJsonTingClientObjectRecommendationRequest extends RestJsonTingClientRe
 				foreach($response->adhlResponse->record as $record)
 				{
 					$recommendation = new TingClientObjectRecommendation();
-					if ($id = $this->getAttributeValue($record, 'recordId'))
+					if ($id = $this->getValue($record->recordId))
 					{
 						$id = explode('|', $id, 2);
 						$recommendation->localId = $id[0];
 						$recommendation->ownerId = (isset($id[1])) ? $id[1] : null;
+						
+						$recommendations[] = $recommendation;
 					}
-					$recommendations[] = $recommendation;
 					
 				}
 			}
