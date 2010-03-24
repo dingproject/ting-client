@@ -44,6 +44,7 @@ class RestJsonTingClientObjectRequest extends RestJsonTingClientRequest
 		
 		public function execute(TingClientRequestAdapter $adapter)
 		{
+			//getting an object is actually just performing a search using specific indexes
 			$request = new RestJsonTingClientSearchRequest($this->baseUrl);
 			
 			//Determine which id to use and the corresponding index
@@ -55,10 +56,16 @@ class RestJsonTingClientObjectRequest extends RestJsonTingClientRequest
 				$request->setQuery('rec.id:'.$localId);
 			}
 			
+			//transfer agency from object to search request
+			if ($agency = $this->getAgency()) {
+				$request->setAgency($agency);
+			}
+			
+			//we only need one object
 			$request->setNumResults(1);
 			
 			$searchResult = $request->execute($adapter);
-			
+
 			return $searchResult->collections[0]->objects[0];
 		}
 
