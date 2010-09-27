@@ -1,6 +1,6 @@
 <?php
 
-interface TingClientScanRequest
+interface TingClientScanRequest extends TingClientAgentRequest
 {
 	
 	function getField();

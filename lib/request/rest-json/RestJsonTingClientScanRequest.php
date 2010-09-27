@@ -16,6 +16,7 @@ class RestJsonTingClientScanRequest extends RestJsonTingClientRequest
 	protected $minFrequency;
 	protected $maxFrequency;
 	protected $output;
+  protected $agency;
 	
 	public function __construct($baseUrl)
 	{
@@ -37,6 +38,7 @@ class RestJsonTingClientScanRequest extends RestJsonTingClientRequest
 																'upper' => 'upper',
 																'minFrequency' => 'minFrequency',
 																'maxFrequency' => 'maxFrequency',
+		                            'agency' => 'agency'
 																);
 		
 		foreach ($methodParameterMap as $method => $parameter)
@@ -148,5 +150,15 @@ class RestJsonTingClientScanRequest extends RestJsonTingClientRequest
 	{
 		$this->output = $output;
 	}
-		
+
+  public function getAgency()
+  {
+    return $this->agency;
+  }
+  
+  public function setAgency($agency)
+  {
+    $this->agency = $agency;
+  }	
+	
 }
