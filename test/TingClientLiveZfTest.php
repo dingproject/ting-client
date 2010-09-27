@@ -10,10 +10,10 @@ require_once 'Zend/Http/Client.php';
 
 class TingClientLiveZfTest extends UnitTestCase {
 	
-	private $searchUrl = 'http://didicas.dbc.dk/opensearch/0.12/';
-	private $scanUrl = 'http://didicas.dbc.dk/openscan_1.3/server.php';
-	private $recommendationUrl = 'http://didicas.dbc.dk/openadhl/1.1/';
-	private $spellUrl = 'http://didicas.dbc.dk/openspell/server.php';
+	private $searchUrl = 'http://opensearch.addi.dk/opensearch/0.14/';
+	private $scanUrl = 'http://openscan.addi.dk/1.7/';
+	private $recommendationUrl = 'http://openadhl.addi.di/openadhl/1.1/';
+	private $spellUrl = 'http://openspell.addi.dk/1.2/';
 	
 	/**
 	 * @var TingClient
