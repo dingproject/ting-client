@@ -32,6 +32,8 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 		protected $numResults;
 		protected $sort;
 		protected $allObjects;
+    protected $allRelations;
+    protected $relationData;
 		protected $agency;
 
 		public function __construct($baseUrl)
@@ -55,6 +57,8 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 																	'numResults' => 'stepValue',
 																	'sort' => 'sort',
 																	'allObjects' => 'allObjects',
+																	'allRelations' => 'allRelations',
+																	'relationData' => 'relationData',
 			                            'agency' => 'agency');
 
 			foreach ($methodParameterMap as $method => $parameter)
@@ -117,6 +121,7 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 			$object->id = self::getValue($objectData->identifier);
 
 			$object->record = array();
+      $object->relations = array();
 
 			// The prefixes used in the response from the server may change over
 			// time. We use our own map to provide a stable interface.
@@ -151,6 +156,26 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 			else {
 				$object->localId = $object->ownerId = FALSE;
 			}
+
+      if (isset($objectData->relations)) {
+        foreach ($objectData->relations->relation as $relation) {
+          // Remove relations that's not from the local agency.
+          $id = $relation->relationObject->object->record->identifier;
+          if ($id[0]->{'@'} == 'ac') {
+            list($l, $o) = explode('|', $id[0]->{'$'});
+            if (!$o || $o != $object->ownerId) {
+              continue;
+            }
+          }
+          else {
+            continue;
+          }
+          $relation_object = $this->generateObject($relation->relationObject->object, $namespaces);
+          $relation_object->relationType = $relation->relationType->{'$'};
+          $relation_object->relationUri = $relation->relationUri->{'$'};
+          $object->relations[] = $relation_object;
+        }
+      }
 
 			return $object;
 		}
@@ -246,6 +271,26 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 		function setAllObjects($allObjects)
 		{
 			$this->allObjects = $allObjects;
+		}
+
+    function getAllRelations()
+		{
+			return $this->allRelations;
+		}
+
+		function setAllRelations($allRelations)
+		{
+			$this->allRelations = $allRelations;
+		}
+
+    function getRelationData()
+		{
+			return $this->relationData;
+		}
+
+		function setRelationData($relationData)
+		{
+			$this->relationData = $relationData;
 		}
 
 		function getAgency()
