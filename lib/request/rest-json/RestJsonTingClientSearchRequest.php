@@ -85,6 +85,7 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 
 			$searchResult->numTotalObjects = self::getValue($searchResponse->result->hitCount);
       $searchResult->numTotalCollections = self::getValue($searchResponse->result->collectionCount);
+      $searchResult->more = (bool) preg_match('/true/i', self::getValue($searchResponse->result->more));
 
 			if (isset($searchResponse->result->searchResult) && is_array($searchResponse->result->searchResult))
 			{
