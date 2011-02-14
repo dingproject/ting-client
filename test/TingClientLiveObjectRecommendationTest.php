@@ -8,7 +8,7 @@ class TingClientLiveObjectRecommendationTest extends TingClientLiveZfTest
 	function testObjectRecommendations()
 	{
 		$request = $this->requestFactory->getObjectRecommendationRequest();
-		$request->setIsbn('978-87-7053-256-3');
+		$request->setIsbn('9788700398368');
 		$recommendations = $this->client->execute($request);
 
 		$this->assertTrue(sizeof($recommendations) > 0, 'Recommendations should return at least one result');
@@ -17,7 +17,7 @@ class TingClientLiveObjectRecommendationTest extends TingClientLiveZfTest
   function testNumResults()
   {
     $request = $this->requestFactory->getObjectRecommendationRequest();
-    $request->setIsbn('978-87-7053-256-3');
+    $request->setIsbn('9788700398368');
     $request->setNumResults(3);
     $recommendations = $this->client->execute($request);
 		
