@@ -9,11 +9,21 @@ require_once dirname(__FILE__) . '/../lib/log/TingClientSimpleTestLogger.php';
 require_once 'Zend/Http/Client.php';
 
 class TingClientLiveZfTest extends UnitTestCase {
-	
+
+/*	
+  //  LIVE urls: protected
 	private $searchUrl = 'http://opensearch.addi.dk/opensearch/0.14/';
 	private $scanUrl = 'http://openscan.addi.dk/1.7/';
-	private $recommendationUrl = 'http://openadhl.addi.di/openadhl/1.1/';
+	private $recommendationUrl = 'http://openadhl.addi.dk/1.1/';
 	private $spellUrl = 'http://openspell.addi.dk/1.2/';
+*/
+
+  // test-urls 
+  private $searchUrl = 'http://didicas.dbc.dk/opensearch_nextkilde/';
+  private $scanUrl = 'http://didicas.dbc.dk/openscan_nextkilde/';
+  private $recommendationUrl = 'http://openadhl.addi.dk/1.1/';
+  private $spellUrl = 'http://didicas.dbc.dk/opensearch_nextkilde/';
+	
 	
 	/**
 	 * @var TingClient
