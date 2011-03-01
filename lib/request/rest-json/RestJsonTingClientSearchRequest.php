@@ -160,7 +160,9 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 
       if (isset($objectData->relations)) {
         foreach ($objectData->relations->relation as $relation) {
-          $relation_object = $this->generateObject($relation->relationObject->object, $namespaces);
+          if (isset($relation->relationObject)) {
+            $relation_object = $this->generateObject($relation->relationObject->object, $namespaces);
+          }
           $relation_object->relationType = $relation->relationType->{'$'};
           $relation_object->relationUri = $relation->relationUri->{'$'};
           $object->relations[] = $relation_object;
