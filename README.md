@@ -13,10 +13,10 @@ The client has been developed for use with [Drupal 6](http://drupal.org/) and [Z
 The client is unit tested using [SimpleTest](http://simpletest.org/) which is included in the ``vendor`` directory:
 
 * To run internal tests:
-    
-		php TingClientTestSuite.php
-    
+
+    php TingClientTestSuite.php
+
 * To run tests against the live Ting API using [Zend Framework](http://framework.zend.com/) (Requires Zend Framework available from PHP include path):
 
-		php TingClientLiveZfTest.php
-  
+    php TingClientLiveZfTest.php
+
