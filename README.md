@@ -13,17 +13,16 @@ The client has been developed for use with [Drupal][] and [Zend Framework][].
 The design is framework agnostic and developers can extend it for use with
 other frameworks.
 
-## Tests
+Running tests
+-------------
 
 The client is unit tested using [SimpleTest][] which is included in the
 `vendor` directory:
 
-* To run internal tests:  
-  `php TingClientTestSuite.php`
+To run tests against the live Ting API using Zend Framework
+(Requires Zend Framework available from PHP include path), go to the
+test folder and run `php TingClientLiveTestSuite.php`
 
-* To run tests against the live Ting API using Zend Framework
-  (Requires Zend Framework available from PHP include path):  
-  `php TingClientLiveZfTest.php`
 
 [Ting]: http://ting.dk/
 [DBC]: http://dbc.dk/
