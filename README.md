@@ -24,6 +24,12 @@ To run tests against the live Ting API using Zend Framework
 test folder and run `php TingClientLiveTestSuite.php`
 
 
+#### Zend Framework tip ####
+
+If you'd rather not install the Zend Framework system-wide, you can
+download the Zend Framework package, and put the `library/Zend` folder
+from the package inside the `test` folder of the Ting client.
+
 [Ting]: http://ting.dk/
 [DBC]: http://dbc.dk/
 [Drupal]: http://drupal.org/
