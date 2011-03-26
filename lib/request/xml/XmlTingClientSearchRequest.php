@@ -43,10 +43,10 @@ class XmlTingClientSearchRequest extends XmlTingClientRequest
 
     protected function getSoapRequest()
     {
-      $SoapRequest = new TingClientSoapRequest();
-      $SoapRequest->setWsdlUrl($this->wsdlUrl);
-      $SoapRequest->setParameter('action', 'search');
-      $SoapRequest->setParameter('format', 'dkabm');
+      $soapRequest = new TingClientSoapRequest();
+      $soapRequest->setWsdlUrl($this->wsdlUrl);
+      $soapRequest->setParameter('action', 'search');
+      $soapRequest->setParameter('format', 'dkabm');
 
       $methodParameterMap = array('query' => 'query',
                                   'facets' => 'facets.facetName',
@@ -65,11 +65,11 @@ class XmlTingClientSearchRequest extends XmlTingClientRequest
         $getter = 'get'.ucfirst($method);
         if ($value = $this->$getter())
         {
-          $SoapRequest->setParameter($parameter, $value);
+          $soapRequest->setParameter($parameter, $value);
         }
       }
 
-      return $SoapRequest;
+      return $soapRequest;
     }
 
     public function getQuery()

@@ -25,10 +25,9 @@ class XmlTingClientScanRequest extends XmlTingClientRequest
 
   protected function getSoapRequest()
   {
-    $httpRequest = new TingClientSoapRequest();
-    $httpRequest->setWsdlUrl($this->wsdlUrl);
-    $httpRequest->setGetParameter('outputType', 'xml');
-    $httpRequest->setGetParameter('action', 'openScan');
+    $soapRequest = new TingClientSoapRequest();
+    $soapRequest->setWsdlUrl($this->wsdlUrl);
+    $soapRequest->setParameter('format', 'dkabm');
 
     $methodParameterMap = array('field' => 'field',
                                 'prefix' => 'prefix',
@@ -45,11 +44,11 @@ class XmlTingClientScanRequest extends XmlTingClientRequest
       $getter = 'get'.ucfirst($method);
       if ($value = $this->$getter())
       {
-        $httpRequest->setParameter(TingClientHttpRequest::GET, $parameter, $value);
+        $soapRequest->setParameter($parameter, $value);
       }
     }
 
-    return $httpRequest;
+    return $soapRequest;
   }
 
   public function getField()
