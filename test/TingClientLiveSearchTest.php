@@ -1,9 +1,13 @@
 <?php
+/**
+ * @file
+ * Test cases for OpenSearch.
+ */
 
-require_once dirname(__FILE__) . '/TingClientLiveZfTest.php';
+require_once dirname(__FILE__) . '/TingClientLiveSoapTest.php';
 
-class TingClientLiveSearchTest extends TingClientLiveZfTest {
-  
+class TingClientLiveSearchTest extends TingClientLiveSoapTest {
+
   /**
    * Test sending a request.
    */
