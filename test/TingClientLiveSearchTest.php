@@ -15,7 +15,7 @@ class TingClientLiveSearchTest extends TingClientLiveSoapTest {
   {
     //End to end test
     $searchRequest = $this->requestFactory->getSearchRequest();
-    $searchRequest->setQuery('dc.title:danmark');
+    $searchRequest->setQuery('dc.title=danmark');
     $searchResult = $this->client->execute($searchRequest);
 
     $this->assertNoErrors('Search should not throw errors');
@@ -28,14 +28,14 @@ class TingClientLiveSearchTest extends TingClientLiveSoapTest {
   {
     //Test using international characters ÆØÅ
     $searchRequest = $this->requestFactory->getSearchRequest();
-    $searchRequest->setQuery('dc.title:blåbærgrød');
+    $searchRequest->setQuery('dc.title=blåbærgrød');
     $searchResult = $this->client->execute($searchRequest);
 
     $this->assertNoErrors('Search should not throw errors');
 
     //Æ as first character
     $searchRequest = $this->requestFactory->getSearchRequest();
-    $searchRequest->setQuery('dc.title:æblegrød');
+    $searchRequest->setQuery('dc.title=æblegrød');
     $searchResult = $this->client->execute($searchRequest);
 
     $this->assertNoErrors('Search should not throw errors');
@@ -47,7 +47,7 @@ class TingClientLiveSearchTest extends TingClientLiveSoapTest {
   function testNumResults()
   {
     $searchRequest = $this->requestFactory->getSearchRequest();
-    $searchRequest->setQuery('dc.title:danmark');
+    $searchRequest->setQuery('dc.title=danmark');
     $searchRequest->setNumResults(1);
     $searchResult = $this->client->execute($searchRequest);
     $this->assertNoErrors('Search should not throw errors');
@@ -65,7 +65,7 @@ class TingClientLiveSearchTest extends TingClientLiveSoapTest {
     $numFacets = 1;
 
     $searchRequest = $this->requestFactory->getSearchRequest();
-    $searchRequest->setQuery('dc.title:danmark');
+    $searchRequest->setQuery('dc.title=danmark');
     $searchRequest->setFacets($facetName);
     $searchRequest->setNumFacets($numFacets);
     $searchResult = $this->client->execute($searchRequest);
@@ -89,7 +89,7 @@ class TingClientLiveSearchTest extends TingClientLiveSoapTest {
     $numFacets = 3;
 
     $searchRequest = $this->requestFactory->getSearchRequest();
-    $searchRequest->setQuery('dc.title:danmark');
+    $searchRequest->setQuery('dc.title=danmark');
     $searchRequest->setFacets($facetNames);
     $searchRequest->setNumFacets($numFacets);
     $searchResult = $this->client->execute($searchRequest);
@@ -112,7 +112,7 @@ class TingClientLiveSearchTest extends TingClientLiveSoapTest {
   function testFacetNarrowing()
   {
     $searchRequest = $this->requestFactory->getSearchRequest();
-    $searchRequest->setQuery('dc.title:danmark');
+    $searchRequest->setQuery('dc.title=danmark');
     $searchRequest->setFacets(array('dc.creator'));
     $searchRequest->setNumFacets(10);
     $searchResult = $this->client->execute($searchRequest);
