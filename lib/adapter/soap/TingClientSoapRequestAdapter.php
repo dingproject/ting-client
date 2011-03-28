@@ -30,6 +30,8 @@ class TingClientSoapRequestAdapter implements TingClientRequestAdapter
     $soapParameters = (object) $requestParameters;
     unset($soapParameters->action);
 
+    $result = $client->{$requestParameters['action']}($soapParameters);
+
     if (isset($result->error)) {
       throw new TingClientException('Unable to excecute Drupal HTTP request: '.$result->error, $result->code);
     }
