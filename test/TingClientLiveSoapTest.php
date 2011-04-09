@@ -10,9 +10,9 @@ class TingClientLiveSoapTest extends UnitTestCase {
 
   // WSDL URLs.
   const SEARCH_URL = 'http://opensearch.addi.dk/1.1/opensearch.wsdl';
-  const SCAN_URL = 'http://didicas.dbc.dk/openscan_nextkilde/';
-  const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/';
-  const SPELL_URL = 'http://didicas.dbc.dk/opensearch_nextkilde/';
+  const SCAN_URL = 'http://openscan.addi.dk/1.7/openscan.wsdl';
+  const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/openadhl.wsdl';
+  const SPELL_URL = 'http://openspell.addi.dk/1.2/openspell.wsdl';
 
   /**
    * @var TingClient
