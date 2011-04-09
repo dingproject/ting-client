@@ -13,11 +13,11 @@ class TingClientLiveZfTestSuide extends TestSuite
         $this->addFile('TingClientLiveCollectionTest.php');
         $this->addFile('TingClientLiveObjectRecommendationTest.php');
 	}
-	
+
 	public function addFile($file)
 	{
 		parent::addFile(dirname(__FILE__).'/'.$file);
 	}
-	
+
 }
 ?>

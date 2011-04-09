@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/TingClientLiveZfTest.php';
 
 class TingClientLiveSpellTest extends TingClientLiveZfTest
 {
-	
+
 	function testSpelling()
 	{
 		$request = $this->requestFactory->getSpellRequest();
@@ -16,5 +16,5 @@ class TingClientLiveSpellTest extends TingClientLiveZfTest
 
 		$this->assertEqual(sizeof($suggestions), 3, 'Suggestions should return the requested number of results');
 	}
-	
+
 }
