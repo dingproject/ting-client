@@ -48,17 +48,19 @@ class XmlTingClientSearchRequest extends XmlTingClientRequest
       $soapRequest->setParameter('action', 'search');
       $soapRequest->setParameter('format', 'dkabm');
 
-      $methodParameterMap = array('query' => 'query',
-                                  'facets' => 'facets.facetName',
-                                  'numFacets' => 'facets.numberOfTerms',
-                                  'format' => 'format',
-                                  'start' => 'start',
-                                  'numResults' => 'stepValue',
-                                  'sort' => 'sort',
-                                  'allObjects' => 'allObjects',
-                                  'allRelations' => 'allRelations',
-                                  'relationData' => 'relationData',
-                                  'agency' => 'agency');
+      $methodParameterMap = array(
+        'query' => 'query',
+        'facets' => 'facets.facetName',
+        'numFacets' => 'facets.numberOfTerms',
+        'format' => 'format',
+        'start' => 'start',
+        'numResults' => 'stepValue',
+        'sort' => 'sort',
+        'allObjects' => 'allObjects',
+        'allRelations' => 'allRelations',
+        'relationData' => 'relationData',
+        'agency' => 'agency',
+      );
 
       foreach ($methodParameterMap as $method => $parameter)
       {
