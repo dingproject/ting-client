@@ -24,7 +24,12 @@ class TingClientSoapRequestAdapter implements TingClientRequestAdapter
   private $clientInstance;
 
   public function executeRequest(TingClientSoapRequest $request) {
-    $client = new SoapClient($request->getWsdlUrl());
+    $client = new SoapClient($request->getWsdlUrl(), array(
+      'cache_wsdl' => WSDL_CACHE_BOTH,
+      'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
+      'soap_version'   => SOAP_1_2,
+      'trace' => FALSE, // TRUE for debugging
+    ));
 
     $requestParameters = $request->getParameters();
     $soapParameters = (object) $requestParameters;
@@ -33,7 +38,7 @@ class TingClientSoapRequestAdapter implements TingClientRequestAdapter
     $result = $client->{$requestParameters['action']}($soapParameters);
 
     if (isset($result->error)) {
-      throw new TingClientException('Unable to excecute Drupal HTTP request: '.$result->error, $result->code);
+      throw new TingClientException('Unable to excecute SOAP request: '.$result->error, $result->code);
     }
 
     return $result->result;
