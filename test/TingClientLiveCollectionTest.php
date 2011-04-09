@@ -8,7 +8,7 @@ class TingClientLiveObjectTest extends TingClientLiveZfTest
 	function testCollectionRetrieval()
 	{
 		$searchRequest = $this->requestFactory->getSearchRequest();
-		$searchRequest->setQuery('dc.title:danmark');
+		$searchRequest->setQuery('dc.title=danmark');
 		$searchRequest->setNumResults(10);
 		$searchResult = $this->client->execute($searchRequest);
 
