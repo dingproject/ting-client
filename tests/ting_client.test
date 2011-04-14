@@ -1,0 +1,69 @@
+<?php
+
+require_once dirname(__FILE__) . '/../lib/adapter/http/TingClientDrupal7HttpRequestAdapter.php';
+require_once dirname(__FILE__) . '/../lib/request/rest-json/RestJsonTingClientRequestFactory.php';
+require_once dirname(__FILE__) . '/../lib/TingClient.php';
+require_once dirname(__FILE__) . '/../lib/log/TingClientVoidLogger.php';
+
+/**
+ * Base class for our other test cases.
+ */
+class TingClientTest extends DrupalUnitTestCase {
+  /**
+   * WSDL URLs.
+   *
+  const SEARCH_URL = 'http://opensearch.addi.dk/1.1/opensearch.wsdl';
+  const SCAN_URL = 'http://openscan.addi.dk/1.7/openscan.wsdl';
+  const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/openadhl.wsdl';
+  const SPELL_URL = 'http://openspell.addi.dk/1.2/openspell.wsdl';
+  /**/
+
+  // test-urls
+  const SEARCH_URL = 'http://didicas.dbc.dk/opensearch_nextkilde/';
+  const SCAN_URL = 'http://didicas.dbc.dk/openscan_nextkilde/';
+  const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/';
+  const SPELL_URL = 'http://openspell.addi.dk/1.2/';
+
+  /**
+   * @var TingClient
+   */
+  protected $client;
+
+  /**
+   * @var TingClientRequestFactory
+   */
+  protected $requestFactory;
+
+  /**
+   * Test info.
+   */
+  public function getInfo() {
+    return array(
+      'name' => 'Ting Client base',
+      'description' => 'Base tests for Ting Client' ,
+      'group' => 'Ting Client',
+    );
+  }
+
+  /**
+   * Set up modules and client instance.
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $this->requestFactory = new RestJsonTingClientRequestFactory(array(
+      'search' => self::SEARCH_URL,
+      'scan' => self::SCAN_URL,
+      'collection' => self::SEARCH_URL,
+      'object' => self::SEARCH_URL,
+      'recommendation' => self::RECOMMENDATION_URL,
+      'spell' => self::SPELL_URL,
+    ));
+
+    $requestAdapter = new TingClientDrupal7HttpRequestAdapter();
+
+    $this->client = new TingClient($requestAdapter,
+                                   new TingClientVoidLogger($this));
+  }
+}
+

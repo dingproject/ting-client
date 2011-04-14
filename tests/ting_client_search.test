@@ -1,0 +1,155 @@
+<?php
+
+/**
+ * Test for Ting Open Search.
+ */
+class TingClientSearchTest extends TingClientTest {
+  /**
+   * Test info.
+   */
+  public function getInfo() {
+    return array(
+      'name' => 'Ting Client search',
+      'description' => 'Test the Ting Open Search client.' ,
+      'group' => 'Ting Client',
+    );
+  }
+
+  /**
+   * Test sending a request.
+   */
+  public function testRequest() {
+    //End to end test
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('dc.title=danmark');
+    $searchResult = $this->client->execute($searchRequest);
+
+    $this->assertTrue($searchResult->numTotalObjects > 1, 'Basic search returns multiple objects.');
+  }
+
+  /**
+   * Test support for international characters in queries.
+   */
+  public function testRequestInternationalChars() {
+    //Test using international characters ÆØÅ
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('dc.title=blåbærgrød');
+    $searchResult = $this->client->execute($searchRequest);
+    $this->assertTrue($searchResult->numTotalObjects > 1, 'Search using non-ASCII characters returns multiple objects.');
+
+    //Æ as first character
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('dc.title=æblegrød');
+    $searchResult = $this->client->execute($searchRequest);
+    $this->assertTrue($searchResult->numTotalObjects > 1, 'Search using non-ASCII characters returns multiple objects.');
+  }
+
+  /**
+   * Test support for specifying search result size.
+   */
+  public function testNumResults() {
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('dc.title=danmark');
+    $searchRequest->setNumResults(1);
+    $searchResult = $this->client->execute($searchRequest);
+
+    $this->assertEqual($searchResult->numTotalCollections, 1, 'Returned collection count match the requested number.');
+    $this->assertEqual(sizeof($searchResult->collections), 1, 'Returned number of results  match the requested number.');
+  }
+
+  /**
+   * Test to ensure support for handling facets and number of facet terms in search requests.
+   */
+  public function testFacet() {
+    $facetName = 'dc.title';
+    $numFacets = 1;
+
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('dc.title=danmark');
+    $searchRequest->setFacets($facetName);
+    $searchRequest->setNumFacets($numFacets);
+    $searchResult = $this->client->execute($searchRequest);
+
+    $searchFacetFound = false;
+    $facetResults = $searchResult->facets;
+    $this->assertEqual(sizeof($facetResults), 1, 'Search should return 1 facet.');
+    $facet = array_shift($facetResults);
+    $this->assertEqual($facet->name, $facetName, 'Expected facet used in search was part of search result.');
+    $this->assertEqual(sizeof($facet->terms), $numFacets, 'Returned number of facet terms matches the expected number.');
+  }
+
+  /**
+   * Test to ensure support for handling several facets and facet terms in search requests.
+   */
+  public function testMultipleFacets() {
+    $facetNames = array('dc.title', 'dc.creator', 'dc.subject');
+    $numFacets = 3;
+
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('dc.title=danmark');
+    $searchRequest->setFacets($facetNames);
+    $searchRequest->setNumFacets($numFacets);
+    $searchResult = $this->client->execute($searchRequest);
+
+    $facetResults = $searchResult->facets;
+    $this->assertEqual(sizeof($facetResults), sizeof($facetNames), 'Returned number of facets match the expected number.');
+    foreach ($facetResults as $facetResult) {
+      $this->assertTrue(in_array($facetResult->name, $facetNames), 'Returned facet '.$facetResult->name.' was part of expected facets.');
+      $this->assertEqual(sizeof($facetResult->terms), $numFacets, 'Returned number of facet terms for '.$facetResult->name.' does match the expected number.');
+    }
+  }
+
+  /**
+   * Test to check that when adding a facet to a query the result is smaller than
+   * the original result set.
+   */
+  public function testFacetNarrowing() {
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('dc.title=danmark');
+    $searchRequest->setFacets(array('dc.creator'));
+    $searchRequest->setNumFacets(10);
+    $searchResult = $this->client->execute($searchRequest);
+
+    $facetCount = 0;
+    $facet = array_shift($searchResult->facets);
+
+    $query = '';
+    foreach ($facet->terms as $facetTerm => $facetCount) {
+      if ($facetCount < $searchResult->numTotalObjects) {
+        $query = $searchRequest->getQuery();
+        $query .= ' AND '.$facet->name.'='.$facetTerm;
+        break;
+      }
+    }
+    $searchRequest->setQuery($query);
+
+    $narrowedSearchResult = $this->client->execute($searchRequest);
+
+    $this->assertTrue($narrowedSearchResult->numTotalObjects < $searchResult->numTotalObjects, 'Total number of results in narrowed result ('.$narrowedSearchResult->numTotalObjects.') should be less than original result ('.$searchResult->numTotalObjects.')');
+    $this->assertEqual($facetCount, $narrowedSearchResult->numTotalObjects, 'Number of results in narrowed search result ('.$narrowedSearchResult->numTotalObjects.') should be equal to count from narrowing facet term ('.$facetCount.')');
+  }
+
+  public function testEmptyFacets() {
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('ostemadder');
+    $searchRequest->setFacets(array('dc.creator'));
+    $searchRequest->setNumFacets(10);
+    $searchResult = $this->client->execute($searchRequest);
+
+    foreach ($searchResult->facets as $facet) {
+      foreach ($facet->terms as $term => $count) {
+        $this->assertTrue($count > 0, 'Count for facet '.$facet->name.' term '.$term.' shound not be 0');
+      }
+    }
+  }
+
+  public function testAgency() {
+    $searchRequest = $this->requestFactory->getSearchRequest();
+    $searchRequest->setQuery('Harry Potter');
+    $searchRequest->setAgency(775100);
+    $searchResult = $this->client->execute($searchRequest);
+
+    $this->assertTrue(sizeof($searchResult->collections) > 0, 'Search with agency returns collections.');
+  }
+}
+

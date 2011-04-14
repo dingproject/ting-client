@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * Test for Ting Open Search.
+ */
+class TingClientObjectRecommendationTest extends TingClientTest {
+  /**
+   * Test info.
+   */
+  public function getInfo() {
+    return array(
+      'name' => 'Ting Client object recommendation',
+      'description' => 'Test the Ting Open Recommendation (ADHL) client.',
+      'group' => 'Ting Client',
+    );
+  }
+
+  public function testObjectRecommendations() {
+    $request = $this->requestFactory->getObjectRecommendationRequest();
+    $request->setIsbn('9788700398368');
+    $recommendations = $this->client->execute($request);
+
+    $this->assertTrue(sizeof($recommendations) > 0, 'Recommendations should return at least one result');
+  }
+
+  public function testNumResults() {
+    $request = $this->requestFactory->getObjectRecommendationRequest();
+    $request->setIsbn('9788700398368');
+    $request->setNumResults(3);
+    $recommendations = $this->client->execute($request);
+
+    $this->assertTrue(sizeof($recommendations) == 3, 'Recommendations should return 3 results.');
+
+    $recommendation = array_pop($recommendations);
+    $this->assertTrue(isset($recommendation->localId) && $recommendation->localId, 'Recommendations should have a local id');
+  }
+}
+

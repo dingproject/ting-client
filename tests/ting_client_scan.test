@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * Test for Ting Open Search.
+ */
+class TingClientScanTest extends TingClientTest {
+  /**
+   * Test info.
+   */
+  public function getInfo() {
+    return array(
+      'name' => 'Ting Client scan',
+      'description' => 'Test the Ting Open Scan (autocomplete) client.' ,
+      'group' => 'Ting Client',
+    );
+  }
+
+  public function testScan() {
+    $scanRequest = $this->requestFactory->getScanRequest();
+    $scanRequest->setField('phrase.title');
+    $scanRequest->setLower('København');
+    $scanRequest->setNumResults(10);
+    $scanResult = $this->client->execute($scanRequest);
+
+    $this->assertTrue(sizeof($scanResult->terms) > 1, 'Returned number of results (' . sizeof($scanResult->terms) . ') exceeds one.');
+  }
+
+  public function testScanResult() {
+    $query = 'København';
+    $numResults = 3;
+
+    $scanRequest = $this->requestFactory->getScanRequest();
+    $scanRequest->setField('phrase.title');
+    $scanRequest->setLower($query);
+    $scanRequest->setNumResults($numResults);
+    $scanResult = $this->client->execute($scanRequest);
+
+    $this->assertEqual(sizeof($scanResult->terms), $numResults, 'Returned number of results (' . sizeof($scanResult->terms) . ') matches the expected number of results (' . $numResults . ').');
+  }
+
+  public function testScanAgency() {
+    $query = 'København';
+    $numResults = 3;
+
+    $scanRequest = $this->requestFactory->getScanRequest();
+    $scanRequest->setField('phrase.title');
+    $scanRequest->setLower($query);
+    $scanRequest->setNumResults($numResults);
+    $scanRequest->setAgency(710100); // Use Copenhagen agency
+    $scanResult = $this->client->execute($scanRequest);
+    $this->assertEqual(sizeof($scanResult->terms), $numResults, 'Returned number of results (' . sizeof($scanResult->terms) . ') matches the expected number of results (' . $numResults . ').');
+
+    $scanRequest->setAgency('foo'); // Use bogus agency
+    $scanResult = $this->client->execute($scanRequest);
+
+    $this->assertEqual(sizeof($scanResult->terms), 0, 'Should not return results for invalid agency. Returned ' . sizeof($scanResult->terms) . ' results.');
+  }
+}
+
