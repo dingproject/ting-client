@@ -160,18 +160,9 @@ class RestJsonTingClientSearchRequest extends RestJsonTingClientRequest
 
       if (isset($objectData->relations)) {
         foreach ($objectData->relations->relation as $relation) {
-          // Remove relations that's not from the local agency.
-          $id = $relation->relationObject->object->record->identifier;
-          if ($id[0]->{'@'} == 'ac') {
-            list($l, $o) = explode('|', $id[0]->{'$'});
-            if (!$o || $o != $object->ownerId) {
-              continue;
-            }
+          if (isset($relation->relationObject)) {
+            $relation_object = $this->generateObject($relation->relationObject->object, $namespaces);
           }
-          else {
-            continue;
-          }
-          $relation_object = $this->generateObject($relation->relationObject->object, $namespaces);
           $relation_object->relationType = $relation->relationType->{'$'};
           $relation_object->relationUri = $relation->relationUri->{'$'};
           $object->relations[] = $relation_object;
