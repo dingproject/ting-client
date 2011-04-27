@@ -3,7 +3,7 @@
 require_once dirname(__FILE__) . '/../lib/adapter/http/TingClientDrupal7HttpRequestAdapter.php';
 require_once dirname(__FILE__) . '/../lib/request/rest-json/RestJsonTingClientRequestFactory.php';
 require_once dirname(__FILE__) . '/../lib/TingClient.php';
-require_once dirname(__FILE__) . '/../lib/log/TingClientVoidLogger.php';
+require_once dirname(__FILE__) . '/../lib/log/TingClientDrupalDebugLogger.php';
 
 /**
  * Base class for our other test cases.
@@ -63,7 +63,7 @@ class TingClientTest extends DrupalUnitTestCase {
     $requestAdapter = new TingClientDrupal7HttpRequestAdapter();
 
     $this->client = new TingClient($requestAdapter,
-                                   new TingClientVoidLogger($this));
+                                   new TingClientDrupalDebugLogger($this));
   }
 }
 
