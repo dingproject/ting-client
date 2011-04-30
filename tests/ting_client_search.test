@@ -149,7 +149,7 @@ class TingClientSearchTest extends TingClientTest {
 
     foreach ($searchResult->facets as $facet) {
       foreach ($facet->terms as $term => $count) {
-        $this->assertTrue($count > 0, 'Count for facet '.$facet->name.' term '.$term.' shound not be 0');
+        $this->assertTrue($count > 0, 'Count for facet '.$facet->name.' term '.$term.' is greater than 0.');
       }
     }
   }
