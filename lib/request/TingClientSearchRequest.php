@@ -230,24 +230,29 @@ class TingClientSearchRequest extends TingClientRequest {
 
       // Transform each value from a SoapVar to what the API consumers 
       // expect to receive.
-      foreach ($elements as $element) {
-        $namespace = $element->enc_ns;
-        $prefix = isset($prefixes[$namespace]) ? $prefixes[$namespace] : 'unknown';
-        $key1 = $prefix . ':' . $name;
+      foreach ($elements as $element_name => $element) {
+        if ($element instanceOf SoapVar) {
+          $namespace = $element->enc_ns;
+          $prefix = isset($prefixes[$namespace]) ? $prefixes[$namespace] : 'unknown';
+          $key1 = $prefix . ':' . $name;
 
-        // TODO: Figure out what this does.
-        if (isset($element->enc_stype)) {
-          $type_name = $element->enc_stype;
-          $type_prefix = isset($prefixes[$element->enc_ns]) ? $prefixes[$element->enc_ns] : 'unknown';
-          $key2 = $type_prefix . ':' . $type_name;
+          // TODO: Figure out what this does.
+          if (isset($element->enc_stype)) {
+            $type_name = $element->enc_stype;
+            $type_prefix = isset($prefixes[$element->enc_ns]) ? $prefixes[$element->enc_ns] : 'unknown';
+            $key2 = $type_prefix . ':' . $type_name;
+          }
+          else {
+            $key2 = '';
+          }
+          if (!isset($object->record[$key1][$key2])) {
+            $object->record[$key1][$key2] = array();
+          }
+          $object->record[$key1][$key2][] = $element->enc_value;
         }
         else {
-          $key2 = '';
+          $object->record[$name][] = $element;
         }
-        if (!isset($object->record[$key1][$key2])) {
-          $object->record[$key1][$key2] = array();
-        }
-        $object->record[$key1][$key2][] = $element->enc_value;
       }
     }
 
