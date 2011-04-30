@@ -198,7 +198,7 @@ class TingClientSearchRequest extends TingClientRequest {
     $objects = array();
     if (isset($collectionData->object) && is_array($collectionData->object)) {
       foreach ($collectionData->object as $objectData) {
-        $objects[] = $this->generateObject($objectData, $namespaces);
+        $objects[] = $this->generateObject($objectData);
       }
     }
     return new TingClientObjectCollection($objects);
