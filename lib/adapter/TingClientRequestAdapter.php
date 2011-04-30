@@ -27,7 +27,7 @@ class TingClientRequestAdapter {
     $result = $client->{$requestParameters['action']}($soapParameters);
 
     if (isset($result->error)) {
-      throw new TingClientException('Unable to excecute SOAP request: '.$result->error, $result->code);
+      throw new TingClientException('Unable to excecute SOAP request: ' . $result->error);
     }
  
     return $result->result;
