@@ -1,13 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/XmlTingClientRequest.php';
-require_once dirname(__FILE__) . '/../base/TingClientScanRequest.php';
-require_once dirname(__FILE__) . '/../../result/scan/TingClientScanResult.php';
-
-class XmlTingClientScanRequest extends XmlTingClientRequest
-                               implements TingClientScanRequest
-{
-
+class TingClientScanRequest extends TingClientRequest {
   protected $field;
   protected $prefix;
   protected $numResults;
@@ -18,13 +11,11 @@ class XmlTingClientScanRequest extends XmlTingClientRequest
   protected $output;
   protected $agency;
 
-  public function __construct($wsdlUrl)
-  {
+  public function __construct($wsdlUrl) {
     parent::__construct($wsdlUrl);
   }
 
-  protected function getSoapRequest()
-  {
+  protected function getSoapRequest() {
     $soapRequest = new TingClientSoapRequest();
     $soapRequest->setWsdlUrl($this->wsdlUrl);
     $soapRequest->setParameter('format', 'dkabm');
@@ -39,11 +30,9 @@ class XmlTingClientScanRequest extends XmlTingClientRequest
                                 'agency' => 'agency'
                                 );
 
-    foreach ($methodParameterMap as $method => $parameter)
-    {
+    foreach ($methodParameterMap as $method => $parameter) {
       $getter = 'get'.ucfirst($method);
-      if ($value = $this->$getter())
-      {
+      if ($value = $this->$getter()) {
         $soapRequest->setParameter($parameter, $value);
       }
     }
@@ -51,94 +40,76 @@ class XmlTingClientScanRequest extends XmlTingClientRequest
     return $soapRequest;
   }
 
-  public function getField()
-  {
+  public function getField() {
     return $this->field;
   }
 
-  public function setField($field)
-  {
+  public function setField($field) {
     $this->field = $field;
   }
 
-  public function getPrefix()
-  {
+  public function getPrefix() {
     return $this->prefix;
   }
 
-  public function setPrefix($prefix)
-  {
+  public function setPrefix($prefix) {
     $this->prefix = $prefix;
   }
 
-  public function getNumResults()
-  {
+  public function getNumResults() {
     return $this->numResults;
   }
 
-  public function setNumResults($numResults)
-  {
+  public function setNumResults($numResults) {
     $this->numResults = $numResults;
   }
 
-  public function getLower()
-  {
+  public function getLower() {
     return $this->lower;
   }
 
-  public function setLower($lower)
-  {
+  public function setLower($lower) {
     $this->lower = $lower;
   }
 
-  public function getUpper()
-  {
+  public function getUpper() {
     return $this->upper;
   }
 
-  public function setUpper($upper)
-  {
+  public function setUpper($upper) {
     $this->upper = $upper;
   }
 
-  public function getMinFrequency()
-  {
+  public function getMinFrequency() {
     return $this->minFrequency;
   }
 
-  public function setMinFrequency($minFrequency)
-  {
+  public function setMinFrequency($minFrequency) {
     $this->minFrequency = $minFrequency;
   }
 
-  public function getMaxFrequency()
-  {
+  public function getMaxFrequency() {
     return $this->maxFrequency;
   }
 
-  public function setMaxFrequency($maxFrequency)
-  {
+  public function setMaxFrequency($maxFrequency) {
     $this->maxFrequency = $maxFrequency;
   }
 
-  public function getOutput()
-  {
+  public function getOutput() {
     return $this->output;
   }
 
-  public function setOutput($output)
-  {
+  public function setOutput($output) {
     $this->output = $output;
   }
 
-  public function getAgency()
-  {
+  public function getAgency() {
     return $this->agency;
   }
 
-  public function setAgency($agency)
-  {
+  public function setAgency($agency) {
     $this->agency = $agency;
   }
-
 }
+

@@ -1,9 +1,8 @@
 <?php
 
-class TingClientObjectRecommendation
-{
+class TingClientObjectRecommendation {
 	
 	public $localId;
 	public $ownerId;
-	
 }
+

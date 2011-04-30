@@ -1,9 +1,7 @@
 <?php
 
-class TingClientScanTerm
-{
-	
+class TingClientScanTerm {
 	public $name;
 	public $count;
-	
 }
+

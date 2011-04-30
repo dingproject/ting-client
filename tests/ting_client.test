@@ -1,28 +1,16 @@
 <?php
 
-require_once dirname(__FILE__) . '/../lib/adapter/http/TingClientDrupal7HttpRequestAdapter.php';
-require_once dirname(__FILE__) . '/../lib/request/rest-json/RestJsonTingClientRequestFactory.php';
-require_once dirname(__FILE__) . '/../lib/TingClient.php';
-require_once dirname(__FILE__) . '/../lib/log/TingClientDrupalDebugLogger.php';
-
 /**
  * Base class for our other test cases.
  */
-class TingClientTest extends DrupalUnitTestCase {
+class TingClientTest extends DrupalWebTestCase {
   /**
    * WSDL URLs.
-   *
+   */
   const SEARCH_URL = 'http://opensearch.addi.dk/1.1/opensearch.wsdl';
   const SCAN_URL = 'http://openscan.addi.dk/1.7/openscan.wsdl';
   const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/openadhl.wsdl';
   const SPELL_URL = 'http://openspell.addi.dk/1.2/openspell.wsdl';
-  /**/
-
-  // test-urls
-  const SEARCH_URL = 'http://didicas.dbc.dk/opensearch_nextkilde/';
-  const SCAN_URL = 'http://didicas.dbc.dk/openscan_nextkilde/';
-  const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/';
-  const SPELL_URL = 'http://openspell.addi.dk/1.2/';
 
   /**
    * @var TingClient
@@ -35,12 +23,42 @@ class TingClientTest extends DrupalUnitTestCase {
   protected $requestFactory;
 
   /**
+   * Class constructor.
+   *
+   * When running unit tests, the code registry (and thus code autoload) 
+   * is not available, so we'll need to include all the files we need directly.
+   */
+  function __construct($test_id = NULL, $includes = array()) {
+    parent::__construct($test_id);
+    $here = dirname(__FILE__);
+
+    // Load defaults first.
+    $includes = array_merge(array(
+      '/../lib/exception/TingClientException.php',
+      '/../lib/log/TingClientLogger.php',
+      '/../lib/log/TingClientDrupalDebugLogger.php',
+      '/../lib/log/TingClientVoidLogger.php',
+      '/../lib/request/TingClientRequestFactory.php',
+      '/../lib/request/TingClientRequest.php',
+      '/../lib/adapter/TingClientRequestAdapter.php',
+      '/../lib/TingClient.php',
+    ), $includes);
+
+    // Remove duplicates, so each file is only included once.
+    array_unique($includes);
+
+    foreach ($includes as $filename) {
+      require_once($here . $filename);
+    }
+  }
+
+  /**
    * Test info.
    */
   public function getInfo() {
     return array(
       'name' => 'Ting Client base',
-      'description' => 'Base tests for Ting Client' ,
+      'description' => 'Base class for Ting Client tests.',
       'group' => 'Ting Client',
     );
   }
@@ -51,7 +69,7 @@ class TingClientTest extends DrupalUnitTestCase {
   public function setUp() {
     parent::setUp();
 
-    $this->requestFactory = new RestJsonTingClientRequestFactory(array(
+    $this->requestFactory = new TingClientRequestFactory(array(
       'search' => self::SEARCH_URL,
       'scan' => self::SCAN_URL,
       'collection' => self::SEARCH_URL,
@@ -60,10 +78,10 @@ class TingClientTest extends DrupalUnitTestCase {
       'spell' => self::SPELL_URL,
     ));
 
-    $requestAdapter = new TingClientDrupal7HttpRequestAdapter();
+    $requestAdapter = new TingClientRequestAdapter();
 
-    $this->client = new TingClient($requestAdapter,
-                                   new TingClientDrupalDebugLogger($this));
+    $this->client = new TingClient($requestAdapter, new TingClientDrupalDebugLogger($this));
   }
+
 }
 

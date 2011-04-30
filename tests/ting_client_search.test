@@ -4,6 +4,17 @@
  * Test for Ting Open Search.
  */
 class TingClientSearchTest extends TingClientTest {
+  function __construct($test_id = NULL, $includes = array()) {
+
+    $includes[] = '/../lib/request/TingClientSearchRequest.php';
+    $includes[] = '/../lib/result/object/TingClientObject.php';
+    $includes[] = '/../lib/result/object/TingClientObjectCollection.php';
+    $includes[] = '/../lib/result/object/data/TingClientObjectData.php';
+    $includes[] = '/../lib/result/search/TingClientSearchResult.php';
+    $includes[] = '/../lib/result/search/TingClientFacetResult.php';
+    parent::__construct($test_id, $includes);
+  }
+
   /**
    * Test info.
    */
@@ -31,13 +42,13 @@ class TingClientSearchTest extends TingClientTest {
    * Test support for international characters in queries.
    */
   public function testRequestInternationalChars() {
-    //Test using international characters ÆØÅ
+    // Test using international characters ÆØÅ
     $searchRequest = $this->requestFactory->getSearchRequest();
     $searchRequest->setQuery('dc.title=blåbærgrød');
     $searchResult = $this->client->execute($searchRequest);
     $this->assertTrue($searchResult->numTotalObjects > 1, 'Search using non-ASCII characters returns multiple objects.');
 
-    //Æ as first character
+    // Æ as first character
     $searchRequest = $this->requestFactory->getSearchRequest();
     $searchRequest->setQuery('dc.title=æblegrød');
     $searchResult = $this->client->execute($searchRequest);
