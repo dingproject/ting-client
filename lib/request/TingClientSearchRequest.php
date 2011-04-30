@@ -17,7 +17,9 @@ class TingClientSearchRequest extends TingClientRequest {
     'dkdcplus' => 'http://biblstandard.dk/abm/namespace/dkdcplus/',
   );
 
-  protected $query;
+  // Query parameter is required, so if not provided, we will just do a 
+  // wildcard search.
+  protected $query = '*:*';
   protected $facets = array();
   protected $numFacets;
   protected $format;
