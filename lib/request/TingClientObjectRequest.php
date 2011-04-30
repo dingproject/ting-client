@@ -1,81 +1,65 @@
 <?php
 
-class TingClientObjectRequest extends TingClientRequest {
+/**
+ * Objects requests are really just simplified search requests.
+ */
+class TingClientObjectRequest extends TingClientSearchRequest {
   protected $id;
   protected $localId;
-  protected $agency;
-  protected $allRelations;
-  protected $relationData;
+  public $ownerId;
 
-  function getObjectId() {
+  public function getObjectId() {
     return $this->id;
   }
 
-  function setObjectId($id) {
+  public function setObjectId($id) {
     $this->id = $id;
   }
 
-  function getLocalId() {
+  public function getLocalId() {
     return $this->localId;
   }
 
-  function setLocalId($localId) {
+  public function setLocalId($localId) {
     $this->localId = $localId;
   }
 
-  function getAgency() {
-    return $this->agency;
-  }
-
-  function setAgency($agency) {
-    $this->agency = $agency;
-  }
-
-  function getAllRelations() {
-    return $this->allRelations;
-  }
-
-  function setAllRelations($allRelations) {
-    $this->allRelations = $allRelations;
-  }
-
-  function getRelationData() {
-    return $this->relationData;
-  }
-
-  function setRelationData($relationData) {
-    $this->relationData = $relationData;
-  }
-
   public function execute(TingClientRequestAdapter $adapter) {
-    //getting an object is actually just performing a search using specific indexes
-    $request = new TingClientSearchRequest($this->wsdlUrl);
-
-    //Determine which id to use and the corresponding index
-    if ($objectId = $this->getObjectId()) {
-      $request->setQuery('rec.id='.$objectId);
-    } elseif ($localId = $this->getLocalId()) {
-      //Use contains (:) instead of equality (=) as local id is not a complete value
-      //TODO: Update to support complete faust numbers (local id and owner id)
-      $request->setQuery('rec.id:'.$localId);
+    // Determine which id to use and the corresponding index
+    if ($this->id) {
+      $this->setQuery('rec.id=' . $this->id);
+    } 
+    // If we have both localId and ownerId, combine them to get 
+    elseif ($this->ownerId && $this->localId) {
+      $this->setQuery('rec.id=' . implode('|', array(
+        $this->localId,
+        $this->ownerId,
+      )));
     }
-
-    //transfer agency from object to search request
-    if ($agency = $this->getAgency()) {
-      $request->setAgency($agency);
+    elseif ($this->localId) {
+      // Use contains (any) instead of equality (=) as local id is not a
+      // complete value.
+      // TODO: This does not seem to work :(
+      $this->setQuery('rec.id any ' . $this->localId);
     }
 
     if ($allRelations = $this->getAllRelations()) {
-      $request->setAllRelations($allRelations);
-                              $request->setRelationData($this->getRelationData());
+      $this->setAllRelations($allRelations);
+      $this->setRelationData($this->getRelationData());
     }
 
-    //we only need one object
-    $request->setNumResults(1);
+    // We only want one object.
+    $this->setNumResults(1);
 
-    $searchResult = $request->execute($adapter);
+    return $adapter->execute($this->getRequest());
+  }
 
-    return $searchResult->collections[0]->objects[0];
+  public function processResponse(stdClass $response) {
+    $response = parent::processResponse($response);
+
+    if (isset($response->collections[0]->objects[0])) {
+      return $response->collections[0]->objects[0];
+    }
   }
 }
 
