@@ -1,6 +1,5 @@
 <?php
 
-class TingClientException extends Exception 
-{
-	
+class TingClientException extends Exception {
 }
+

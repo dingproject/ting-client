@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__).'/TingClientLogger.php';
-
 /**
  * Ting logger wrapper for the Drupal watchdog API.
  *
