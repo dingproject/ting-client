@@ -31,7 +31,7 @@ class TingClientSearchRequest extends TingClientRequest {
   protected $relationData;
   protected $agency;
 
-  protected function getRequest() {
+  public function getRequest() {
     // These defaults are always needed.
     $this->setParameter('action', 'search');
     $this->setParameter('format', 'dkabm');

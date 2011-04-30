@@ -24,7 +24,7 @@ class TingClientObjectRequest extends TingClientSearchRequest {
     $this->localId = $localId;
   }
 
-  public function execute(TingClientRequestAdapter $adapter) {
+  public function getRequest() {
     // Determine which id to use and the corresponding index
     if ($this->id) {
       $this->setQuery('rec.id=' . $this->id);
@@ -51,7 +51,7 @@ class TingClientObjectRequest extends TingClientSearchRequest {
     // We only want one object.
     $this->setNumResults(1);
 
-    return $adapter->execute($this->getRequest());
+    return parent::getRequest();
   }
 
   public function processResponse(stdClass $response) {
