@@ -196,11 +196,18 @@ class TingClientSearchRequest extends TingClientRequest {
 
   private function generateCollection($collectionData) {
     $objects = array();
+
+    // If there's multiple objects, we get an array.
     if (isset($collectionData->object) && is_array($collectionData->object)) {
       foreach ($collectionData->object as $objectData) {
         $objects[] = $this->generateObject($objectData);
       }
     }
+    // If not, we just get the object directly.
+    elseif ($collectionData->object instanceOf stdClass) {
+      $objects[] = $this->generateObject($collectionData->object);
+    }
+
     return new TingClientObjectCollection($objects);
   }
 
