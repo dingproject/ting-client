@@ -17,7 +17,7 @@ class TingClientRequestAdapter {
       'cache_wsdl' => WSDL_CACHE_BOTH,
       'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
       'soap_version' => SOAP_1_2,
-      'trace' => TRUE, // TRUE for debugging
+      'trace' => FALSE, // TRUE for debugging
     ));
  
     $requestParameters = $request->getParameters();
