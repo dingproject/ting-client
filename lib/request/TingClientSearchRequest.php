@@ -256,8 +256,9 @@ class TingClientSearchRequest extends TingClientRequest {
       }
     }
 
-    if (!empty($object->record['ac:identifier'][''])) {
-      list($object->localId, $object->ownerId) = explode('|', $object->record['ac:identifier'][''][0]);
+    // Extract localId and ownerId from the ID provided by OpenSearch.
+    if (!empty($object->record['identifier'][0])) {
+      list($object->localId, $object->ownerId) = explode('|', $object->record['identifier'][0]);
     }
     else {
       $object->localId = $object->ownerId = FALSE;
