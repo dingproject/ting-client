@@ -33,29 +33,29 @@ class TingClientObjectTest extends TingClientTest {
    */
   public function testObjectRetrieval() {
     $searchRequest = $this->requestFactory->getSearchRequest();
-    $searchRequest->setQuery('dc.title:danmark');
+    $searchRequest->setQuery('dc.title=danmark');
     $searchRequest->setNumResults(1);
     $searchResult = $this->client->execute($searchRequest);
-    $this->assertTrue(sizeof($searchResult->collections) > 0, 'Search should return at least one result');
+    $this->assertTrue(sizeof($searchResult->collections) == 1, 'Search should return exactly one result.');
 
     $searchObject = $searchResult->collections[0]->objects[0];
-    $this->assertNotNull($searchObject, 'Search should return at least one collection containing one object');
+    $this->assertNotNull($searchObject, 'Search should return at least one collection containing one object.');
 
     $objectRequest = $this->requestFactory->getObjectRequest();
     $objectRequest->setObjectId($searchObject->id);
     $searchRequest->setNumResults(1);
     $object = $this->client->execute($objectRequest);
 
-    $this->assertEqual($searchObject, $object, 'Retrieved object should be equal to search result');
+    $this->assertEqual($searchObject, $object, 'Retrieved object should be equal to search result.');
   }
 
   public function testObjectRetrievalByLocalId() {
     $searchRequest = $this->requestFactory->getSearchRequest();
-    $searchRequest->setQuery('dc.title:danmark');
+    $searchRequest->setQuery('dc.title=danmark');
     $searchRequest->setNumResults(1);
     $searchResult = $this->client->execute($searchRequest);
 
-    $this->assertTrue(sizeof($searchResult->collections) > 0, 'Search should return at least one result');
+    $this->assertTrue(sizeof($searchResult->collections) > 0, 'Search should return at least one result.');
 
     $localId = null;
     $searchObject = null;
@@ -63,17 +63,23 @@ class TingClientObjectTest extends TingClientTest {
       foreach ($collection->objects as $object) {
         if ($object->localId) {
           $localId = $object->localId;
+          $ownerId = $object->ownerId;
           $searchObject = $object;
           break 2;
         }
       }
     }
-    $this->assertNotNull($localId, 'Search should return at least one object containing a local id');
+    $this->assertNotNull($localId, 'Search should return at least one object containing a local id.');
 
     $objectRequest = $this->requestFactory->getObjectRequest();
     $objectRequest->setLocalId($localId);
+
+    // TODO: This test does not currently pass without setting ownerId, 
+    // due to the : operation being discontinued.
+    $objectRequest->ownerId = $ownerId;
     $object = $this->client->execute($objectRequest);
 
-    $this->assertEqual($searchObject, $object, 'Retrieved object should be equal to search result');
+    $this->assertEqual($searchObject, $object, 'Retrieved object should be equal to search result.');
   }
 }
+
