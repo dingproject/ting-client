@@ -204,7 +204,7 @@ class TingClientSearchRequest extends TingClientRequest {
       }
     }
     // If not, we just get the object directly.
-    elseif ($collectionData->object instanceOf stdClass) {
+    elseif (isset($collectionData->object) && $collectionData->object instanceOf stdClass) {
       $objects[] = $this->generateObject($collectionData->object);
     }
 
