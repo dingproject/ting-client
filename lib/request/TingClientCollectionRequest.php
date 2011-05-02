@@ -1,34 +1,40 @@
 <?php
 
-class TingClientCollectionRequest extends TingClientRequest {
+class TingClientCollectionRequest extends TingClientSearchRequest {
   protected $id;
   protected $agency;
 
-  function getObjectId() {
+  public function getObjectId() {
     return $id;
   }
 
-  function setObjectId($id) {
+  public function setObjectId($id) {
     $this->id = $id;
   }
 
-  function getAgency() {
+  public function getAgency() {
     return $this->agency;
   }
 
-  function setAgency($agency) {
+  public function setAgency($agency) {
     $this->agency = $agency;
   }
 
-  public function execute(TingClientRequestAdapter $adapter) {
-    $request = new TingClientSearchRequest($this->wsdlUrl);
-    $request->setQuery('rec.id='.$this->id);
-    $request->setAgency($this->agency);
-    $request->setAllObjects(true);
-    $request->setNumResults(1);
+  public function getRequest() {
+    $this->setQuery('rec.id=' . $this->id);
+    $this->setAgency($this->agency);
+    $this->setAllObjects(true);
+    $this->setNumResults(1);
 
-    $searchResult = $request->execute($adapter);
-    return $searchResult->collections[0];
+    return parent::getRequest();
+  }
+
+  public function processResponse(stdClass $response) {
+    $response = parent::processResponse($response);
+
+    if (isset($response->collections[0])) {
+      return $response->collections[0];
+    }
   }
 }
 
