@@ -1,9 +1,12 @@
 <?php
 
 class TingClientObjectRecommendationRequest extends TingClientRequest {
+  const GENDER_MALE = 'male';
+  const GENDER_FEMALE = 'female';
+
   protected $isbn;
   protected $numResults;
-  protected $sex;
+  protected $gender;
   protected $minAge;
   protected $maxAge;
   protected $fromDate;
@@ -25,12 +28,12 @@ class TingClientObjectRecommendationRequest extends TingClientRequest {
     $this->numResults = $numResults;
   }
 
-  public function getSex() {
-    return $this->sex;
+  public function getGender() {
+    return $this->gender;
   }
 
-  public function setSex($sex) {
-    $this->sex = $sex;
+  public function setGender($gender) {
+    $this->gender = $gender;
   }
 
   public function getAge() {
@@ -63,15 +66,15 @@ class TingClientObjectRecommendationRequest extends TingClientRequest {
       $this->setParameter('numRecords', $this->numResults);
     }
 
-    if ($this->sex) {
-      switch ($this->sex) {
-        case TingClientObjectRecommendationRequest::SEX_MALE:
-          $sex = 'm';
+    if ($this->gender) {
+      switch ($this->gender) {
+        case TingClientObjectRecommendationRequest::GENDER_MALE:
+          $gender = 'm';
           break;
-        case TingClientObjectRecommendationRequest::SEX_FEMALE:
-          $sex = 'k';
+        case TingClientObjectRecommendationRequest::GENDER_FEMALE:
+          $gender = 'k';
       }
-      $this->setParameter($sex);
+      $this->setParameter($gender);
     }
 
     if ($this->minAge || $this->maxAge) {
