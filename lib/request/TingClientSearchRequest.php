@@ -25,6 +25,7 @@ class TingClientSearchRequest extends TingClientRequest {
   protected $format;
   protected $start;
   protected $numResults;
+  protected $rank;
   protected $sort;
   protected $allObjects;
   protected $allRelations;
@@ -41,6 +42,7 @@ class TingClientSearchRequest extends TingClientRequest {
       'format' => 'format',
       'start' => 'start',
       'numResults' => 'stepValue',
+      'rank' => 'rank',
       'sort' => 'sort',
       'allObjects' => 'allObjects',
       'allRelations' => 'allRelations',
@@ -114,6 +116,14 @@ class TingClientSearchRequest extends TingClientRequest {
 
   public function setNumResults($numResults) {
     $this->numResults = $numResults;
+  }
+
+  public function getRank() {
+    return $this->rank;
+  }
+
+  public function setRank($rank) {
+    $this->rank = $rank;
   }
 
   public function getSort() {
