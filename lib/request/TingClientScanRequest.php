@@ -11,33 +11,29 @@ class TingClientScanRequest extends TingClientRequest {
   protected $output;
   protected $agency;
 
-  public function __construct($wsdlUrl) {
-    parent::__construct($wsdlUrl);
-  }
+  protected function getRequest() {
+    $this->setParameter('action', 'openScan');
+    $this->setParameter('format', 'dkabm');
 
-  protected function getSoapRequest() {
-    $soapRequest = new TingClientSoapRequest();
-    $soapRequest->setWsdlUrl($this->wsdlUrl);
-    $soapRequest->setParameter('format', 'dkabm');
-
-    $methodParameterMap = array('field' => 'field',
-                                'prefix' => 'prefix',
-                                'numResults' => 'limit',
-                                'lower' => 'lower',
-                                'upper' => 'upper',
-                                'minFrequency' => 'minFrequency',
-                                'maxFrequency' => 'maxFrequency',
-                                'agency' => 'agency'
-                                );
+    $methodParameterMap = array(
+      'field' => 'field',
+      'prefix' => 'prefix',
+      'numResults' => 'limit',
+      'lower' => 'lower',
+      'upper' => 'upper',
+      'minFrequency' => 'minFrequency',
+      'maxFrequency' => 'maxFrequency',
+      'agency' => 'agency'
+    );
 
     foreach ($methodParameterMap as $method => $parameter) {
-      $getter = 'get'.ucfirst($method);
+      $getter = 'get' . ucfirst($method);
       if ($value = $this->$getter()) {
-        $soapRequest->setParameter($parameter, $value);
+        $this->setParameter($parameter, $value);
       }
     }
 
-    return $soapRequest;
+    return $this;
   }
 
   public function getField() {
@@ -110,6 +106,22 @@ class TingClientScanRequest extends TingClientRequest {
 
   public function setAgency($agency) {
     $this->agency = $agency;
+  }
+
+  public function processResponse(stdClass $response) {
+    // The old API expects the result to be available at $response->terms, 
+    // so let's copy it there, making sure it's an array.
+    if (isset($response->term) && is_array($response->term)) {
+      $response->terms = $response->term;
+    }
+    elseif (isset($response->term) && $response->term instanceOf stdClass) {
+      $response->terms = array($response->term);
+    }
+    else {
+      $response->terms = array();
+    }
+
+    return $response;
   }
 }
 
