@@ -4,6 +4,12 @@
  * Test for Ting Open Search.
  */
 class TingClientSpellTest extends TingClientTest {
+  function __construct($test_id = NULL, $includes = array()) {
+
+    $includes[] = '/../lib/request/TingClientSpellRequest.php';
+    parent::__construct($test_id, $includes);
+  }
+
   /**
    * Test info.
    */
@@ -17,8 +23,8 @@ class TingClientSpellTest extends TingClientTest {
 
   public function testSpelling() {
     $request = $this->requestFactory->getSpellRequest();
-    $request->setWord('terasse'); // Should be 'terrasse', but gives lots of other fun suggestions.
-    $request->setWord('terasse'); // Should be 'terrasse', but gives lots of other fun suggestions.
+    // Should be 'terrasse', but gives lots of other fun suggestions.
+    $request->setWord('terasse');
     $request->setNumResults(3);
 
     $suggestions = $this->client->execute($request);
