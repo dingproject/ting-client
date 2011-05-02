@@ -49,7 +49,7 @@ class TingClientSearchRequest extends TingClientRequest {
     );
 
     foreach ($methodParameterMap as $method => $parameter) {
-      $getter = 'get'.ucfirst($method);
+      $getter = 'get' . ucfirst($method);
       if ($value = $this->$getter()) {
         $this->setParameter($parameter, $value);
       }
@@ -84,11 +84,11 @@ class TingClientSearchRequest extends TingClientRequest {
     $this->facets = $facets;
   }
 
-  function getNumFacets() {
+  public function getNumFacets() {
     return $this->numFacets;
   }
 
-  function setNumFacets($numFacets) {
+  public function setNumFacets($numFacets) {
     $this->numFacets = $numFacets;
   }
 
@@ -108,11 +108,11 @@ class TingClientSearchRequest extends TingClientRequest {
     $this->start = $start;
   }
 
-  function getNumResults() {
+  public function getNumResults() {
     return $this->numResults;
   }
 
-  function setNumResults($numResults) {
+  public function setNumResults($numResults) {
     $this->numResults = $numResults;
   }
 
@@ -124,39 +124,39 @@ class TingClientSearchRequest extends TingClientRequest {
     $this->sort = $sort;
   }
 
-  function getAllObjects() {
+  public function getAllObjects() {
     return $this->allObjects;
   }
 
-  function setAllObjects($allObjects) {
+  public function setAllObjects($allObjects) {
     $this->allObjects = $allObjects;
   }
 
-  function getAllRelations() {
+  public function getAllRelations() {
     return $this->allRelations;
   }
 
-  function setAllRelations($allRelations) {
+  public function setAllRelations($allRelations) {
     $this->allRelations = $allRelations;
   }
 
-  function getRelationData() {
+  public function getRelationData() {
     return $this->relationData;
   }
 
-  function setRelationData($relationData) {
+  public function setRelationData($relationData) {
     $this->relationData = $relationData;
   }
 
-  function getAgency() {
+  public function getAgency() {
     return $this->agency;
   }
 
-  function setAgency($agency) {
+  public function setAgency($agency) {
     $this->agency = $agency;
   }
 
-  function processResponse(stdClass $response) {
+  public function processResponse(stdClass $response) {
     $searchResult = new TingClientSearchResult();
 
     if (isset($response->error)) {
