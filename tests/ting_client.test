@@ -9,7 +9,7 @@ class TingClientTest extends DrupalWebTestCase {
    */
   const SEARCH_URL = 'http://opensearch.addi.dk/1.1/opensearch.wsdl';
   const SCAN_URL = 'http://openscan.addi.dk/1.7/openscan.wsdl';
-  const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/openadhl.wsdl';
+  const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/adhl.wsdl';
   const SPELL_URL = 'http://openspell.addi.dk/1.2/openspell.wsdl';
 
   /**
