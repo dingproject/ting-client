@@ -4,6 +4,12 @@
  * Test for Ting Open Search.
  */
 class TingClientScanTest extends TingClientTest {
+  function __construct($test_id = NULL, $includes = array()) {
+
+    $includes[] = '/../lib/request/TingClientScanRequest.php';
+    parent::__construct($test_id, $includes);
+  }
+
   /**
    * Test info.
    */
