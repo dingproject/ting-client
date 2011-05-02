@@ -168,10 +168,15 @@ class TingClientSearchRequest extends TingClientRequest {
     $searchResult->more = (bool) preg_match('/true/i', $response->more);
 
     // Make collection objects for each search result.
-    if (isset($response->searchResult)) {
+    if (isset($response->searchResult) && is_array($response->searchResult)) {
       foreach ($response->searchResult as $entry => $result) {
-        $searchResult->collections[] = $this->generateCollection($result);
+        $searchResult->collections[] = $this->generateCollection($result->collection);
       }
+    }
+    // Special case if only one result is returned.
+    // This gives us the object directly instead of an array of objects.
+    elseif (isset($response->searchResult) && $response->searchResult instanceOf stdClass) {
+      $searchResult->collections[] = $this->generateCollection($response->searchResult->collection);
     }
 
     // If we have facets in the result, they need processing.
