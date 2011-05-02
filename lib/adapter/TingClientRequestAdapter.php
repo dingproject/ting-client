@@ -29,8 +29,13 @@ class TingClientRequestAdapter {
     if (isset($result->error)) {
       throw new TingClientException('Unable to excecute SOAP request: ' . $result->error);
     }
+
+    // If result is wrapped in an object, unwrap it.
+    if (isset($result->result)) {
+      return $result->result;
+    }
  
-    return $result->result;
+    return $result;
   }
  
   public function setLogger(TingClientLogger $logger) {
