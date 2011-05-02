@@ -4,19 +4,17 @@ class TingClientSpellRequest extends TingClientRequest {
   protected $word;
   protected $numResults;
 
-  protected function getSoapRequest() {
-    $soapRequest = new TingClientSoapRequest();
-    $soapRequest->setWsdlUrl($this->wsdlUrl);
-    $soapRequest->setParameter('action', 'openSpell');
-    $soapRequest->setParameter('format', 'dkabm');
+  protected function getRequest() {
+    $this->setParameter('action', 'openSpell');
+    $this->setParameter('format', 'dkabm');
 
     // TODO: Figure out what this does. It's required in the SOAP
     // implementation, but not used in the REST implementation.
-    $soapRequest->setParameter('filter', '');
+    $this->setParameter('filter', '');
 
     // TODO: This should be configurable somewhere, even though it's not an
     // option in the REST implementation.
-    $soapRequest->setParameter('language', 'da');
+    $this->setParameter('language', 'da');
 
     $methodParameterMap = array(
       'word' => 'word',
@@ -24,13 +22,13 @@ class TingClientSpellRequest extends TingClientRequest {
     );
 
     foreach ($methodParameterMap as $method => $parameter) {
-      $getter = 'get'.ucfirst($method);
+      $getter = 'get' . ucfirst($method);
       if ($value = $this->$getter()) {
-        $soapRequest->setParameter($parameter, $value);
+        $this->setParameter($parameter, $value);
       }
     }
 
-    return $soapRequest;
+    return $this;
   }
 
   public function getWord() {
@@ -47,6 +45,19 @@ class TingClientSpellRequest extends TingClientRequest {
 
   public function setNumResults($numResults) {
     $this->numResults = $numResults;
+  }
+
+  public function processResponse(stdClass $response) {
+    // The old API expects an array of suggestions, so let's transform.
+    if (isset($response->term) && is_array($response->term)) {
+      return $response->term;
+    }
+    elseif (isset($response->term) && $response->term instanceOf stdClass) {
+      return array($response->term);
+    }
+    else {
+      return array();
+    }
   }
 }
 
