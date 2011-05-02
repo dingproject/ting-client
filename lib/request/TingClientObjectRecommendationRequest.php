@@ -51,18 +51,16 @@ class TingClientObjectRecommendationRequest extends TingClientRequest {
     $this->toDate = $toDate;
   }
 
-  protected function getSoapRequest() {
-    $request = new TingClientSoapRequest();
-    $request->setWsdlUrl($this->wsdlUrl);
-    $request->setParameter('action', 'ADHLRequest');
-    $request->setParameter('format', 'dkabm');
+  protected function getRequest() {
+    $this->setParameter('action', 'ADHLRequest');
+    $this->setParameter('format', 'dkabm');
 
     if ($this->isbn) {
-      $request->setParameter('isbn', $this->isbn);
+      $this->setParameter('isbn', $this->isbn);
     }
 
     if ($this->numResults) {
-      $request->setParameter('numRecords', $this->numResults);
+      $this->setParameter('numRecords', $this->numResults);
     }
 
     if ($this->sex) {
@@ -73,22 +71,22 @@ class TingClientObjectRecommendationRequest extends TingClientRequest {
         case TingClientObjectRecommendationRequest::SEX_FEMALE:
           $sex = 'k';
       }
-      $request->setParameter($sex);
+      $this->setParameter($sex);
     }
 
     if ($this->minAge || $this->maxAge) {
       $minAge = ($this->minAge) ? $this->minAge : 0;
       $maxAge = ($this->maxAge) ? $this->maxAge : 100;
-      $request->setParameter('minAge', $minAge);
-      $request->setParameter('maxAge', $maxAge);
+      $this->setParameter('minAge', $minAge);
+      $this->setParameter('maxAge', $maxAge);
     }
 
     if ($this->fromDate || $this->toDate) {
-      $request->setParameter('from', $this->fromDate);
-      $request->setParameter('to', $this->toDate);
+      $this->setParameter('from', $this->fromDate);
+      $this->setParameter('to', $this->toDate);
     }
 
-    return $request;
+    return $this;
   }
 }
 
