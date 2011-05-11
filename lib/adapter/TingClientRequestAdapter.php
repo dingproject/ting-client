@@ -13,29 +13,16 @@ class TingClientRequestAdapter {
   private $clientInstance;
  
   public function executeRequest(TingClientRequest $request) {
-    $client = new SoapClient($request->getWsdlUrl(), array(
-      'cache_wsdl' => WSDL_CACHE_BOTH,
-      'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
-      'soap_version' => SOAP_1_2,
-      'trace' => FALSE, // TRUE for debugging
-    ));
+    $client = new NanoSOAPClient($request->getWsdlUrl());
  
     $requestParameters = $request->getParameters();
-    $soapParameters = (object) $requestParameters;
-    unset($soapParameters->action);
- 
-    $result = $client->{$requestParameters['action']}($soapParameters);
+    $soapParameters = $requestParameters;
+    unset($soapParameters['action']);
 
-    if (isset($result->error)) {
-      throw new TingClientException('Unable to excecute SOAP request: ' . $result->error);
-    }
-
-    // If result is wrapped in an object, unwrap it.
-    if (isset($result->result)) {
-      return $result->result;
-    }
+    // We always want serialised JSON output.
+    $soapParameters['outputType'] = 'json';
  
-    return $result;
+    return $client->call($requestParameters['action'], $soapParameters);
   }
  
   public function setLogger(TingClientLogger $logger) {
@@ -51,10 +38,9 @@ class TingClientRequestAdapter {
       $time = floatval(($stopTime[1]+$stopTime[0]) - ($startTime[1]+$startTime[0]));
       $this->logger->log('Completed SOAP request ' . $request->getWsdlUrl() . ' (' . round($time, 3) . 's)');
  
-      return $request->processResponse($response);
+      return $request->parseResponse($response);
     }
-    catch (TingClientException $e)
-    {
+    catch (TingClientException $e) {
       $this->logger->log('Error handling SOAP request ' . $request->getWsdlUrl() .' : '. $e->getMessage());
       throw $e;
     }

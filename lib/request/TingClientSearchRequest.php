@@ -34,7 +34,7 @@ class TingClientSearchRequest extends TingClientRequest {
 
   public function getRequest() {
     // These defaults are always needed.
-    $this->setParameter('action', 'search');
+    $this->setParameter('action', 'searchRequest');
     $this->setParameter('format', 'dkabm');
 
     $methodParameterMap = array(
@@ -166,69 +166,44 @@ class TingClientSearchRequest extends TingClientRequest {
     $this->agency = $agency;
   }
 
-  public function processResponse(stdClass $response) {
+  public function processResponse($response) {
     $searchResult = new TingClientSearchResult();
 
-    if (isset($response->error)) {
-      throw new TingClientException('Error handling search request: '.self::getValue($response->error));
+    $searchResponse = $response->searchResponse;
+    if (isset($searchResponse->error)) {
+      throw new TingClientException('Error handling search request: '.self::getValue($searchResponse->error));
     }
 
-    $searchResult->numTotalObjects = $response->hitCount;
-    $searchResult->numTotalCollections = $response->collectionCount;
-    $searchResult->more = (bool) preg_match('/true/i', $response->more);
+    $searchResult->numTotalObjects = self::getValue($searchResponse->result->hitCount);
+    $searchResult->numTotalCollections = self::getValue($searchResponse->result->collectionCount);
+    $searchResult->more = (bool) preg_match('/true/i', self::getValue($searchResponse->result->more));
 
-    // Make collection objects for each search result.
-    if (isset($response->searchResult) && is_array($response->searchResult)) {
-      foreach ($response->searchResult as $entry => $result) {
-        $searchResult->collections[] = $this->generateCollection($result->collection);
+    if (isset($searchResponse->result->searchResult) && is_array($searchResponse->result->searchResult)) {
+      foreach ($searchResponse->result->searchResult as $entry => $result) {
+        $searchResult->collections[] = $this->generateCollection($result->collection, (array)$response->{'@namespaces'});
       }
     }
-    // Special case if only one result is returned.
-    // This gives us the object directly instead of an array of objects.
-    elseif (isset($response->searchResult) && $response->searchResult instanceOf stdClass) {
-      $searchResult->collections[] = $this->generateCollection($response->searchResult->collection);
-    }
 
-    // If we have facets in the result, they need processing.
-    if (isset($response->facetResult) && isset($response->facetResult->facet)) {
-      // We may get more than one facetResult group, process each in turn.
-      if (is_array($response->facetResult->facet)) {
-        $facets = array();
-        foreach ($response->facetResult->facet as $facetData) {
-          $facets += $this->generateFacetResult($facetData);
+    if (isset($searchResponse->result->facetResult->facet) && is_array($searchResponse->result->facetResult->facet)) {
+      foreach ($searchResponse->result->facetResult->facet as $facetResult) {
+        $facet = new TingClientFacetResult();
+        $facet->name = self::getValue($facetResult->facetName);
+        if (isset($facetResult->facetTerm)) {
+          foreach ($facetResult->facetTerm as $term) {
+            $facet->terms[self::getValue($term->term)] = self::getValue($term->frequence);
+          }
         }
-      }
-      // Otherwise, just process the one group.
-      else {
-        $facets = $this->generateFacetResult($response->facetResult->facet);
-      }
 
-      $searchResult->facets = $facets;
+        $searchResult->facets[$facet->name] = $facet;
+      }
     }
 
     return $searchResult;
   }
 
-  private function generateCollection($collectionData) {
-    $objects = array();
-
-    // If there's multiple objects, we get an array.
-    if (isset($collectionData->object) && is_array($collectionData->object)) {
-      foreach ($collectionData->object as $objectData) {
-        $objects[] = $this->generateObject($objectData);
-      }
-    }
-    // If not, we just get the object directly.
-    elseif (isset($collectionData->object) && $collectionData->object instanceOf stdClass) {
-      $objects[] = $this->generateObject($collectionData->object);
-    }
-
-    return new TingClientObjectCollection($objects);
-  }
-
-  private function generateObject($objectData) {
+  private function generateObject($objectData, $namespaces) {
     $object = new TingClientObject();
-    $object->id = $objectData->identifier;
+    $object->id = self::getValue($objectData->identifier);
 
     $object->record = array();
     $object->relations = array();
@@ -236,44 +211,32 @@ class TingClientSearchRequest extends TingClientRequest {
     // The prefixes used in the response from the server may change over
     // time. We use our own map to provide a stable interface.
     $prefixes = array_flip(self::$namespaces);
-
-    // Take each data element in the record and transform it.
     foreach ($objectData->record as $name => $elements) {
       if (!is_array($elements)) {
         continue;
       }
-
-      // Transform each value from a SoapVar to what the API consumers 
-      // expect to receive.
-      foreach ($elements as $element_name => $element) {
-        if ($element instanceOf SoapVar) {
-          $namespace = $element->enc_ns;
-          $prefix = isset($prefixes[$namespace]) ? $prefixes[$namespace] : 'unknown';
-          $key1 = $prefix . ':' . $name;
-
-          // TODO: Figure out what this does.
-          if (isset($element->enc_stype)) {
-            $type_name = $element->enc_stype;
-            $type_prefix = isset($prefixes[$element->enc_ns]) ? $prefixes[$element->enc_ns] : 'unknown';
-            $key2 = $type_prefix . ':' . $type_name;
-          }
-          else {
-            $key2 = '';
-          }
-          if (!isset($object->record[$key1][$key2])) {
-            $object->record[$key1][$key2] = array();
-          }
-          $object->record[$key1][$key2][] = $element->enc_value;
+      foreach ($elements as $element) {
+        $namespace = $namespaces[isset($element->{'@'}) ? $element->{'@'} : '$'];
+        $prefix = isset($prefixes[$namespace]) ? $prefixes[$namespace] : 'unknown';
+        $key1 = $prefix . ':' . $name;
+        if (isset($element->{'@type'})) {
+          list($type_prefix, $type_name) = explode(':', $element->{'@type'}->{'$'}, 2);
+          $type_namespace = $namespaces[isset($type_prefix) ? $type_prefix : '$'];
+          $type_prefix = isset($prefixes[$type_namespace]) ? $prefixes[$type_namespace] : 'unknown';
+          $key2 = $type_prefix . ':' . $type_name;
         }
         else {
-          $object->record[$name][] = $element;
+          $key2 = '';
         }
+        if (!isset($object->record[$key1][$key2])) {
+          $object->record[$key1][$key2] = array();
+        }
+        $object->record[$key1][$key2][] = $element->{'$'};
       }
     }
 
-    // Extract localId and ownerId from the ID provided by OpenSearch.
-    if (!empty($object->record['identifier'][0])) {
-      list($object->localId, $object->ownerId) = explode('|', $object->record['identifier'][0]);
+    if (!empty($object->record['ac:identifier'][''])) {
+      list($object->localId, $object->ownerId) = explode('|', $object->record['ac:identifier'][''][0]);
     }
     else {
       $object->localId = $object->ownerId = FALSE;
@@ -293,33 +256,17 @@ class TingClientSearchRequest extends TingClientRequest {
     return $object;
   }
 
-  /**
-   * Transforms the SOAP data into a TingClientFacetResult instance.
-   *
-   * @param stdClass $facetData
-   *   The data returned from the webservice
-   * @return TingClientFacetResult
-   */
-  public function generateFacetResult($facetData) {
-    $facet = new TingClientFacetResult();
-    $facet->name = $facetData->facetName;
-
-    // We may have multiple facetTerms, in which case we add them to the 
-    // array one by one.
-    if (is_array($facetData->facetTerm)) {
-      foreach ($facetData->facetTerm as $term) {
-        $facet->terms[$term->term] = $term->frequence;
+  private function generateCollection($collectionData, $namespaces)
+  {
+    $objects = array();
+    if (isset($collectionData->object) && is_array($collectionData->object))
+    {
+      foreach ($collectionData->object as $objectData)
+      {
+        $objects[] = $this->generateObject($objectData, $namespaces);
       }
     }
-    // If there's only one facetTerm, it's avaiable as a stdClass object 
-    // instead of an array.
-    else {
-      $facet->terms[$facetData->facetTerm->term] = $facetData->facetTerm->frequence;
-    }
-
-    // Return a single-element of facets, keyed by name, so the final 
-    // array will also be keyed by name.
-    return array($facet->name => $facet);
+    return new TingClientObjectCollection($objects);
   }
 }
 
