@@ -7,10 +7,10 @@ class TingClientTest extends DrupalWebTestCase {
   /**
    * WSDL URLs.
    */
-  const SEARCH_URL = 'http://opensearch.addi.dk/1.1/opensearch.wsdl';
-  const SCAN_URL = 'http://openscan.addi.dk/1.7/openscan.wsdl';
-  const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/adhl.wsdl';
-  const SPELL_URL = 'http://openspell.addi.dk/1.2/openspell.wsdl';
+  const SEARCH_URL = 'http://opensearch.addi.dk/1.1/';
+  const SCAN_URL = 'http://openscan.addi.dk/1.7/';
+  const RECOMMENDATION_URL = 'http://openadhl.addi.dk/1.1/';
+  const SPELL_URL = 'http://openspell.addi.dk/1.2/';
 
   /**
    * @var TingClient
@@ -67,7 +67,9 @@ class TingClientTest extends DrupalWebTestCase {
    * Set up modules and client instance.
    */
   public function setUp() {
-    parent::setUp();
+    parent::setUp('nanosoap');
+
+    module_load_include('inc', 'nanosoap');
 
     $this->requestFactory = new TingClientRequestFactory(array(
       'search' => self::SEARCH_URL,
@@ -82,6 +84,5 @@ class TingClientTest extends DrupalWebTestCase {
 
     $this->client = new TingClient($requestAdapter, new TingClientDrupalDebugLogger($this));
   }
-
 }
 

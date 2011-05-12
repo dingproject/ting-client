@@ -101,6 +101,6 @@ abstract class TingClientRequest {
     }
   }
   
-  public abstract function processResponse($response); 
+  public abstract function processResponse(stdClass $response); 
 }
 

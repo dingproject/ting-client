@@ -166,7 +166,7 @@ class TingClientSearchRequest extends TingClientRequest {
     $this->agency = $agency;
   }
 
-  public function processResponse($response) {
+  public function processResponse(stdClass $response) {
     $searchResult = new TingClientSearchResult();
 
     $searchResponse = $response->searchResponse;
@@ -256,13 +256,10 @@ class TingClientSearchRequest extends TingClientRequest {
     return $object;
   }
 
-  private function generateCollection($collectionData, $namespaces)
-  {
+  private function generateCollection($collectionData, $namespaces) {
     $objects = array();
-    if (isset($collectionData->object) && is_array($collectionData->object))
-    {
-      foreach ($collectionData->object as $objectData)
-      {
+    if (isset($collectionData->object) && is_array($collectionData->object)) {
+      foreach ($collectionData->object as $objectData) {
         $objects[] = $this->generateObject($objectData, $namespaces);
       }
     }
