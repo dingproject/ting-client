@@ -7,6 +7,8 @@ class TingClientScanTest extends TingClientTest {
   function __construct($test_id = NULL, $includes = array()) {
 
     $includes[] = '/../lib/request/TingClientScanRequest.php';
+    $includes[] = '/../lib/result/scan/TingClientScanResult.php';
+    $includes[] = '/../lib/result/scan/TingClientScanTerm.php';
     parent::__construct($test_id, $includes);
   }
 

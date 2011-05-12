@@ -12,7 +12,7 @@ class TingClientScanRequest extends TingClientRequest {
   protected $agency;
 
   protected function getRequest() {
-    $this->setParameter('action', 'openScan');
+    $this->setParameter('action', 'scanRequest');
     $this->setParameter('format', 'dkabm');
 
     $methodParameterMap = array(
@@ -109,17 +109,19 @@ class TingClientScanRequest extends TingClientRequest {
   }
 
   public function processResponse(stdClass $response) {
-    // The old API expects the result to be available at $response->terms, 
-    // so let's copy it there, making sure it's an array.
-    if (isset($response->term) && is_array($response->term)) {
-      $response->terms = $response->term;
+    $result = new TingClientScanResult();
+
+    if (isset($response->scanResponse->term) && is_array($response->scanResponse->term)) {
+      foreach ($response->scanResponse->term as $scanTerm) {
+        $term = new TingClientScanTerm();
+        $term->name = $scanTerm->name->{'$'};
+        $term->count = $scanTerm->hitCount->{'$'};
+        $result->terms[] = $term;
+      }
     }
-    elseif (isset($response->term) && $response->term instanceOf stdClass) {
-      $response->terms = array($response->term);
-    }
-    else {
-      $response->terms = array();
-    }
+
+    return $result; 
+
 
     return $response;
   }
