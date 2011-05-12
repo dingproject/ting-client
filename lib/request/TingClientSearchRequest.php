@@ -31,6 +31,7 @@ class TingClientSearchRequest extends TingClientRequest {
   protected $allRelations;
   protected $relationData;
   protected $agency;
+  var $userDefinedRanking;
 
   public function getRequest() {
     // These defaults are always needed.
@@ -65,6 +66,11 @@ class TingClientSearchRequest extends TingClientRequest {
         'facetName' => $facets,
         'numberOfTerms' => $this->getNumFacets(),
       ));
+    }
+
+    // Include userDefinedRanking if set on the request.
+    if (is_array($this->userDefinedRanking) && !empty($this->userDefinedRanking)) {
+      $this->setParameter('userDefinedRanking', $this->userDefinedRanking);
     }
 
     return $this;
