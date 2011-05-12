@@ -5,16 +5,8 @@ class TingClientSpellRequest extends TingClientRequest {
   protected $numResults;
 
   protected function getRequest() {
-    $this->setParameter('action', 'openSpell');
+    $this->setParameter('action', 'spellRequest');
     $this->setParameter('format', 'dkabm');
-
-    // TODO: Figure out what this does. It's required in the SOAP
-    // implementation, but not used in the REST implementation.
-    $this->setParameter('filter', '');
-
-    // TODO: This should be configurable somewhere, even though it's not an
-    // option in the REST implementation.
-    $this->setParameter('language', 'da');
 
     $methodParameterMap = array(
       'word' => 'word',
@@ -48,16 +40,18 @@ class TingClientSpellRequest extends TingClientRequest {
   }
 
   public function processResponse(stdClass $response) {
-    // The old API expects an array of suggestions, so let's transform.
-    if (isset($response->term) && is_array($response->term)) {
-      return $response->term;
+    $suggestions = array();
+
+    if (isset($response->spellResponse)) {
+      $response = $response->spellResponse;
+
+      if (isset($response->term) && $response->term) {
+        foreach ($response->term as $term) {
+          $suggestions[] = new TingClientSpellSuggestion($this->getValue($term->suggestion), floatval(str_replace(',', '.', $this->getValue($term->weight))));
+        }
+      }
     }
-    elseif (isset($response->term) && $response->term instanceOf stdClass) {
-      return array($response->term);
-    }
-    else {
-      return array();
-    }
+    return $suggestions;
   }
 }
 

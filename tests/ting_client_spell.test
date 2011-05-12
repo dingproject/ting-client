@@ -7,6 +7,7 @@ class TingClientSpellTest extends TingClientTest {
   function __construct($test_id = NULL, $includes = array()) {
 
     $includes[] = '/../lib/request/TingClientSpellRequest.php';
+    $includes[] = '/../lib/result/spell/TingClientSpellSuggestion.php';
     parent::__construct($test_id, $includes);
   }
 
