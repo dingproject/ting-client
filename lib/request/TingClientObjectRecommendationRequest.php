@@ -55,11 +55,11 @@ class TingClientObjectRecommendationRequest extends TingClientRequest {
   }
 
   protected function getRequest() {
-    $this->setParameter('action', 'ADHLRequest');
-    $this->setParameter('format', 'dkabm');
+    $this->setParameter('action', 'adhlRequest');
+    $this->setParameter('outputType', 'dkabm');
 
     if ($this->isbn) {
-      $this->setParameter('isbn', $this->isbn);
+      $this->setParameter('id', array('isbn' => $this->isbn));
     }
 
     if ($this->numResults) {
@@ -74,7 +74,7 @@ class TingClientObjectRecommendationRequest extends TingClientRequest {
         case TingClientObjectRecommendationRequest::GENDER_FEMALE:
           $gender = 'k';
       }
-      $this->setParameter($gender);
+      $this->setParameter('gender', $gender);
     }
 
     if ($this->minAge || $this->maxAge) {
@@ -90,6 +90,28 @@ class TingClientObjectRecommendationRequest extends TingClientRequest {
     }
 
     return $this;
+  }
+
+  public function processResponse(stdClass $response) {
+    if (isset($response->error)) {
+      throw new TingClientException('Error handling recommendation request: '.$response->error);
+    }
+    
+    $recommendations = array();
+    if (isset($response->adhlResponse->record)) {
+      foreach($response->adhlResponse->record as $record) {
+        $recommendation = new TingClientObjectRecommendation();
+        if ($id = $this->getValue($record->recordId)) {
+          $id = explode('|', $id, 2);
+          $recommendation->localId = $id[0];
+          $recommendation->ownerId = (isset($id[1])) ? $id[1] : null;
+          
+          $recommendations[] = $recommendation;
+        }
+      }
+    }
+
+    return $recommendations;
   }
 }
 

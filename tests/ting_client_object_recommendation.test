@@ -4,6 +4,13 @@
  * Test for Ting Open Search.
  */
 class TingClientObjectRecommendationTest extends TingClientTest {
+  function __construct($test_id = NULL, $includes = array()) {
+
+    $includes[] = '/../lib/request/TingClientObjectRecommendationRequest.php';
+    $includes[] = '/../lib/result/recommendation/TingClientObjectRecommendation.php';
+    parent::__construct($test_id, $includes);
+  }
+
   /**
    * Test info.
    */
