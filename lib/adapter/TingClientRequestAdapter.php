@@ -13,7 +13,7 @@ class TingClientRequestAdapter {
   private $clientInstance;
  
   public function executeRequest(TingClientRequest $request) {
-    $client = new NanoSOAPClient($request->getWsdlUrl());
+    $this->clientInstance = new NanoSOAPClient($request->getWsdlUrl());
  
     $requestParameters = $request->getParameters();
     $soapParameters = $requestParameters;
@@ -22,7 +22,7 @@ class TingClientRequestAdapter {
     // We always want serialised JSON output.
     $soapParameters['outputType'] = 'json';
  
-    return $client->call($requestParameters['action'], $soapParameters);
+    return $this->clientInstance->call($requestParameters['action'], $soapParameters);
   }
  
   public function setLogger(TingClientLogger $logger) {
