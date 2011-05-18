@@ -36,7 +36,7 @@ class TingClientRequestAdapter {
  
       $stopTime = explode(' ', microtime());
       $time = floatval(($stopTime[1]+$stopTime[0]) - ($startTime[1]+$startTime[0]));
-      $this->logger->log('Completed SOAP request ' . $request->getWsdlUrl() . ' (' . round($time, 3) . 's)');
+      $this->logger->log('Completed SOAP request ' . $request->getWsdlUrl() . ' (' . round($time, 3) . 's). Request body: ' . htmlspecialchars($this->clientInstance->requestBodyString, ENT_QUOTES, 'UTF-8', FALSE));
  
       return $request->parseResponse($response);
     }
