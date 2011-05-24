@@ -74,9 +74,9 @@ class TingClientObjectTest extends TingClientTest {
     $objectRequest = $this->requestFactory->getObjectRequest();
     $objectRequest->setLocalId($localId);
 
-    // TODO: This test does not currently pass without setting ownerId, 
+    // TODO: This test does not currently pass without setting agency, 
     // due to the : operation being discontinued.
-    $objectRequest->ownerId = $ownerId;
+    $objectRequest->setAgency($ownerId);
     $object = $this->client->execute($objectRequest);
 
     $this->assertEqual($searchObject, $object, 'Retrieved object should be equal to search result.');

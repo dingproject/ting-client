@@ -6,7 +6,6 @@
 class TingClientObjectRequest extends TingClientSearchRequest {
   protected $id;
   protected $localId;
-  public $ownerId;
 
   public function getObjectId() {
     return $this->id;
@@ -30,10 +29,10 @@ class TingClientObjectRequest extends TingClientSearchRequest {
       $this->setQuery('rec.id=' . $this->id);
     } 
     // If we have both localId and ownerId, combine them to get 
-    elseif ($this->ownerId && $this->localId) {
+    elseif ($this->getAgency() && $this->localId) {
       $this->setQuery('rec.id=' . implode('|', array(
         $this->localId,
-        $this->ownerId,
+        $this->getAgency(),
       )));
     }
     elseif ($this->localId) {
