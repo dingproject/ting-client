@@ -10,40 +10,40 @@ class TingClientRequestAdapter {
     $this->logger = new TingClientVoidLogger();
   }
  
-  private $clientInstance;
- 
-  public function executeRequest(TingClientRequest $request) {
-    $this->clientInstance = new NanoSOAPClient($request->getWsdlUrl());
- 
-    $requestParameters = $request->getParameters();
-    $soapParameters = $requestParameters;
-    unset($soapParameters['action']);
-
-    // We always want serialised JSON output.
-    $soapParameters['outputType'] = 'json';
- 
-    return $this->clientInstance->call($requestParameters['action'], $soapParameters);
-  }
- 
   public function setLogger(TingClientLogger $logger) {
     $this->logger = $logger;
   }
  
   public function execute(TingClientRequest $request) {
-    $startTime = explode(' ', microtime());
+    //Prepare the parameters for the SOAP request
+    $soapParameters = $request->getParameters();
+    // Separate the action from other parameters
+    $soapAction = $soapParameters['action'];
+    unset($soapParameters['action']);
+    // We always want serialised JSON output.
+    $soapParameters['outputType'] = 'json';
+    
     try {
-      $response = $this->executeRequest($request);
- 
-      $stopTime = explode(' ', microtime());
-      $time = floatval(($stopTime[1]+$stopTime[0]) - ($startTime[1]+$startTime[0]));
-      $this->logger->log('Completed SOAP request ' . $request->getWsdlUrl() . ' (' . round($time, 3) . 's). Request body: ' . htmlspecialchars($this->clientInstance->requestBodyString, ENT_QUOTES, 'UTF-8', FALSE));
- 
-      return $request->parseResponse($response);
-    }
-    catch (TingClientException $e) {
-      $this->logger->log('Error handling SOAP request ' . $request->getWsdlUrl() .' : '. $e->getMessage());
+      try {
+        $startTime = explode(' ', microtime());
+        
+        $client = new NanoSOAPClient($request->getWsdlUrl());
+        $response = $client->call($soapAction, $soapParameters);
+  
+        $stopTime = explode(' ', microtime());
+        $time = floatval(($stopTime[1]+$stopTime[0]) - ($startTime[1]+$startTime[0]));
+    
+        $this->logger->log('Completed SOAP request ' . $soapAction . ' ' . $request->getWsdlUrl() . ' (' . round($time, 3) . 's). Request body: ' . htmlspecialchars($client->requestBodyString, ENT_QUOTES, 'UTF-8', FALSE));
+   
+        return $request->parseResponse($response);
+      } catch (NanoSOAPcURLException $e) {
+        //Convert NanoSOAP exceptions to TingClientExceptions as callers
+        //should not deal with protocol details
+        throw new TingClientException($e->getMessage(), $e->getCode());
+      }
+    } catch (TingClientException $e) {
+      $this->logger->log('Error handling SOAP request ' . $soapAction . ' ' . $request->getWsdlUrl() .': '. $e->getMessage());
       throw $e;
     }
   }
 }
-
