@@ -31,6 +31,7 @@ class TingClientSearchRequest extends TingClientRequest {
   protected $allRelations;
   protected $relationData;
   protected $agency;
+  var $userDefinedBoost;
   var $userDefinedRanking;
 
   public function getRequest() {
@@ -66,6 +67,11 @@ class TingClientSearchRequest extends TingClientRequest {
         'facetName' => $facets,
         'numberOfTerms' => $this->getNumFacets(),
       ));
+    }
+
+    // Include userDefinedBoost if set on the request.
+    if (is_array($this->userDefinedBoost) && !empty($this->userDefinedBoost)) {
+      $this->setParameter('userDefinedBoost', $this->userDefinedBoost);
     }
 
     // Include userDefinedRanking if set on the request.
