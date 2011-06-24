@@ -219,6 +219,7 @@ class TingClientSearchRequest extends TingClientRequest {
 
     $object->record = array();
     $object->relations = array();
+    $object->formatsAvailable = array();
 
     // The prefixes used in the response from the server may change over
     // time. We use our own map to provide a stable interface.
@@ -263,6 +264,10 @@ class TingClientSearchRequest extends TingClientRequest {
           $object->relations[] = $relation_object;
         }
       }
+    }
+
+    foreach ($objectData->formatsAvailable->format as $format) {
+      $object->formatsAvailable[] = $format->{'$'};
     }
 
     return $object;
