@@ -18,7 +18,7 @@ class TingClientObjectTest extends TingClientTest {
   /**
    * Test info.
    */
-  public function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Ting Client object',
       'description' => 'Test the Ting Open Search object API.' ,

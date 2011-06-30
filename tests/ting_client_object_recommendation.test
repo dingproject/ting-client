@@ -14,7 +14,7 @@ class TingClientObjectRecommendationTest extends TingClientTest {
   /**
    * Test info.
    */
-  public function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Ting Client object recommendation',
       'description' => 'Test the Ting Open Recommendation (ADHL) client.',

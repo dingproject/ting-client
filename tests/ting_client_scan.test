@@ -15,7 +15,7 @@ class TingClientScanTest extends TingClientTest {
   /**
    * Test info.
    */
-  public function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Ting Client scan',
       'description' => 'Test the Ting Open Scan (autocomplete) client.' ,
