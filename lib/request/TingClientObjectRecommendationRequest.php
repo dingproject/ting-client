@@ -56,7 +56,6 @@ class TingClientObjectRecommendationRequest extends TingClientRequest {
 
   protected function getRequest() {
     $this->setParameter('action', 'adhlRequest');
-    $this->setParameter('outputType', 'dkabm');
 
     if ($this->isbn) {
       $this->setParameter('id', array('isbn' => $this->isbn));
