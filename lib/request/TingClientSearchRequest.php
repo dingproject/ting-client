@@ -35,9 +35,13 @@ class TingClientSearchRequest extends TingClientRequest {
   var $userDefinedRanking;
 
   public function getRequest() {
+    $parameters = $this->getParameters();
+
     // These defaults are always needed.
     $this->setParameter('action', 'searchRequest');
-    $this->setParameter('format', 'dkabm');
+    if (!isset($parameters['format']) || empty($parameters['format'])) {
+      $this->setParameter('format', 'dkabm');
+    }
 
     $methodParameterMap = array(
       'query' => 'query',

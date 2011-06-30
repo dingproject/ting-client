@@ -20,8 +20,11 @@ class TingClientRequestAdapter {
     // Separate the action from other parameters
     $soapAction = $soapParameters['action'];
     unset($soapParameters['action']);
-    // We always want serialised JSON output.
-    $soapParameters['outputType'] = 'json';
+
+    // We use JSON as the default outputType.
+    if (!isset($soapParameters['outputType'])) {
+      $soapParameters['outputType'] = 'json';
+    }
     
     try {
       try {
@@ -35,7 +38,13 @@ class TingClientRequestAdapter {
     
         $this->logger->log('Completed SOAP request ' . $soapAction . ' ' . $request->getWsdlUrl() . ' (' . round($time, 3) . 's). Request body: ' . $client->requestBodyString);
    
-        return $request->parseResponse($response);
+        // If using JSON and DKABM, we help parse it.
+        if ($soapParameters['outputType'] == 'json') {
+          return $request->parseResponse($response);
+        }
+        else {
+          return $response;
+        }
       } catch (NanoSOAPcURLException $e) {
         //Convert NanoSOAP exceptions to TingClientExceptions as callers
         //should not deal with protocol details
