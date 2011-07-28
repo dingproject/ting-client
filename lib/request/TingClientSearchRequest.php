@@ -228,27 +228,30 @@ class TingClientSearchRequest extends TingClientRequest {
     // The prefixes used in the response from the server may change over
     // time. We use our own map to provide a stable interface.
     $prefixes = array_flip(self::$namespaces);
-    foreach ($objectData->record as $name => $elements) {
-      if (!is_array($elements)) {
-        continue;
-      }
-      foreach ($elements as $element) {
-        $namespace = $namespaces[isset($element->{'@'}) ? $element->{'@'} : '$'];
-        $prefix = isset($prefixes[$namespace]) ? $prefixes[$namespace] : 'unknown';
-        $key1 = $prefix . ':' . $name;
-        if (isset($element->{'@type'})) {
-          list($type_prefix, $type_name) = explode(':', $element->{'@type'}->{'$'}, 2);
-          $type_namespace = $namespaces[isset($type_prefix) ? $type_prefix : '$'];
-          $type_prefix = isset($prefixes[$type_namespace]) ? $prefixes[$type_namespace] : 'unknown';
-          $key2 = $type_prefix . ':' . $type_name;
+
+    if (isset($objectData->record)) {
+      foreach ($objectData->record as $name => $elements) {
+        if (!is_array($elements)) {
+          continue;
         }
-        else {
-          $key2 = '';
+        foreach ($elements as $element) {
+          $namespace = $namespaces[isset($element->{'@'}) ? $element->{'@'} : '$'];
+          $prefix = isset($prefixes[$namespace]) ? $prefixes[$namespace] : 'unknown';
+          $key1 = $prefix . ':' . $name;
+          if (isset($element->{'@type'})) {
+            list($type_prefix, $type_name) = explode(':', $element->{'@type'}->{'$'}, 2);
+            $type_namespace = $namespaces[isset($type_prefix) ? $type_prefix : '$'];
+            $type_prefix = isset($prefixes[$type_namespace]) ? $prefixes[$type_namespace] : 'unknown';
+            $key2 = $type_prefix . ':' . $type_name;
+          }
+          else {
+            $key2 = '';
+          }
+          if (!isset($object->record[$key1][$key2])) {
+            $object->record[$key1][$key2] = array();
+          }
+          $object->record[$key1][$key2][] = $element->{'$'};
         }
-        if (!isset($object->record[$key1][$key2])) {
-          $object->record[$key1][$key2] = array();
-        }
-        $object->record[$key1][$key2][] = $element->{'$'};
       }
     }
 
