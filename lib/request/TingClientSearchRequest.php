@@ -273,8 +273,10 @@ class TingClientSearchRequest extends TingClientRequest {
       }
     }
 
-    foreach ($objectData->formatsAvailable->format as $format) {
-      $object->formatsAvailable[] = $format->{'$'};
+    if (isset($objectData->formatsAvailable)) {
+      foreach ($objectData->formatsAvailable->format as $format) {
+        $object->formatsAvailable[] = $format->{'$'};
+      }
     }
 
     return $object;
