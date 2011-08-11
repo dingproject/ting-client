@@ -17,7 +17,7 @@ class TingClientSearchRequest extends TingClientRequest {
     'dkdcplus' => 'http://biblstandard.dk/abm/namespace/dkdcplus/',
   );
 
-  // Query parameter is required, so if not provided, we will just do a 
+  // Query parameter is required, so if not provided, we will just do a
   // wildcard search.
   protected $query = '*:*';
   protected $facets = array();
@@ -63,7 +63,7 @@ class TingClientSearchRequest extends TingClientRequest {
       }
     }
 
-    // If we have facets to display, we need to construct an array of 
+    // If we have facets to display, we need to construct an array of
     // them for SoapClient's benefit.
     $facets = $this->getFacets();
     if ($facets) {
@@ -263,13 +263,20 @@ class TingClientSearchRequest extends TingClientRequest {
     }
 
     if (isset($objectData->relations)) {
+      $object->relationsData = array();
       foreach ($objectData->relations->relation as $relation) {
+        $relation_data = (object) array(
+          'relationType' => $relation->relationType->{'$'},
+          'relationUri' => $relation->relationUri->{'$'},
+        );
         if (isset($relation->relationObject)) {
           $relation_object = $this->generateObject($relation->relationObject->object, $namespaces);
-          $relation_object->relationType = $relation->relationType->{'$'};
-          $relation_object->relationUri = $relation->relationUri->{'$'};
+          $relation_data->relationObject = $relation_object;
+          $relation_object->relationType = $relation_data->relationType;
+          $relation_object->relationUri = $relation_data->relationUri;
           $object->relations[] = $relation_object;
         }
+        $object->relationsData[] = $relation_data;
       }
     }
 
