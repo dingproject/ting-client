@@ -238,7 +238,7 @@ class TingClientSearchRequest extends TingClientRequest {
           $namespace = $namespaces[isset($element->{'@'}) ? $element->{'@'} : '$'];
           $prefix = isset($prefixes[$namespace]) ? $prefixes[$namespace] : 'unknown';
           $key1 = $prefix . ':' . $name;
-          if (isset($element->{'@type'}) && stristr($element->{'@type'}->{'$'}, ':')) {
+          if (isset($element->{'@type'}) && strpos($element->{'@type'}->{'$'}, ':') !== FALSE) {
             list($type_prefix, $type_name) = explode(':', $element->{'@type'}->{'$'}, 2);
             $type_namespace = $namespaces[isset($type_prefix) ? $type_prefix : '$'];
             $type_prefix = isset($prefixes[$type_namespace]) ? $prefixes[$type_namespace] : 'unknown';
