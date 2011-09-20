@@ -13,7 +13,15 @@ class TingClientObjectRequest extends TingClientRequest {
   protected $id;
   protected $localId;
   protected $relationData;
+  protected $identifier;
+  protected $profile;
 
+  public function getProfile() {
+    return $this->profile;
+  }
+  public function setProfile($profile) {
+    $this->profile = $profile;
+  }
   public function getAgency() {
     return $this->agency;
   }
@@ -112,6 +120,7 @@ class TingClientObjectRequest extends TingClientRequest {
     $response = $searchRequest->processResponse($response);
 
     if (isset($response->collections[0]->objects[0])) {
+      //  print_r($response->collections);
       return $response->collections[0]->objects[0];
     }
   }
