@@ -1,18 +1,41 @@
 <?php
 
 /**
- * Objects requests are really just simplified search requests.
+ * Get a Ting object by ID.
+ *
+ * Objects requests are much like search request, so this is implemented 
+ * as a subclass, even though it is a different request type.
  */
-class TingClientObjectRequest extends TingClientSearchRequest {
+class TingClientObjectRequest extends TingClientRequest {
+  protected $agency;
+  protected $allRelations;
+  protected $format;
   protected $id;
   protected $localId;
+  protected $relationData;
 
-  public function getObjectId() {
-    return $this->id;
+  public function getAgency() {
+    return $this->agency;
   }
 
-  public function setObjectId($id) {
-    $this->id = $id;
+  public function setAgency($agency) {
+    $this->agency = $agency;
+  }
+
+  public function getAllRelations() {
+    return $this->allRelations;
+  }
+
+  public function setAllRelations($allRelations) {
+    $this->allRelations = $allRelations;
+  }
+
+  public function getFormat() {
+    return $this->format;
+  }
+
+  public function setFormat($format) {
+    $this->format = $format;
   }
 
   public function getLocalId() {
@@ -23,23 +46,55 @@ class TingClientObjectRequest extends TingClientSearchRequest {
     $this->localId = $localId;
   }
 
+  public function getObjectId() {
+    return $this->identifier;
+  }
+
+  public function setObjectId($id) {
+    $this->identifier = $id;
+  }
+
+  public function getRelationData() {
+    return $this->relationData;
+  }
+
+  public function setRelationData($relationData) {
+    $this->relationData = $relationData;
+  }
+
   public function getRequest() {
+    $parameters = $this->getParameters();
+    //
+    // These defaults are always needed.
+    $this->setParameter('action', 'getObjectRequest');
+    if (!isset($parameters['format']) || empty($parameters['format'])) {
+      $this->setParameter('format', 'dkabm');
+    }
+
     // Determine which id to use and the corresponding index
-    if ($this->id) {
-      $this->setQuery('rec.id=' . $this->id);
+    if ($this->identifier) {
+      $this->setParameter('identifier', $this->identifier);
     } 
     // If we have both localId and ownerId, combine them to get 
     elseif ($this->getAgency() && $this->localId) {
-      $this->setQuery('rec.id=' . implode('|', array(
+      $this->setParameter('identifier', implode('|', array(
         $this->localId,
         $this->getAgency(),
       )));
     }
-    elseif ($this->localId) {
-      // Use contains (any) instead of equality (=) as local id is not a
-      // complete value.
-      // TODO: This does not seem to work :(
-      $this->setQuery('rec.id any ' . $this->localId);
+
+    $methodParameterMap = array(
+      'format' => 'objectFormat',
+      'allRelations' => 'allRelations',
+      'relationData' => 'relationData',
+      'agency' => 'agency',
+    );
+
+    foreach ($methodParameterMap as $method => $parameter) {
+      $getter = 'get' . ucfirst($method);
+      if ($value = $this->$getter()) {
+        $this->setParameter($parameter, $value);
+      }
     }
 
     if ($allRelations = $this->getAllRelations()) {
@@ -47,14 +102,14 @@ class TingClientObjectRequest extends TingClientSearchRequest {
       $this->setRelationData($this->getRelationData());
     }
 
-    // We only want one object.
-    $this->setNumResults(1);
-
-    return parent::getRequest();
+    return $this;
   }
 
   public function processResponse(stdClass $response) {
-    $response = parent::processResponse($response);
+    // Use TingClientSearchRequest::processResponse for processing the 
+    // response from Ting.
+    $searchRequest = new TingClientSearchRequest(NULL);
+    $response = $searchRequest->processResponse($response);
 
     if (isset($response->collections[0]->objects[0])) {
       return $response->collections[0]->objects[0];
