@@ -32,8 +32,8 @@ class TingClientSearchRequest extends TingClientRequest {
   protected $relationData;
   protected $agency;
   protected $profile;
-  var $userDefinedBoost;
-  var $userDefinedRanking;
+  protected $userDefinedBoost;
+  protected $userDefinedRanking;
 
   public function getRequest() {
     $parameters = $this->getParameters();
@@ -56,6 +56,8 @@ class TingClientSearchRequest extends TingClientRequest {
       'relationData' => 'relationData',
       'agency' => 'agency',
       'profile' => 'profile',
+      'userDefinedBoost' => 'userDefinedBoost',
+      'userDefinedRanking' => 'userDefinedRanking',
     );
 
     foreach ($methodParameterMap as $method => $parameter) {
@@ -73,16 +75,6 @@ class TingClientSearchRequest extends TingClientRequest {
         'facetName' => $facets,
         'numberOfTerms' => $this->getNumFacets(),
       ));
-    }
-
-    // Include userDefinedBoost if set on the request.
-    if (is_array($this->userDefinedBoost) && !empty($this->userDefinedBoost)) {
-      $this->setParameter('userDefinedBoost', $this->userDefinedBoost);
-    }
-
-    // Include userDefinedRanking if set on the request.
-    if (is_array($this->userDefinedRanking) && !empty($this->userDefinedRanking)) {
-      $this->setParameter('userDefinedRanking', $this->userDefinedRanking);
     }
 
     return $this;
@@ -190,6 +182,22 @@ class TingClientSearchRequest extends TingClientRequest {
 
   public function setProfile($profile) {
     $this->profile = $profile;
+  }
+
+  public function getUserDefinedBoost() {
+    return $this->userDefinedBoost;
+  }
+
+  public function setUserDefinedBoost($userDefinedBoost) {
+    $this->userDefinedBoost = $userDefinedBoost;
+  }
+
+  public function getUserDefinedRanking() {
+    return $this->userDefinedRanking;
+  }
+
+  public function setUserDefinedRanking($userDefinedRanking) {
+    $this->userDefinedRanking = $userDefinedRanking;
   }
 
   public function processResponse(stdClass $response) {
