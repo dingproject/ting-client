@@ -3,7 +3,7 @@
 /**
  * Get a Ting object by ID.
  *
- * Objects requests are much like search request, so this is implemented 
+ * Objects requests are much like search request, so this is implemented
  * as a subclass, even though it is a different request type.
  */
 class TingClientObjectRequest extends TingClientRequest {
@@ -82,8 +82,8 @@ class TingClientObjectRequest extends TingClientRequest {
     // Determine which id to use and the corresponding index
     if ($this->identifier) {
       $this->setParameter('identifier', $this->identifier);
-    } 
-    // If we have both localId and ownerId, combine them to get 
+    }
+    // If we have both localId and ownerId, combine them to get
     elseif ($this->getAgency() && $this->localId) {
       $this->setParameter('identifier', implode('|', array(
         $this->localId,
@@ -115,7 +115,7 @@ class TingClientObjectRequest extends TingClientRequest {
   }
 
   public function processResponse(stdClass $response) {
-    // Use TingClientSearchRequest::processResponse for processing the 
+    // Use TingClientSearchRequest::processResponse for processing the
     // response from Ting.
     $searchRequest = new TingClientSearchRequest(NULL);
     $response = $searchRequest->processResponse($response);
