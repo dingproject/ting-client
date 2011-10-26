@@ -31,8 +31,9 @@ class TingClientSearchRequest extends TingClientRequest {
   protected $allRelations;
   protected $relationData;
   protected $agency;
-  var $userDefinedBoost;
-  var $userDefinedRanking;
+  protected $profile;
+  protected $userDefinedBoost;
+  protected $userDefinedRanking;
 
   public function getRequest() {
     $parameters = $this->getParameters();
@@ -54,6 +55,9 @@ class TingClientSearchRequest extends TingClientRequest {
       'allRelations' => 'allRelations',
       'relationData' => 'relationData',
       'agency' => 'agency',
+      'profile' => 'profile',
+      'userDefinedBoost' => 'userDefinedBoost',
+      'userDefinedRanking' => 'userDefinedRanking',
     );
 
     foreach ($methodParameterMap as $method => $parameter) {
@@ -71,16 +75,6 @@ class TingClientSearchRequest extends TingClientRequest {
         'facetName' => $facets,
         'numberOfTerms' => $this->getNumFacets(),
       ));
-    }
-
-    // Include userDefinedBoost if set on the request.
-    if (is_array($this->userDefinedBoost) && !empty($this->userDefinedBoost)) {
-      $this->setParameter('userDefinedBoost', $this->userDefinedBoost);
-    }
-
-    // Include userDefinedRanking if set on the request.
-    if (is_array($this->userDefinedRanking) && !empty($this->userDefinedRanking)) {
-      $this->setParameter('userDefinedRanking', $this->userDefinedRanking);
     }
 
     return $this;
@@ -182,6 +176,30 @@ class TingClientSearchRequest extends TingClientRequest {
     $this->agency = $agency;
   }
 
+  public function getProfile() {
+    return $this->profile;
+  }
+
+  public function setProfile($profile) {
+    $this->profile = $profile;
+  }
+
+  public function getUserDefinedBoost() {
+    return $this->userDefinedBoost;
+  }
+
+  public function setUserDefinedBoost($userDefinedBoost) {
+    $this->userDefinedBoost = $userDefinedBoost;
+  }
+
+  public function getUserDefinedRanking() {
+    return $this->userDefinedRanking;
+  }
+
+  public function setUserDefinedRanking($userDefinedRanking) {
+    $this->userDefinedRanking = $userDefinedRanking;
+  }
+
   public function processResponse(stdClass $response) {
     $searchResult = new TingClientSearchResult();
 
@@ -238,7 +256,7 @@ class TingClientSearchRequest extends TingClientRequest {
           $namespace = $namespaces[isset($element->{'@'}) ? $element->{'@'} : '$'];
           $prefix = isset($prefixes[$namespace]) ? $prefixes[$namespace] : 'unknown';
           $key1 = $prefix . ':' . $name;
-          if (isset($element->{'@type'})) {
+          if (isset($element->{'@type'}) && strpos($element->{'@type'}->{'$'}, ':') !== FALSE) {
             list($type_prefix, $type_name) = explode(':', $element->{'@type'}->{'$'}, 2);
             $type_namespace = $namespaces[isset($type_prefix) ? $type_prefix : '$'];
             $type_prefix = isset($prefixes[$type_namespace]) ? $prefixes[$type_namespace] : 'unknown';
