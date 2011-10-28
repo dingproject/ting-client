@@ -85,9 +85,9 @@ class TingClientObjectRequest extends TingClientRequest {
     }
     // If we have both localId and ownerId, combine them to get
     elseif ($this->getAgency() && $this->localId) {
-      $this->setParameter('identifier', implode('|', array(
-        $this->localId,
+      $this->setParameter('identifier', implode(':', array(
         $this->getAgency(),
+        $this->localId,
       )));
     }
 
