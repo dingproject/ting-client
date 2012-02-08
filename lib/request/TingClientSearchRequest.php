@@ -214,7 +214,9 @@ class TingClientSearchRequest extends TingClientRequest {
 
     if (isset($searchResponse->result->searchResult) && is_array($searchResponse->result->searchResult)) {
       foreach ($searchResponse->result->searchResult as $entry => $result) {
-        $searchResult->collections[] = $this->generateCollection($result->collection, (array)$response->{'@namespaces'});
+        if (self::getValue($result->collection->numberOfObjects) >= 1)  {
+          $searchResult->collections[] = $this->generateCollection($result->collection, (array)$response->{'@namespaces'});
+        }
       }
     }
 
