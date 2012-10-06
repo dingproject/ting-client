@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ * TingClientSearchRequest class definition.
+ */
+
 
 class TingClientSearchRequest extends TingClientRequest {
   /**
@@ -23,6 +28,7 @@ class TingClientSearchRequest extends TingClientRequest {
   protected $facets = array();
   protected $numFacets;
   protected $format;
+  protected $objectFormat;
   protected $start;
   protected $numResults;
   protected $rank;
@@ -35,16 +41,23 @@ class TingClientSearchRequest extends TingClientRequest {
   protected $userDefinedBoost;
   protected $userDefinedRanking;
 
+  /**
+   * Return the request object instance, ready for use.
+   */
   public function getRequest() {
     $parameters = $this->getParameters();
 
     // These defaults are always needed.
     $this->setParameter('action', 'searchRequest');
-    if (!isset($parameters['format']) || empty($parameters['format'])) {
+
+    if (isset($parameters['objectFormat'])) {
+      $this->setObjectFormat($parameters['objectFormat']);
+    }
+    elseif (empty($parameters['format'])) {
       $this->setParameter('format', 'dkabm');
     }
 
-    $methodParameterMap = array(
+    $method_parameter_map = array(
       'query' => 'query',
       'format' => 'format',
       'start' => 'start',
@@ -60,7 +73,7 @@ class TingClientSearchRequest extends TingClientRequest {
       'userDefinedRanking' => 'userDefinedRanking',
     );
 
-    foreach ($methodParameterMap as $method => $parameter) {
+    foreach ($method_parameter_map as $method => $parameter) {
       $getter = 'get' . ucfirst($method);
       if ($value = $this->$getter()) {
         $this->setParameter($parameter, $value);
@@ -77,169 +90,289 @@ class TingClientSearchRequest extends TingClientRequest {
       ));
     }
 
+    // Include userDefinedBoost if set on the request.
+    if (is_array($this->userDefinedBoost) && !empty($this->userDefinedBoost)) {
+      $this->setParameter('userDefinedBoost', $this->userDefinedBoost);
+    }
+
+    // Include userDefinedRanking if set on the request.
+    if (is_array($this->userDefinedRanking) && !empty($this->userDefinedRanking)) {
+      $this->setParameter('userDefinedRanking', $this->userDefinedRanking);
+    }
+
     return $this;
   }
 
+  /**
+   * Get search query.
+   */
   public function getQuery() {
     return $this->query;
   }
 
+  /**
+   * Set search query.
+   */
   public function setQuery($query) {
     $this->query = $query;
   }
 
+  /**
+   * Get facets to be requested.
+   */
   public function getFacets() {
     return $this->facets;
   }
 
+  /**
+   * Set facets to be requested.
+   */
   public function setFacets($facets) {
     $this->facets = $facets;
   }
 
+  /**
+   * Get the number of facets returned from OpenSearch.
+   */
   public function getNumFacets() {
     return $this->numFacets;
   }
 
-  public function setNumFacets($numFacets) {
-    $this->numFacets = $numFacets;
+  /**
+   * Set the number of facets returned from OpenSearch.
+   */
+  public function setNumFacets($facet_count) {
+    $this->numFacets = $facet_count;
   }
 
+  /**
+   * Get format.
+   */
   public function getFormat() {
     return $this->format;
   }
 
+  /**
+   * Set format.
+   */
   public function setFormat($format) {
     $this->format = $format;
   }
 
+  /**
+   * Get object format.
+   */
+  public function getObjectFormat() {
+    return $this->objectFormat;
+  }
+
+  /**
+   * Set object format.
+   */
+  public function setObjectFormat($value) {
+    $this->objectFormat = $value;
+  }
+
+  /**
+   * Get start.
+   */
   public function getStart() {
     return $this->start;
   }
 
+  /**
+   * Set start.
+   */
   public function setStart($start) {
     $this->start = $start;
   }
 
+  /**
+   * Get number of results on executed query.
+   */
   public function getNumResults() {
     return $this->numResults;
   }
 
-  public function setNumResults($numResults) {
-    $this->numResults = $numResults;
+  /**
+   * Set number of results on executed query.
+   */
+  public function setNumResults($result_count) {
+    $this->numResults = $result_count;
   }
 
+  /**
+   * Get rank.
+   */
   public function getRank() {
     return $this->rank;
   }
 
+  /**
+   * Set rank.
+   */
   public function setRank($rank) {
     $this->rank = $rank;
   }
 
+  /**
+   * Get current sort setting.
+   */
   public function getSort() {
     return $this->sort;
   }
 
+  /**
+   * Set new sort setting.
+   */
   public function setSort($sort) {
     $this->sort = $sort;
   }
 
+  /**
+   * Get allObjects flag.
+   */
   public function getAllObjects() {
     return $this->allObjects;
   }
 
-  public function setAllObjects($allObjects) {
-    $this->allObjects = $allObjects;
+  /**
+   * Set allObjects flag.
+   */
+  public function setAllObjects($value) {
+    $this->allObjects = $value;
   }
 
+  /**
+   * Get allRelations flag.
+   */
   public function getAllRelations() {
     return $this->allRelations;
   }
 
-  public function setAllRelations($allRelations) {
-    $this->allRelations = $allRelations;
+  /**
+   * Set allRelations flag.
+   */
+  public function setAllRelations($value) {
+    $this->allRelations = $value;
   }
 
+  /**
+   * Get relationData flag.
+   */
   public function getRelationData() {
     return $this->relationData;
   }
 
-  public function setRelationData($relationData) {
-    $this->relationData = $relationData;
+  /**
+   * Set relationData flag.
+   */
+  public function setRelationData($value) {
+    $this->relationData = $value;
   }
 
+  /**
+   * Get agency code.
+   */
   public function getAgency() {
     return $this->agency;
   }
 
+  /**
+   * Set agency code.
+   */
   public function setAgency($agency) {
     $this->agency = $agency;
   }
 
+  /**
+   * Get search profile name.
+   */
   public function getProfile() {
     return $this->profile;
   }
 
+  /**
+   * Set search profile name.
+   */
   public function setProfile($profile) {
     $this->profile = $profile;
   }
 
+  /**
+   * Get current userDefinedBoost configuration.
+   */
   public function getUserDefinedBoost() {
     return $this->userDefinedBoost;
   }
 
-  public function setUserDefinedBoost($userDefinedBoost) {
-    $this->userDefinedBoost = $userDefinedBoost;
+  /**
+   * Set new userDefinedBoost configuration.
+   */
+  public function setUserDefinedBoost($config) {
+    $this->userDefinedBoost = $config;
   }
 
+  /**
+   * Get current userDefinedRanking configuration.
+   */
   public function getUserDefinedRanking() {
     return $this->userDefinedRanking;
   }
 
-  public function setUserDefinedRanking($userDefinedRanking) {
-    $this->userDefinedRanking = $userDefinedRanking;
+  /**
+   * Set new userDefinedRanking configuration.
+   */
+  public function setUserDefinedRanking($config) {
+    $this->userDefinedRanking = $config;
   }
 
+  /**
+   * Process response from OpenSearch.
+   */
   public function processResponse(stdClass $response) {
-    $searchResult = new TingClientSearchResult();
+    $search_result = new TingClientSearchResult();
 
-    $searchResponse = $response->searchResponse;
-    if (isset($searchResponse->error)) {
-      throw new TingClientException('Error handling search request: '.self::getValue($searchResponse->error));
+    $search_response = $response->searchResponse;
+    if (isset($search_response->error)) {
+      throw new TingClientException('Error handling search request: ' . self::getValue($search_response->error));
     }
 
-    $searchResult->numTotalObjects = self::getValue($searchResponse->result->hitCount);
-    $searchResult->numTotalCollections = self::getValue($searchResponse->result->collectionCount);
-    $searchResult->more = (bool) preg_match('/true/i', self::getValue($searchResponse->result->more));
+    $search_result->numTotalObjects = self::getValue($search_response->result->hitCount);
+    $search_result->numTotalCollections = self::getValue($search_response->result->collectionCount);
+    $search_result->more = (strpos(self::getValue($search_response->result->more), 'true') !== FALSE);
 
-    if (isset($searchResponse->result->searchResult) && is_array($searchResponse->result->searchResult)) {
-      foreach ($searchResponse->result->searchResult as $entry => $result) {
-        if (self::getValue($result->collection->numberOfObjects) >= 1)  {
-          $searchResult->collections[] = $this->generateCollection($result->collection, (array)$response->{'@namespaces'});
+    if (isset($search_response->result->searchResult) && is_array($search_response->result->searchResult)) {
+      foreach ($search_response->result->searchResult as $entry => $result) {
+        if (self::getValue($result->collection->numberOfObjects) >= 1) {
+          $search_result->collections[] = $this->generateCollection($result->collection, (array) $response->{'@namespaces'});
         }
       }
     }
 
-    if (isset($searchResponse->result->facetResult->facet) && is_array($searchResponse->result->facetResult->facet)) {
-      foreach ($searchResponse->result->facetResult->facet as $facetResult) {
+    if (isset($search_response->result->facetResult->facet) && is_array($search_response->result->facetResult->facet)) {
+      foreach ($search_response->result->facetResult->facet as $facet_result) {
         $facet = new TingClientFacetResult();
-        $facet->name = self::getValue($facetResult->facetName);
-        if (isset($facetResult->facetTerm)) {
-          foreach ($facetResult->facetTerm as $term) {
+        $facet->name = self::getValue($facet_result->facetName);
+        if (isset($facet_result->facetTerm)) {
+          foreach ($facet_result->facetTerm as $term) {
             $facet->terms[self::getValue($term->term)] = self::getValue($term->frequence);
           }
         }
 
-        $searchResult->facets[$facet->name] = $facet;
+        $search_result->facets[$facet->name] = $facet;
       }
     }
 
-    return $searchResult;
+    return $search_result;
   }
 
-  private function generateObject($objectData, $namespaces) {
+  /**
+   * Generate TingClientObject from response data.
+   */
+  protected function generateObject($object_data, $namespaces) {
     $object = new TingClientObject();
-    $object->id = self::getValue($objectData->identifier);
+    $object->id = self::getValue($object_data->identifier);
 
     $object->record = array();
     $object->relations = array();
@@ -249,8 +382,8 @@ class TingClientSearchRequest extends TingClientRequest {
     // time. We use our own map to provide a stable interface.
     $prefixes = array_flip(self::$namespaces);
 
-    if (isset($objectData->record)) {
-      foreach ($objectData->record as $name => $elements) {
+    if (isset($object_data->record)) {
+      foreach ($object_data->record as $name => $elements) {
         if (!is_array($elements)) {
           continue;
         }
@@ -282,9 +415,9 @@ class TingClientSearchRequest extends TingClientRequest {
       $object->localId = $object->ownerId = FALSE;
     }
 
-    if (isset($objectData->relations)) {
+    if (isset($object_data->relations)) {
       $object->relationsData = array();
-      foreach ($objectData->relations->relation as $relation) {
+      foreach ($object_data->relations->relation as $relation) {
         $relation_data = (object) array(
           'relationType' => $relation->relationType->{'$'},
           'relationUri' => $relation->relationUri->{'$'},
@@ -300,8 +433,8 @@ class TingClientSearchRequest extends TingClientRequest {
       }
     }
 
-    if (isset($objectData->formatsAvailable)) {
-      foreach ($objectData->formatsAvailable->format as $format) {
+    if (isset($object_data->formatsAvailable)) {
+      foreach ($object_data->formatsAvailable->format as $format) {
         $object->formatsAvailable[] = $format->{'$'};
       }
     }
@@ -309,14 +442,16 @@ class TingClientSearchRequest extends TingClientRequest {
     return $object;
   }
 
-  private function generateCollection($collectionData, $namespaces) {
+  /**
+   * Generate TingClientObjectCollection from response data.
+   */
+  protected function generateCollection($collection_data, $namespaces) {
     $objects = array();
-    if (isset($collectionData->object) && is_array($collectionData->object)) {
-      foreach ($collectionData->object as $objectData) {
-        $objects[] = $this->generateObject($objectData, $namespaces);
+    if (isset($collection_data->object) && is_array($collection_data->object)) {
+      foreach ($collection_data->object as $object_data) {
+        $objects[] = $this->generateObject($object_data, $namespaces);
       }
     }
     return new TingClientObjectCollection($objects);
   }
 }
-

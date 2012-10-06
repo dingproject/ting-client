@@ -1,50 +1,91 @@
 <?php
+/**
+ * @file
+ * TingClientRequestFactory class definition.
+ */
 
+/**
+ * Factory class for getting the correct request object for any service.
+ */
 class TingClientRequestFactory {
-	public function __construct($urls) {
-		$this->urls = $urls;
-	}
+  public $urls;
 
-	/**
-	 * @return TingClientSearchRequest
-	 */
-	public function getSearchRequest() {
-		return new TingClientSearchRequest($this->urls['search']);
-	}
+  /**
+   * Create the request factury with the service URLs to used.
+   */
+  public function __construct($urls) {
+    $this->urls = $urls;
+  }
 
-	/**
-	 * @return TingClientScanRequest
-	 */
-	public function getScanRequest() {
-		return new TingClientScanRequest($this->urls['scan']);
-	}
+  /**
+   * Get OpenSearch request.
+   *
+   * @return TingClientSearchRequest
+   *   Request object.
+   */
+  public function getSearchRequest() {
+    if (isset($this->urls['search'])) {
+      return new TingClientSearchRequest($this->urls['search']);
+    }
+  }
 
-	/**
-	 * @return TingClientCollectionRequest
-	 */
-	public function getCollectionRequest() {
-		return new TingClientCollectionRequest($this->urls['collection']);
-	}
+  /**
+   * Get OpenScan request.
+   *
+   * @return TingClientScanRequest
+   *   Request object.
+   */
+  public function getScanRequest() {
+    if (isset($this->urls['scan'])) {
+      return new TingClientScanRequest($this->urls['scan']);
+    }
+  }
 
-	/**
-	 * @return TingClientObjectRequest
-	 */
-	public function getObjectRequest() {
-		return new TingClientObjectRequest($this->urls['object']);
-	}
+  /**
+   * Get OpenScan collection request.
+   *
+   * @return TingClientCollectionRequest
+   *   Request object.
+   */
+  public function getCollectionRequest() {
+    if (isset($this->urls['collection'])) {
+      return new TingClientCollectionRequest($this->urls['collection']);
+    }
+  }
 
-	/**
-	 * @return TingClientSpellRequest
-	 */
-	public function getSpellRequest() {
-		return new TingClientSpellRequest($this->urls['spell']);
-	}
+  /**
+   * Get OpenScan object request.
+   *
+   * @return TingClientObjectRequest
+   *   Request object.
+   */
+  public function getObjectRequest() {
+    if (isset($this->urls['object'])) {
+      return new TingClientObjectRequest($this->urls['object']);
+    }
+  }
 
-	/**
-	 * @return TingClientObjectRecommendationRequest
-	 */
-	function getObjectRecommendationRequest() {
-		return new TingClientObjectRecommendationRequest($this->urls['recommendation']);
-	}
+  /**
+   * Get OpenSpell object request.
+   *
+   * @return TingClientSpellRequest
+   *   Request object.
+   */
+  public function getSpellRequest() {
+    if (isset($this->urls['spell'])) {
+      return new TingClientSpellRequest($this->urls['spell']);
+    }
+  }
+
+  /**
+   * Get OpenADHL object request.
+   *
+   * @return TingClientObjectRecommendationRequest
+   *   Request object.
+   */
+  public function getObjectRecommendationRequest() {
+    if (isset($this->urls['recommendation'])) {
+      return new TingClientObjectRecommendationRequest($this->urls['recommendation']);
+    }
+  }
 }
-
